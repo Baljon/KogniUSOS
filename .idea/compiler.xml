@@ -11,7 +11,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="KogniUSOS" target="1.5" />
+      <module name="KogniUSOS" target="1.8" />
       <module name="KogniUSOS2" target="1.8" />
     </bytecodeTargetLevel>
   </component>

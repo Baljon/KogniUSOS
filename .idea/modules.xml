@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/KogniUSOS2.iml" filepath="$PROJECT_DIR$/KogniUSOS2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/KogniUSOS.iml" filepath="$PROJECT_DIR$/KogniUSOS.iml" />
     </modules>
   </component>
 </project>

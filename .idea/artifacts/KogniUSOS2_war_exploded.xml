@@ -4,7 +4,7 @@
     <root id="root">
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
-          <element id="module-output" name="KogniUSOS2" />
+          <element id="module-output" name="KogniUSOS" />
         </element>
         <element id="directory" name="lib">
           <element id="library" level="project" name="Maven: com.vaadin:vaadin-server:8.0.6" />
@@ -24,8 +24,8 @@
       <element id="directory" name="META-INF">
         <element id="file-copy" path="$PROJECT_DIR$/target/KogniUSOS-0.1-SNAPSHOT/META-INF/MANIFEST.MF" />
       </element>
-      <element id="javaee-facet-resources" facet="KogniUSOS2/web/Web" />
-      <element id="gwt-compiler-output" facet="KogniUSOS2/gwt/GWT" />
+      <element id="javaee-facet-resources" facet="KogniUSOS/web/Web" />
+      <element id="gwt-compiler-output" facet="KogniUSOS/gwt/GWT" />
     </root>
   </artifact>
 </component>
