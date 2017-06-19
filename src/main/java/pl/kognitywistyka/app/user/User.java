@@ -1,10 +1,49 @@
 package pl.kognitywistyka.app.user;
 
+import javax.persistence.*;
+
 /**
  * Created by wikto on 19.06.2017.
  */
+@Entity
+@Inheritance
+@DiscriminatorColumn(name = "USER_TYPE")
+@Table(name = "USERS")
 public abstract class User {
 
-    private String id;
+    @Id
+    @Column(name = "ID", nullable = false)
+    private String id; //should be PESEL number or album number or USOS id
+
+    @Column(name = "FIRST_NAME", nullable = false)
+    private String firstName;
+
+    @Column(name = "LAST_NAME", nullable = false)
+    private String lastName;
+
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
 }
