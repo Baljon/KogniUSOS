@@ -1,4 +1,4 @@
-package pl.kognitywistyka;
+package pl.kognitywistyka.app;
 
 import javax.servlet.annotation.WebServlet;
 
