@@ -19,20 +19,41 @@ public class JsonService {
     @ConfigProperty(name = "usosuw.apikey")
     private String apikey;
 
+    @Inject
+    @ConfigProperty(name = "usosuw.service")
+    private String service;
+
+    @Inject
+    @ConfigProperty(name = "usosuw.service.course")
+    private String course;
+
+    @Inject
+    @ConfigProperty(name = "usosuw.service.fac")
+    private String fac;
+
+    @Inject
+    @ConfigProperty(name = "usosuw.service.course.fields")
+    private String courseFields;
+
+    @Inject
+    @ConfigProperty(name = "usosuw.service.fac.fields")
+    private String facFields;
+
     private Client client;
     private WebTarget target;
 
-    @PostConstruct
-    protected void init() {
+
+    public String CourseRESTtoBASE(String courseID) {
         client = ClientBuilder.newClient();
-        //example query params: ?q=Turku&cnt=10&mode=json&units=metric
+
         target = client.target(
-                "http://api.openweathermap.org/data/2.5/forecast/daily")
-                .queryParam("cnt", "10")
-                .queryParam("mode", "json")
-                .queryParam("units", "metric")
-                .queryParam("appid", apikey)
+                service + course)
+                .queryParam("id", courseID)
+                .queryParam("format", "json")
+                .queryParam("fields", courseFields)
         ;
+        String TestOutput = "TEST";
+        return TestOutput;
     }
 }
 
