@@ -3,11 +3,8 @@ package pl.kognitywistyka.app.ui;
 import com.vaadin.server.Page;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.*;
-import pl.kognitywistyka.app.course.Course;
 import pl.kognitywistyka.app.security.AuthenticationService;
 import pl.kognitywistyka.app.user.User;
-
-import java.util.List;
 
 /**
  * Created by wikto on 19.06.2017.
@@ -61,7 +58,7 @@ public abstract class CenteredWindow extends VerticalLayout {
         topMenu.removeAllComponents();
         User loginInfo = AuthenticationService.getCurrentLoginInfo();
 
-        if(loginInfo != null) {
+        if (loginInfo != null) {
             String text = "You're logged in as: ";// <b>" + loginInfo.getFirstName() + " " + loginInfo.getLastName() + "</b>";
             Label loginLabel = new Label(text, ContentMode.HTML);
 
@@ -72,7 +69,7 @@ public abstract class CenteredWindow extends VerticalLayout {
             Button userNameButton = new Button(loginInfo.getFirstName() + " " + loginInfo.getLastName());
 
             userNameButton.addClickListener(event -> {
-               UI.getCurrent().setContent(new UserWindow(loginInfo, getUI().getCurrent().getContent()));
+                UI.getCurrent().setContent(new StudentWindow(loginInfo, getUI().getCurrent().getContent()));
             });
 
             topMenu.addComponent(userNameButton);
@@ -89,8 +86,7 @@ public abstract class CenteredWindow extends VerticalLayout {
 
             topMenu.addComponent(logoutButton);
             topMenu.setComponentAlignment(logoutButton, Alignment.TOP_RIGHT);
-        }
-        else {
+        } else {
             String text = "You're not logged in!";
             Label loginLabel = new Label(text, ContentMode.HTML);
 
@@ -100,7 +96,7 @@ public abstract class CenteredWindow extends VerticalLayout {
             Button loginButton = new Button("Sign in");
 
             loginButton.addClickListener(event -> {
-               UI.getCurrent().setContent(new LoginWindow());
+                UI.getCurrent().setContent(new LoginWindow());
             });
 
             topMenu.addComponent(loginButton);
@@ -109,7 +105,7 @@ public abstract class CenteredWindow extends VerticalLayout {
     }
 
     public void showNotification(boolean value) {
-        if(value) {
+        if (value) {
             Notification notification = new Notification("Ok, it's done!");
             notification.show(Page.getCurrent());
         } else {

@@ -12,7 +12,7 @@ import java.util.*;
 public class StudentService {
 
     private static StudentService instance;
-    private HashMap<String, User> users;
+    private HashMap<String, Student> users;
 
     public static StudentService getInstance() {
         if (instance == null){
@@ -23,16 +23,16 @@ public class StudentService {
     }
 
     public void ensureTestData() {
-        users = new HashMap<>();
-        List<User> usersList = Arrays.asList(
+        users = new HashMap<String, Student>();
+        List<Student> studentsList = Arrays.asList(
                 new Student("1", "Radosław", "Jurczak"),
                 new Student("2", "Jakub", "Milewski"),
                 new Student("3", "Wiktor", "Rorot")
         );
 //        Integer id = 0;
-        for(User user : usersList) {
-            String id = user.getId();
-            users.put(id, user);
+        for(Student student : studentsList) {
+            String id = student.getId();
+            users.put(id, student);
 //            id = id + 1;
         }
     }
@@ -42,9 +42,9 @@ public class StudentService {
         return new ArrayList<>();
     }
 
-    public synchronized List<User> findAll(String value) {
-        ArrayList<User> arrayList = new ArrayList<>();
-        for (User user : users.values()) {
+    public synchronized ArrayList<Student> findAll(String value) {
+        ArrayList<Student> arrayList = new ArrayList<>();
+        for (Student user : users.values()) {
             boolean passesFilter = (value == null || value.isEmpty())
                     || user.toString().toLowerCase().contains(value.toLowerCase());
             if (passesFilter) {
@@ -59,13 +59,13 @@ public class StudentService {
     public void register(Set<Course> selectedCourses) {
     }
 
-    public boolean delete(User user) {
-        users.remove(user.getId());
+    public boolean delete(Student student) {
+        users.remove(student.getId());
         return true;
     }
 
-    public boolean delete(Set<User> selectedUsers) {
-        for(User user : selectedUsers) {
+    public boolean delete(Set<Student> selectedStudents) {
+        for(Student user : selectedStudents) {
             users.remove(user.getId());
         }
         return true;

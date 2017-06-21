@@ -6,6 +6,7 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.renderers.ButtonRenderer;
 import com.vaadin.ui.themes.ValoTheme;
 import pl.kognitywistyka.app.service.StudentService;
+import pl.kognitywistyka.app.user.Student;
 import pl.kognitywistyka.app.user.User;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public class StudentsWindow extends GridWindow<User> {
     private HorizontalLayout buttonsLayout;
 
     //Grid
-    private Grid<User> grid;
+    private Grid<Student> grid;
 
     //Filter
     private TextField filterField;
@@ -34,7 +35,7 @@ public class StudentsWindow extends GridWindow<User> {
 
     //variables
     //todo should it be here?
-    private Set<User> selectedStudents;
+    private Set<Student> selectedStudents;
 
     public StudentsWindow() {
         init();
@@ -77,19 +78,19 @@ public class StudentsWindow extends GridWindow<User> {
         middleLayer.setExpandRatio(filterLayout, 0.1f);
 
         //Initializing grid
-        grid = new Grid<>(User.class);
+        grid = new Grid<>(Student.class);
         grid.setSizeFull();
 
-        grid.addColumn(User::getId).setCaption("PESEL");
-        grid.addColumn(User::getFirstName).setCaption("First Name");
-        grid.addColumn(User::getLastName).setCaption("Last Name");
+        grid.addColumn(Student::getId).setCaption("PESEL");
+        grid.addColumn(Student::getFirstName).setCaption("First Name");
+        grid.addColumn(Student::getLastName).setCaption("Last Name");
         grid.setColumns("id", "firstName", "lastName");
 
         grid.setSelectionMode(Grid.SelectionMode.MULTI);
 
         grid.addColumn(event -> "View",
                 new ButtonRenderer<>(clickEvent -> {
-                    getUI().getCurrent().setContent(new UserWindow(clickEvent.getItem(), getUI().getCurrent().getContent()));
+                    getUI().getCurrent().setContent(new StudentWindow(clickEvent.getItem(), getUI().getCurrent().getContent()));
                 }));
 
         grid.addColumn(event -> "Delete",
@@ -145,8 +146,8 @@ public class StudentsWindow extends GridWindow<User> {
 
     public void updateGrid() {
         StudentService studentService = StudentService.getInstance();
-        List<User> usersList = studentService.findAll(filterField.getValue());
-        grid.setItems(usersList);
+        List<Student> studentsList= studentService.findAll(filterField.getValue());
+        grid.setItems(studentsList);
     }
 
 }

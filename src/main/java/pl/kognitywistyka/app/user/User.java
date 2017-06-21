@@ -23,6 +23,9 @@ public abstract class User {
     @Column(name = "LAST_NAME", nullable = false)
     private String lastName;
 
+    @Column(name = "PASSWORD", nullable = false)
+    private String password;
+
 
     public String getId() {
         return id;
@@ -51,4 +54,12 @@ public abstract class User {
     public abstract String toString();
 
     public abstract boolean equals(User user);
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

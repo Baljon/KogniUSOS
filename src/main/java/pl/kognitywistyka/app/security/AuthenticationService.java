@@ -10,9 +10,9 @@ public class AuthenticationService {
 
     private User currentLoginInfo;
 
-    public static User getCurrentLoginInfo() {
+    public static Pokropski getCurrentLoginInfo() {
         //TODO
-        return new Pokropski();
+        return new Pokropski("0","My","Name", "");
     }
 
     public void setCurrentLoginInfo(User currentLoginInfo) {

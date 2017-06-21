@@ -5,12 +5,13 @@ import com.vaadin.ui.*;
 import pl.kognitywistyka.app.security.AuthenticationService;
 import pl.kognitywistyka.app.service.CourseService;
 import pl.kognitywistyka.app.service.StudentService;
+import pl.kognitywistyka.app.user.Student;
 import pl.kognitywistyka.app.user.User;
 
 /**
  * Created by wikto on 19.06.2017.
  */
-public class UserWindow extends ItemWindow {
+public class StudentWindow extends ItemWindow {
 
     //Layouts
     private VerticalLayout middleLayer;
@@ -35,8 +36,8 @@ public class UserWindow extends ItemWindow {
     private User user;
     private GridWindow previousWindow;
 
-    public UserWindow(User user, Component previousWindow) {
-        setUser(user);
+    public StudentWindow(User user, Component previousWindow) {
+        setUser(this.user);
         setPreviousWindow(previousWindow);
         init();
     }
@@ -97,7 +98,7 @@ public class UserWindow extends ItemWindow {
         //it's absolutely not safe todo should add some prompt asking if I'm sure
         deleteButton.addClickListener(event -> {
             StudentService studentService = StudentService.getInstance();
-            boolean deleted = studentService.delete(user);
+            boolean deleted = studentService.delete((Student) user);
             showNotification(deleted);
             if (deleted) {
                 previousWindow.updateGrid();
@@ -191,8 +192,6 @@ public class UserWindow extends ItemWindow {
 
             buttonsLayout.addComponent(addCoursesButton);
         }
-
-
 
         initTop();
     }

@@ -11,19 +11,19 @@ import java.util.Set;
  * Created by wikto on 19.06.2017.
  */
 @Entity
-@Table(name = "STUDENTS")
-public class Student {
+//@JoinTable(name = "USERS")
+public class Student extends User {
     //Students are identified (studentID) by their album number. Fake IDs can be injected by admins if necessary.
 
-    @Id
-    @Column(name="STUDENT_ID", nullable = false)
-    private String studentID;
+//    @Id
+//    @Column(name="STUDENT_ID", nullable = false)
+//    private String studentID;
 
-    @Column(name = "STUDENT_FIRSTNAME", nullable = false)
-    private String firstName;
-
-    @Column(name = "STUDENT_LASTNAME", nullable = false)
-    private String lastName;
+//    @Column(name = "STUDENT_FIRSTNAME", nullable = false)
+//    private String firstName;
+//
+//    @Column(name = "STUDENT_LASTNAME", nullable = false)
+//    private String lastName;
 
     @ManyToMany(targetEntity = Course.class, cascade = CascadeType.ALL)
     private Set<Course> courses = new HashSet<>();
@@ -31,18 +31,18 @@ public class Student {
     public Student() {}
 
     public Student(String albumNo,String firstName, String lastName) {
-        setStudentID(albumNo);
+        setId(albumNo);
         setFirstName(firstName);
         setLastName(lastName);
     }
 
-    public String getStudentID() {
-        return studentID;
-    }
-
-    public void setStudentID(String albumNumber) {
-        this.studentID = albumNumber;
-    }
+//    public String getStudentID() {
+//        return studentID;
+//    }
+//
+//    public void setStudentID(String albumNumber) {
+//        this.studentID = albumNumber;
+//    }
 
     public Set<Course> getGroups() {
         return courses;
@@ -52,28 +52,33 @@ public class Student {
         this.courses = courses;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
+//    public String getFirstName() {
+//        return firstName;
+//    }
+//
+//    public void setFirstName(String firstName) {
+//        this.firstName = firstName;
+//    }
+//
+//    public String getLastName() {
+//        return lastName;
+//    }
+//
+//    public void setLastName(String lastName) {
+//        this.lastName = lastName;
+//    }
 
     @Override
     public String toString() {
-        return getStudentID() + "|" + getFirstName() + "|" + getLastName();
+        return getId() + "|" + getFirstName() + "|" + getLastName();
+    }
+
+    @Override
+    public boolean equals(User user) {
+        return getId().equals(user.getId());
     }
 
     public boolean equals(Student randomStudent) {
-        return this.getStudentID().equals(randomStudent.getStudentID());
+        return this.getId().equals(randomStudent.getId());
     }
 }
