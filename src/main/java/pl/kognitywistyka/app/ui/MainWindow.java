@@ -53,7 +53,7 @@ public class MainWindow extends GridWindow<Course> {
         //Initializing layout
         middleLayer = new VerticalLayout();
         middleLayer.setSizeFull();
-        middleLayer.addStyleName("login-panel");
+//        middleLayer.addStyleName("login-panel");
 
         init(middleLayer);
 

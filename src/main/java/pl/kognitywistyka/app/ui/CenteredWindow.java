@@ -29,10 +29,10 @@ public abstract class CenteredWindow extends VerticalLayout {
         //Initializing layouts
         this.setMiddleLayer(middleLayer);
         middleLayer.setSizeFull();
-        middleLayer.addStyleName("login-panel");
+//        middleLayer.addStyleName("login-panel");
 
         topMenu = new HorizontalLayout();
-        topMenu.addStyleName("kogniusos-top");
+//        topMenu.addStyleName("kogniusos-top");
         topMenu.setHeight("15px");
         topMenu.setWidth("60%");
 
@@ -67,7 +67,7 @@ public abstract class CenteredWindow extends VerticalLayout {
 
             topMenu.addComponent(loginLabel);
             topMenu.setComponentAlignment(loginLabel, Alignment.MIDDLE_LEFT);
-            topMenu.setExpandRatio(loginLabel, 0.12f);
+            topMenu.setExpandRatio(loginLabel, 0.18f);
 
             Button userNameButton = new Button(loginInfo.getFirstName() + " " + loginInfo.getLastName());
 

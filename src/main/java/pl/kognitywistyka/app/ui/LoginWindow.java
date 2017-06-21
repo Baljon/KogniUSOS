@@ -38,17 +38,17 @@ public class LoginWindow extends CenteredWindow {
         //Initializing layout
         middleLayer = new VerticalLayout();
         middleLayer.setSizeFull();
-        middleLayer.addStyleName("login-panel");
+//        middleLayer.addStyleName("login-panel");
 
         init(middleLayer);
 
         inputBoxes = new FormLayout();
         buttonsLayout = new HorizontalLayout();
 
-        inputBoxes.addStyleName("form-centered");
+//        inputBoxes.addStyleName("form-centered");
 
         welcomeLabel = new Label("<p align='center'><b>WELCOME TO KogniUSOS!</b></p>");
-        welcomeLabel.addStyleName("caption-label");
+//        welcomeLabel.addStyleName("caption-label");
         welcomeLabel.setContentMode(ContentMode.HTML);
 
         middleLayer.addComponent(welcomeLabel);
@@ -73,18 +73,18 @@ public class LoginWindow extends CenteredWindow {
 
         //Initializing buttons
         loginButton = new Button("Sign in");
-        reminderButton = new Button("Retrieve password");
+//        reminderButton = new Button("Retrieve password");
         createAccount = new Button("Sign up");
 
         buttonsLayout.addComponent(loginButton);
-        buttonsLayout.addComponent(reminderButton);
+//        buttonsLayout.addComponent(reminderButton);
         buttonsLayout.addComponent(createAccount);
         buttonsLayout.setSpacing(true);
 
-        reminderButton.addClickListener(event -> {
-           throw new NotImplementedException();
-//            getUI().setContent(new SendReminderWindow());
-        });
+//        reminderButton.addClickListener(event -> {
+//           throw new NotImplementedException();
+////            getUI().setContent(new SendReminderWindow());
+//        });
 
         loginButton.addClickListener(event -> {
             getUI().setContent(new MainWindow());
