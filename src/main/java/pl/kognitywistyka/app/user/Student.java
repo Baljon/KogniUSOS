@@ -50,4 +50,9 @@ public class Student extends User {
     public String toString() {
         return getId() + "|" + getFirstName() + "|" + getLastName();
     }
+
+    public boolean equals(User user) {
+//        return getId().equals(user.getId());
+        return true;
+    }
 }

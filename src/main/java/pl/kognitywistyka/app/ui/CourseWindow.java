@@ -1,16 +1,14 @@
 package pl.kognitywistyka.app.ui;
 
 import com.vaadin.icons.VaadinIcons;
-import com.vaadin.server.Page;
 import com.vaadin.ui.*;
 import pl.kognitywistyka.app.course.Course;
 import pl.kognitywistyka.app.service.CourseService;
-import pl.kognitywistyka.app.service.StudentService;
 
 /**
  * Created by wikto on 20.06.2017.
  */
-public class CourseWindow extends CenteredWindow {
+public class CourseWindow extends ItemWindow {
 
     //Layouts
     private VerticalLayout middleLayer;
@@ -33,7 +31,7 @@ public class CourseWindow extends CenteredWindow {
 
     //Variables
     private Course course;
-    private Component previousWindow;
+    private GridWindow previousWindow;
     private Button registerButton;
 
     public CourseWindow(Course course, Component previousWindow) {
@@ -118,6 +116,6 @@ public class CourseWindow extends CenteredWindow {
     }
 
     public void setPreviousWindow(Component previousWindow) {
-        this.previousWindow = previousWindow;
+        this.previousWindow = (GridWindow) previousWindow;
     }
 }

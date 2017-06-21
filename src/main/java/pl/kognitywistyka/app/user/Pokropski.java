@@ -16,4 +16,13 @@ public class Pokropski extends User {
 
     }
 
+    @Override
+    public String toString() {
+        return null;
+    }
+
+    @Override
+    public boolean equals(User user) {
+        return true;
+    }
 }
