@@ -11,6 +11,9 @@ public class TextWindow extends ItemWindow {
     private CssLayout nameLayout;
     private Label nameLabel;
 
+    private HorizontalLayout buttonsLayout;
+    private Button returnButton;
+
     private String text;
     public TextWindow(String object) {
         setText(object);
@@ -22,7 +25,7 @@ public class TextWindow extends ItemWindow {
         //Initializing layout
         middleLayer = new VerticalLayout();
         middleLayer.setSizeFull();
-        middleLayer.addStyleName("login-panel");
+//        middleLayer.addStyleName("login-panel");
 
         init(middleLayer);
 
@@ -39,6 +42,18 @@ public class TextWindow extends ItemWindow {
         middleLayer.addComponent(nameLayout);
         middleLayer.setComponentAlignment(nameLayout, Alignment.TOP_LEFT);
         middleLayer.setExpandRatio(nameLayout, 0.1f);
+
+        buttonsLayout = new HorizontalLayout();
+
+        returnButton = new Button("return");
+        returnButton.addClickListener(event -> {
+            getUI().getCurrent().setContent(new MainWindow());
+        });
+
+        buttonsLayout.addComponent(returnButton);
+        middleLayer.addComponent(buttonsLayout);
+
+        initTop();
     }
 
     public String getText() {

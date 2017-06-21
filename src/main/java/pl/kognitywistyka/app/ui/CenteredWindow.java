@@ -29,10 +29,10 @@ public abstract class CenteredWindow extends VerticalLayout {
         //Initializing layouts
         this.setMiddleLayer(middleLayer);
         middleLayer.setSizeFull();
-        middleLayer.addStyleName("login-panel");
+//        middleLayer.addStyleName("login-panel");
 
         topMenu = new HorizontalLayout();
-        topMenu.addStyleName("kogniusos-top");
+//        topMenu.addStyleName("kogniusos-top");
         topMenu.setHeight("15px");
         topMenu.setWidth("60%");
 
@@ -66,9 +66,10 @@ public abstract class CenteredWindow extends VerticalLayout {
             Label loginLabel = new Label(text, ContentMode.HTML);
 
             topMenu.addComponent(loginLabel);
-            topMenu.setComponentAlignment(loginLabel, Alignment.TOP_LEFT);
+            topMenu.setComponentAlignment(loginLabel, Alignment.MIDDLE_LEFT);
+            topMenu.setExpandRatio(loginLabel, 0.18f);
 
-            Button userNameButton = new Button(loginInfo.getFirstName() + loginInfo.getLastName());
+            Button userNameButton = new Button(loginInfo.getFirstName() + " " + loginInfo.getLastName());
 
             userNameButton.addClickListener(event -> {
                UI.getCurrent().setContent(new UserWindow(loginInfo, getUI().getCurrent().getContent()));
@@ -76,12 +77,14 @@ public abstract class CenteredWindow extends VerticalLayout {
 
             topMenu.addComponent(userNameButton);
             topMenu.setComponentAlignment(userNameButton, Alignment.TOP_LEFT);
+            topMenu.setExpandRatio(userNameButton, 0.8f);
 
             Button logoutButton = new Button("Log out");
 
             logoutButton.addClickListener(event -> {
-                AuthenticationService.logout();
+                boolean signedOut = AuthenticationService.logout();
                 UI.getCurrent().setContent(new LoginWindow());
+                showNotification(signedOut);
             });
 
             topMenu.addComponent(logoutButton);

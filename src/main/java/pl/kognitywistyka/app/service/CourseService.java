@@ -63,4 +63,20 @@ public class CourseService {
     public static boolean addCourses(String value) {
         return false;
     }
+
+    public static boolean proposeCourses(String value) {
+        return false;
+    }
+
+    public boolean delete(Course course) {
+        courses.remove(course.getId());
+        return true;
+    }
+
+    public boolean delete(Set<Course> selectedCourses) {
+        for(Course course : selectedCourses) {
+            courses.remove(course.getId());
+        }
+        return true;
+    }
 }

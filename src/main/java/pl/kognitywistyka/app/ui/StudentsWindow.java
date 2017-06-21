@@ -47,7 +47,7 @@ public class StudentsWindow extends GridWindow<User> {
         //Initializing layout
         middleLayer = new VerticalLayout();
         middleLayer.setSizeFull();
-        middleLayer.addStyleName("login-panel");
+//        middleLayer.addStyleName("login-panel");
 
         init(middleLayer);
 
@@ -87,12 +87,12 @@ public class StudentsWindow extends GridWindow<User> {
 
         grid.setSelectionMode(Grid.SelectionMode.MULTI);
 
-        grid.addColumn(event -> "View account details",
+        grid.addColumn(event -> "View",
                 new ButtonRenderer<>(clickEvent -> {
                     getUI().getCurrent().setContent(new UserWindow(clickEvent.getItem(), getUI().getCurrent().getContent()));
                 }));
 
-        grid.addColumn(event -> "Delete account",
+        grid.addColumn(event -> "Delete",
                 new ButtonRenderer<>(clickEvent -> {
                     StudentService studentService = StudentService.getInstance();
                     boolean deleted = studentService.delete(clickEvent.getItem());

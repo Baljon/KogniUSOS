@@ -1,7 +1,6 @@
 package pl.kognitywistyka.app.security;
 
 import pl.kognitywistyka.app.user.Pokropski;
-import pl.kognitywistyka.app.user.Student;
 import pl.kognitywistyka.app.user.User;
 
 /**
@@ -25,7 +24,8 @@ public class AuthenticationService {
         return false;
     }
 
-    public static void logout() {
+    public static boolean logout() {
+        return true;
     }
 
     public static boolean isAdmin() {

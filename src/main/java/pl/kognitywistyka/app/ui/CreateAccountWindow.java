@@ -40,17 +40,17 @@ public class CreateAccountWindow extends CenteredWindow {
         //Initializing layout
         middleLayer = new VerticalLayout();
         middleLayer.setSizeFull();
-        middleLayer.addStyleName("login-panel");
+//        middleLayer.addStyleName("login-panel");
 
         init(middleLayer);
 
         inputBoxes = new FormLayout();
         buttonsLayout = new HorizontalLayout();
 
-        inputBoxes.addStyleName("form-centered");
+//        inputBoxes.addStyleName("form-centered");
 
         welcomeLabel = new Label("<p align='center'><b>Create an account...</b></p>");
-        welcomeLabel.addStyleName("caption-label");
+//        welcomeLabel.addStyleName("caption-label");
         welcomeLabel.setContentMode(ContentMode.HTML);
 
         middleLayer.addComponent(welcomeLabel);
