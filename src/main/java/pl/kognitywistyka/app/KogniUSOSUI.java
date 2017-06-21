@@ -1,5 +1,6 @@
 package pl.kognitywistyka.app;
 
+import javax.inject.Inject;
 import javax.servlet.annotation.WebServlet;
 
 import com.fasterxml.classmate.AnnotationConfiguration;
@@ -24,6 +25,9 @@ import java.util.List;
  * The UI is initialized using {@link #init(VaadinRequest)}. This method is intended to be
  * overridden to add component to the user interface and initialize non-component functionality.
  */
+
+
+
 @Theme("kogniusos")
 public class KogniUSOSUI extends UI {
 
@@ -40,6 +44,9 @@ public class KogniUSOSUI extends UI {
 //
 //
 //    }
+
+    @Inject
+    JsonService service;
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
