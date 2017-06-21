@@ -1,7 +1,10 @@
 package pl.kognitywistyka.app.course;
 
+import pl.kognitywistyka.app.user.Student;
+
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -20,21 +23,22 @@ public class Course {
     @Column(name = "NAME", nullable = false)
     private String courseName;
 
-    @OneToMany(targetEntity = CourseGroup.class, mappedBy = "course", cascade = CascadeType.ALL)
-    private Set<CourseGroup> groups;
-
-    @Column(name = "COORDINATOR")
-    private String coordinator;
-
-    @Column(name = "FACULTY") // I don't think we need to store this as a relation to a faculty-object, we only need to filter by this value;
+    @Column(name = "FACULTY")
     private String faculty;
 
     @Column(name = "SYLLABUS")
     private String syllabus;
 
-    public Course() {
+    @Column(name = "ACCEPTED")
+    private boolean accepted;
 
-    }
+    @Column(name = "BLACKLISTED")
+    private boolean blacklisted;
+
+    @ManyToMany(targetEntity = Student.class, cascade = CascadeType.ALL)
+    private Set<Student> participants = new HashSet<>();
+
+    public Course() {}
 
     public Course(String id, String courseName, String faculty) {
         setId(id);
@@ -58,22 +62,6 @@ public class Course {
         this.courseName = courseName;
     }
 
-    public Set<CourseGroup> getGroups() {
-        return groups;
-    }
-
-    public void setGroups(Set<CourseGroup> groups) {
-        this.groups = groups;
-    }
-
-    public String getCoordinator() {
-        return coordinator;
-    }
-
-    public void setCoordinator(String coordinator) {
-        this.coordinator = coordinator;
-    }
-
     public String getFaculty() {
         return faculty;
     }
@@ -90,10 +78,42 @@ public class Course {
         this.syllabus = syllabus;
     }
 
+    public Set<Student> getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(Set<Student> participants) {
+        this.participants = participants;
+    }
+
+    public boolean isAccepted() {
+        return accepted;
+    }
+
+    public void acceptCourse() {
+        this.accepted = true;
+    }
+
+    public void rejectCourse() {
+        this.accepted = false;
+    }
+
+    public boolean isBlacklisted() {
+        return blacklisted;
+    }
+
+    public void blacklist() {
+        this.blacklisted = true;
+    }
+
+    public void unblacklist() {
+        this.blacklisted = false;
+    }
+
     @Override
     public String toString() {
         //todo properer string, this one only for filtering testdata
-        String course = getId() + "|" + getCourseName() + "|" + getFaculty();
-        return course;
+        String courseAsString = getId() + "|" + getCourseName() + "|" + getFaculty();
+        return courseAsString;
     }
 }

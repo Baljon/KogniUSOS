@@ -1,58 +1,79 @@
 package pl.kognitywistyka.app.user;
 
+import pl.kognitywistyka.app.course.Course;
 import pl.kognitywistyka.app.course.CourseGroup;
-import pl.kognitywistyka.app.user.User;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
  * Created by wikto on 19.06.2017.
  */
 @Entity
-@DiscriminatorValue("STUDENT")
-public class Student extends User {
+@Table(name = "STUDENTS")
+public class Student {
+    //Students are identified (studentID) by their album number. Fake IDs can be injected by admins if necessary.
 
-    @Column(name="ALBUM_NUMBER", nullable = false)
-    private String albumNumber;
+    @Id
+    @Column(name="STUDENT_ID", nullable = false)
+    private String studentID;
 
-    @ManyToMany(targetEntity = CourseGroup.class, cascade = CascadeType.ALL)
-    @JoinTable(name = "GROUP_PARTICIPANTS", joinColumns = @JoinColumn(name = "PARTICIPANTS"), inverseJoinColumns = @JoinColumn(name="GROUP"))
-    private Set<CourseGroup> groups;
+    @Column(name = "STUDENT_FIRSTNAME", nullable = false)
+    private String firstName;
 
-    public Student() {
+    @Column(name = "STUDENT_LASTNAME", nullable = false)
+    private String lastName;
 
-    }
+    @ManyToMany(targetEntity = Course.class, cascade = CascadeType.ALL)
+    private Set<Course> courses = new HashSet<>();
 
-    public Student(String pesel,String firstName, String lastName) {
-        setId(pesel);
+    public Student() {}
+
+    public Student(String albumNo,String firstName, String lastName) {
+        setStudentID(albumNo);
         setFirstName(firstName);
         setLastName(lastName);
     }
 
-    public String getAlbumNumber() {
-        return albumNumber;
+    public String getStudentID() {
+        return studentID;
     }
 
-    public void setAlbumNumber(String albumNumber) {
-        this.albumNumber = albumNumber;
+    public void setStudentID(String albumNumber) {
+        this.studentID = albumNumber;
     }
 
-    public Set<CourseGroup> getGroups() {
-        return groups;
+    public Set<Course> getGroups() {
+        return courses;
     }
 
-    public void setGroups(Set<CourseGroup> groups) {
-        this.groups = groups;
+    public void setCourses(Set<Course> courses) {
+        this.courses = courses;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     @Override
     public String toString() {
-        return getId() + "|" + getFirstName() + "|" + getLastName();
+        return getStudentID() + "|" + getFirstName() + "|" + getLastName();
     }
 
-    public boolean equals(User user) {
-//        return getId().equals(user.getId());
-        return true;
+    public boolean equals(Student randomStudent) {
+        return this.getStudentID().equals(randomStudent.getStudentID());
     }
 }

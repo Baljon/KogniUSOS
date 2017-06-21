@@ -5,6 +5,8 @@ import javax.persistence.*;
 /**
  * Created by wikto on 19.06.2017.
  */
+
+//This class should supposedly be deprecated. We will hopefully never need a common denominator for students and admins.
 @Entity
 @Inheritance
 @DiscriminatorColumn(name = "USER_TYPE")
