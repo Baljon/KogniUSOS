@@ -87,7 +87,8 @@ public class LoginWindow extends CenteredWindow {
         });
 
         loginButton.addClickListener(event -> {
-            throw new NotImplementedException();
+            getUI().setContent(new MainWindow());
+            //TODO login logic
 //            if (AuthenticationService.validateLogin(userField.getValue(), passwordField.getValue())) {
 //                getUI().setContent(new MainWindow());
 //            } else {
