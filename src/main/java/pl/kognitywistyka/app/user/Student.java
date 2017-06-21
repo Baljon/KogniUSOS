@@ -24,6 +24,12 @@ public class Student extends User {
 
     }
 
+    public Student(String pesel,String firstName, String lastName) {
+        setId(pesel);
+        setFirstName(firstName);
+        setLastName(lastName);
+    }
+
     public String getAlbumNumber() {
         return albumNumber;
     }
@@ -38,5 +44,10 @@ public class Student extends User {
 
     public void setGroups(Set<CourseGroup> groups) {
         this.groups = groups;
+    }
+
+    @Override
+    public String toString() {
+        return getId() + "|" + getFirstName() + "|" + getLastName();
     }
 }

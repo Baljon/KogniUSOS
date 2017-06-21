@@ -15,6 +15,8 @@ public class Course {
     @Column(name = "ID", nullable = false)
     private String id; //should be course's USOS code
 
+//    private int localId;
+
     @Column(name = "NAME", nullable = false)
     private String courseName;
 
@@ -32,6 +34,12 @@ public class Course {
 
     public Course() {
 
+    }
+
+    public Course(String id, String courseName, String faculty) {
+        setId(id);
+        setCourseName(courseName);
+        setFaculty(faculty);
     }
 
     public String getId() {
@@ -80,5 +88,12 @@ public class Course {
 
     public void setSyllabus(String syllabus) {
         this.syllabus = syllabus;
+    }
+
+    @Override
+    public String toString() {
+        //todo properer string, this one only for filtering testdata
+        String course = getId() + "|" + getCourseName() + "|" + getFaculty();
+        return course;
     }
 }

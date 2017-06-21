@@ -27,6 +27,10 @@ public class AuthenticationService {
     public static void logout() {
     }
 
+    public static boolean isAdmin() {
+        return true;
+    }
+
     //TODO
 
 }
