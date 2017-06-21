@@ -1,5 +1,6 @@
 package pl.kognitywistyka.app.ui;
 
+import com.vaadin.server.Page;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.*;
 import pl.kognitywistyka.app.security.AuthenticationService;
@@ -29,8 +30,8 @@ public abstract class CenteredWindow extends VerticalLayout {
 
         topMenu = new HorizontalLayout();
         topMenu.addStyleName("kogniusos-top");
-        topMenu.setHeight("25px");
-        topMenu.setWidth("100%");
+        topMenu.setHeight("15px");
+        topMenu.setWidth("60%");
 
         topSpacer = new VerticalLayout();
         bottomSpacer = new VerticalLayout();
@@ -40,12 +41,13 @@ public abstract class CenteredWindow extends VerticalLayout {
 
         addComponent(topSpacer);
         addComponent(topMenu);
+        setComponentAlignment(topMenu, Alignment.MIDDLE_CENTER);
         addComponent(middleLayer);
         addComponent(bottomSpacer);
 
-        setExpandRatio(topSpacer, 0.1f);
-        setExpandRatio(middleLayer, 1.5f);
-        setExpandRatio(bottomSpacer, 0.25f);
+        setExpandRatio(topSpacer, 0.05f);
+        setExpandRatio(middleLayer, 0.9f);
+        setExpandRatio(bottomSpacer, 0.05f);
 
         setComponentAlignment(middleLayer, Alignment.MIDDLE_CENTER);
 
@@ -66,7 +68,7 @@ public abstract class CenteredWindow extends VerticalLayout {
             Button userNameButton = new Button(loginInfo.getFirstName() + loginInfo.getLastName());
 
             userNameButton.addClickListener(event -> {
-               UI.getCurrent().setContent(new UserWindow(loginInfo));
+               UI.getCurrent().setContent(new UserWindow(loginInfo, getUI().getCurrent().getContent()));
             });
 
             topMenu.addComponent(userNameButton);
@@ -97,6 +99,17 @@ public abstract class CenteredWindow extends VerticalLayout {
 
             topMenu.addComponent(loginButton);
             topMenu.setComponentAlignment(loginButton, Alignment.TOP_RIGHT);
+        }
+    }
+
+    public void showNotification(boolean value) {
+        if(value) {
+            Notification notification = new Notification("Ok, it's done!");
+            notification.show(Page.getCurrent());
+        } else {
+            Notification notification = new Notification("Something went wrong!",
+                    "If problem persists, contact administrator.", Notification.Type.ERROR_MESSAGE);
+            notification.show(Page.getCurrent());
         }
     }
 

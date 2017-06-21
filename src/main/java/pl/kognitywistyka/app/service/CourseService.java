@@ -52,6 +52,11 @@ public class CourseService {
         return arrayList;
     }
 
-    public static void register(Set<Course> selectedCourses) {
+    public static boolean register(Set<Course> selectedCourses) {
+        return false;
+    }
+
+    public static boolean register(Course course) {
+        return false;
     }
 }

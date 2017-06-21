@@ -64,8 +64,8 @@ public class StudentService {
         return true;
     }
 
-    public boolean delete(Set<User> users) {
-        for(User user : users) {
+    public boolean delete(Set<User> selectedUsers) {
+        for(User user : selectedUsers) {
             users.remove(user.getId());
         }
         return true;
