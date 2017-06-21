@@ -1,14 +1,18 @@
 package pl.kognitywistyka.app.ui;
 
+import com.vaadin.event.dd.acceptcriteria.Not;
 import com.vaadin.icons.VaadinIcons;
+import com.vaadin.server.Page;
 import com.vaadin.ui.*;
+import pl.kognitywistyka.app.security.AuthenticationService;
+import pl.kognitywistyka.app.service.CourseService;
 import pl.kognitywistyka.app.service.StudentService;
 import pl.kognitywistyka.app.user.User;
 
 /**
  * Created by wikto on 19.06.2017.
  */
-public class UserWindow extends CenteredWindow{
+public class UserWindow extends ItemWindow {
 
     //Layouts
     private VerticalLayout middleLayer;
@@ -27,10 +31,11 @@ public class UserWindow extends CenteredWindow{
     //Buttons
     private Button previousWindowButton;
     private Button deleteButton;
+    private Button addCoursesButton;
 
     //Variables
     private User user;
-    private StudentsWindow previousWindow;
+    private GridWindow previousWindow;
 
     public UserWindow(User user, Component previousWindow) {
         setUser(user);
@@ -91,17 +96,64 @@ public class UserWindow extends CenteredWindow{
         middleLayer.setComponentAlignment(buttonLayout, Alignment.BOTTOM_LEFT);
 
         deleteButton = new Button("Delete account");
+        //it's absolutely not safe todo should add some prompt asking if I'm sure
         deleteButton.addClickListener(event -> {
             StudentService studentService = StudentService.getInstance();
             boolean deleted = studentService.delete(user);
             showNotification(deleted);
-            if(deleted) {
+            if (deleted) {
                 previousWindow.updateGrid();
                 getUI().getCurrent().setContent(previousWindow);
             }
         });
 
-        buttonLayout.addComponent(deleteButton);
+        if (!AuthenticationService.isAdmin()) {
+            buttonLayout.addComponent(deleteButton);
+        }
+
+        if (AuthenticationService.isAdmin() && AuthenticationService.getCurrentLoginInfo().equals(user)) {
+            addCoursesButton = new Button("Add courses");
+            addCoursesButton.addClickListener(event -> {
+                //Initializing submit window
+                Window window = new Window("Add courses");
+                window.setWidth("300px");
+                window.setModal(true);
+
+                //Initializing layout
+                FormLayout content = new FormLayout();
+                content.setMargin(true);
+
+                //Initializing info button
+                Button infoButton = new Button(VaadinIcons.INFO_CIRCLE_O);
+                infoButton.addClickListener(infoEvent -> {
+                    Notification notification = new Notification("Please, separate each code with a comma.",
+                            "Courses will be downloaded from USOSweb UW and added to the database. \n" +
+                                    "You may browse them in the course grid.", Notification.Type.ASSISTIVE_NOTIFICATION);
+                    notification.show(getUI().getUI().getPage());
+                });
+                content.addComponent(infoButton);
+                content.setComponentAlignment(infoButton, Alignment.TOP_LEFT);
+
+                //Initializing codes field
+                TextField codesField = new TextField("Enter codes: ");
+                content.addComponent(codesField);
+
+                //Initializing submit button
+                Button submitButton = new Button("Submit");
+                submitButton.addClickListener(submitEvent -> {
+                    boolean submitted = CourseService.addCourses(codesField.getValue());
+                    showNotification(submitted);
+                    window.close();
+                });
+                content.addComponent(submitButton);
+                content.setComponentAlignment(submitButton, Alignment.BOTTOM_CENTER);
+                window.setContent(content);
+                getUI().getUI().addWindow(window);
+            });
+
+            buttonLayout.addComponent(addCoursesButton);
+        }
+
 
 
         initTop();
@@ -120,6 +172,6 @@ public class UserWindow extends CenteredWindow{
     }
 
     public void setPreviousWindow(Component previousWindow) {
-        this.previousWindow = (StudentsWindow) previousWindow;
+        this.previousWindow = (GridWindow) previousWindow;
     }
 }

@@ -1,5 +1,6 @@
 package pl.kognitywistyka.app.security;
 
+import pl.kognitywistyka.app.user.Pokropski;
 import pl.kognitywistyka.app.user.Student;
 import pl.kognitywistyka.app.user.User;
 
@@ -12,7 +13,7 @@ public class AuthenticationService {
 
     public static User getCurrentLoginInfo() {
         //TODO
-        return null;
+        return new Pokropski();
     }
 
     public void setCurrentLoginInfo(User currentLoginInfo) {

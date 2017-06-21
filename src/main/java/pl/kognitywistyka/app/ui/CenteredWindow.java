@@ -3,8 +3,11 @@ package pl.kognitywistyka.app.ui;
 import com.vaadin.server.Page;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.*;
+import pl.kognitywistyka.app.course.Course;
 import pl.kognitywistyka.app.security.AuthenticationService;
 import pl.kognitywistyka.app.user.User;
+
+import java.util.List;
 
 /**
  * Created by wikto on 19.06.2017.

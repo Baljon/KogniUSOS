@@ -14,7 +14,7 @@ import java.util.Set;
 /**
  * Created by wikto on 21.06.2017.
  */
-public class StudentsWindow extends CenteredWindow {
+public class StudentsWindow extends GridWindow<User> {
 
     //Layouts
     private VerticalLayout middleLayer;
@@ -22,7 +22,7 @@ public class StudentsWindow extends CenteredWindow {
     private HorizontalLayout buttonsLayout;
 
     //Grid
-    private Grid<User> usersGrid;
+    private Grid<User> grid;
 
     //Filter
     private TextField filterField;
@@ -77,22 +77,22 @@ public class StudentsWindow extends CenteredWindow {
         middleLayer.setExpandRatio(filterLayout, 0.1f);
 
         //Initializing grid
-        usersGrid = new Grid<>(User.class);
-        usersGrid.setSizeFull();
+        grid = new Grid<>(User.class);
+        grid.setSizeFull();
 
-        usersGrid.addColumn(User::getId).setCaption("PESEL");
-        usersGrid.addColumn(User::getFirstName).setCaption("First Name");
-        usersGrid.addColumn(User::getLastName).setCaption("Last Name");
-        usersGrid.setColumns("id", "firstName", "lastName");
+        grid.addColumn(User::getId).setCaption("PESEL");
+        grid.addColumn(User::getFirstName).setCaption("First Name");
+        grid.addColumn(User::getLastName).setCaption("Last Name");
+        grid.setColumns("id", "firstName", "lastName");
 
-        usersGrid.setSelectionMode(Grid.SelectionMode.MULTI);
+        grid.setSelectionMode(Grid.SelectionMode.MULTI);
 
-        usersGrid.addColumn(event -> "View account details",
+        grid.addColumn(event -> "View account details",
                 new ButtonRenderer<>(clickEvent -> {
                     getUI().getCurrent().setContent(new UserWindow(clickEvent.getItem(), getUI().getCurrent().getContent()));
                 }));
 
-        usersGrid.addColumn(event -> "Delete account",
+        grid.addColumn(event -> "Delete account",
                 new ButtonRenderer<>(clickEvent -> {
                     StudentService studentService = StudentService.getInstance();
                     boolean deleted = studentService.delete(clickEvent.getItem());
@@ -100,14 +100,14 @@ public class StudentsWindow extends CenteredWindow {
                     updateGrid();
                 }));
 
-        usersGrid.addSelectionListener(event -> {
+        grid.addSelectionListener(event -> {
             selectedStudents = event.getAllSelectedItems();
             deleteButton.setEnabled(selectedStudents.size() > 0);
         });
 
-        middleLayer.addComponent(usersGrid);
-        middleLayer.setComponentAlignment(usersGrid, Alignment.MIDDLE_LEFT);
-        middleLayer.setExpandRatio(usersGrid, 0.8f);
+        middleLayer.addComponent(grid);
+        middleLayer.setComponentAlignment(grid, Alignment.MIDDLE_LEFT);
+        middleLayer.setExpandRatio(grid, 0.8f);
 
         updateGrid();
 
@@ -146,7 +146,7 @@ public class StudentsWindow extends CenteredWindow {
     public void updateGrid() {
         StudentService studentService = StudentService.getInstance();
         List<User> usersList = studentService.findAll(filterField.getValue());
-        usersGrid.setItems(usersList);
+        grid.setItems(usersList);
     }
 
 }

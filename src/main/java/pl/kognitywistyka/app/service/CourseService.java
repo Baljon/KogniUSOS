@@ -59,4 +59,8 @@ public class CourseService {
     public static boolean register(Course course) {
         return false;
     }
+
+    public static boolean addCourses(String value) {
+        return false;
+    }
 }

@@ -1,26 +1,21 @@
 package pl.kognitywistyka.app.ui;
 
 import com.vaadin.icons.VaadinIcons;
-import com.vaadin.server.FontAwesome;
-import com.vaadin.server.Page;
 import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.ui.*;
-import com.vaadin.ui.components.grid.MultiSelectionModel;
 import com.vaadin.ui.renderers.ButtonRenderer;
 import com.vaadin.ui.themes.ValoTheme;
 import pl.kognitywistyka.app.course.Course;
 import pl.kognitywistyka.app.security.AuthenticationService;
 import pl.kognitywistyka.app.service.CourseService;
 
-import javax.jnlp.PersistenceService;
-import javax.xml.soap.Text;
 import java.util.List;
 import java.util.Set;
 
 /**
  * Created by wikto on 19.06.2017.
  */
-public class MainWindow extends CenteredWindow {
+public class MainWindow extends GridWindow<Course> {
 
 
     //Layouts
@@ -29,7 +24,7 @@ public class MainWindow extends CenteredWindow {
     private HorizontalLayout buttonsLayout;
 
     //Grid
-    private Grid<Course> courseGrid;
+    private Grid<Course> grid;
 
     //Filter
     private TextField filterField;
@@ -88,27 +83,27 @@ public class MainWindow extends CenteredWindow {
         middleLayer.setExpandRatio(filterLayout, 0.1f);
 
         //Initializing grid
-        courseGrid = new Grid<>(Course.class);
+        grid = new Grid<>(Course.class);
 
-        courseGrid.addColumn(Course::getId).setCaption("USOS code");
-        courseGrid.addColumn(Course::getCourseName).setCaption("Course Name");
-        courseGrid.addColumn(Course::getFaculty).setCaption("Faculty");
-        courseGrid.setColumns("id", "courseName", "faculty");
+        grid.addColumn(Course::getId).setCaption("USOS code");
+        grid.addColumn(Course::getCourseName).setCaption("Course Name");
+        grid.addColumn(Course::getFaculty).setCaption("Faculty");
+        grid.setColumns("id", "courseName", "faculty");
 
-        courseGrid.setSelectionMode(Grid.SelectionMode.MULTI);
+        grid.setSelectionMode(Grid.SelectionMode.MULTI);
 
-        courseGrid.addColumn(event -> "View course",
+        grid.addColumn(event -> "View course",
                 new ButtonRenderer<>(clickEvent ->
                         getUI().getCurrent().setContent(new CourseWindow(clickEvent.getItem(), getUI().getCurrent().getContent()))));
 
-        courseGrid.addSelectionListener(event -> {
+        grid.addSelectionListener(event -> {
             selectedCourses = event.getAllSelectedItems();
             registerButton.setEnabled(selectedCourses.size()>0);
         });
 
-        middleLayer.addComponent(courseGrid);
-        middleLayer.setComponentAlignment(courseGrid, Alignment.MIDDLE_LEFT);
-        middleLayer.setExpandRatio(courseGrid, 0.8f);
+        middleLayer.addComponent(grid);
+        middleLayer.setComponentAlignment(grid, Alignment.MIDDLE_LEFT);
+        middleLayer.setExpandRatio(grid, 0.8f);
 
         updateGrid();
 
@@ -141,13 +136,62 @@ public class MainWindow extends CenteredWindow {
         middleLayer.setComponentAlignment(buttonsLayout, Alignment.BOTTOM_LEFT);
         middleLayer.setExpandRatio(buttonsLayout, 0.1f);
 
+        //todo should I leave it here?
+        Button addCoursesButton;
+
+
+        if (AuthenticationService.isAdmin()) {
+            addCoursesButton = new Button("Add courses");
+            addCoursesButton.addClickListener(event -> {
+                //Initializing submit window
+                Window window = new Window("Add courses");
+                window.setWidth("300px");
+                window.setModal(true);
+
+                //Initializing layout
+                FormLayout content = new FormLayout();
+                content.setMargin(true);
+
+                //Initializing info button
+                Button infoButton = new Button(VaadinIcons.INFO_CIRCLE_O);
+                infoButton.addClickListener(infoEvent -> {
+                    Notification notification = new Notification("Please, separate each code with a comma.",
+                            "Courses will be downloaded from USOSweb UW and added to the database. \n" +
+                                    "You may browse them in the course grid.", Notification.Type.ASSISTIVE_NOTIFICATION);
+                    notification.show(getUI().getUI().getPage());
+                });
+                content.addComponent(infoButton);
+                content.setComponentAlignment(infoButton, Alignment.TOP_LEFT);
+
+                //Initializing codes field
+                TextField codesField = new TextField("Enter codes: ");
+                content.addComponent(codesField);
+
+                //Initializing submit button
+                Button submitButton = new Button("Submit");
+                submitButton.addClickListener(submitEvent -> {
+                    boolean submitted = CourseService.addCourses(codesField.getValue());
+                    String object = codesField.getValue();
+                    showNotification(submitted);
+                    window.close();
+                    getUI().getCurrent().setContent(new TextWindow(object));
+                });
+                content.addComponent(submitButton);
+                content.setComponentAlignment(submitButton, Alignment.BOTTOM_CENTER);
+                window.setContent(content);
+                getUI().getUI().addWindow(window);
+            });
+
+            buttonsLayout.addComponent(addCoursesButton);
+        }
+
         //Initializing top menu
         initTop();
     }
 
     public void updateGrid() {
         List<Course> courses = courseService.findAll(filterField.getValue());
-        courseGrid.setItems(courses);
+        grid.setItems(courses);
     }
 
 }

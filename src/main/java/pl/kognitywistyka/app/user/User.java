@@ -46,4 +46,7 @@ public abstract class User {
         this.lastName = lastName;
     }
 
+    public abstract String toString();
+
+    public abstract boolean equals(User user);
 }
