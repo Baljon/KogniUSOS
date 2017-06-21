@@ -19,9 +19,6 @@
           <element id="library" level="project" name="Maven: com.vaadin.external.slf4j:vaadin-slf4j-jdk14:1.6.1" />
           <element id="library" level="project" name="Maven: com.vaadin:vaadin-client-compiled:8.0.6" />
           <element id="library" level="project" name="Maven: com.vaadin:vaadin-themes:8.0.6" />
-          <element id="library" level="project" name="Maven: com.vaadin:vaadin-cdi:2.0.0" />
-          <element id="library" level="project" name="Maven: org.apache.deltaspike.core:deltaspike-core-api:1.7.2" />
-          <element id="library" level="project" name="Maven: org.apache.deltaspike.core:deltaspike-core-impl:1.7.2" />
           <element id="library" level="project" name="Maven: org.hibernate:hibernate-core:5.2.10.Final" />
           <element id="library" level="project" name="Maven: org.jboss.logging:jboss-logging:3.3.0.Final" />
           <element id="library" level="project" name="Maven: org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final" />

@@ -3,6 +3,7 @@ package pl.kognitywistyka.app.ui;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.ui.*;
 import pl.kognitywistyka.app.course.Course;
+import pl.kognitywistyka.app.security.AuthenticationService;
 import pl.kognitywistyka.app.service.CourseService;
 
 /**
@@ -32,7 +33,7 @@ public class CourseWindow extends ItemWindow {
     //Variables
     private Course course;
     private GridWindow previousWindow;
-    private Button registerButton;
+    private Button registerDeleteButton;
 
     public CourseWindow(Course course, Component previousWindow) {
         setCourse(course);
@@ -94,13 +95,26 @@ public class CourseWindow extends ItemWindow {
         middleLayer.addComponent(buttonLayout);
         middleLayer.setComponentAlignment(buttonLayout, Alignment.BOTTOM_LEFT);
 
-        registerButton = new Button("Register");
-        registerButton.addClickListener(event -> {
-            boolean registered = CourseService.register(course);
-            showNotification(registered);
-        });
+        if(!AuthenticationService.isAdmin()) {
+            registerDeleteButton = new Button("Register");
+            registerDeleteButton.addClickListener(event -> {
+                boolean registered = CourseService.register(course);
+                showNotification(registered);
+            });
+        } else {
+            registerDeleteButton = new Button("Delete");
+            registerDeleteButton.addClickListener(event -> {
+                CourseService courseService = CourseService.getInstance();
+                boolean deleted = courseService.delete(course);
+                showNotification(deleted);
+                if(deleted) {
+                    previousWindow.updateGrid();
+                    getUI().getCurrent().setContent(previousWindow);
+                }
+            });
+        }
 
-        buttonLayout.addComponent(registerButton);
+        buttonLayout.addComponent(registerDeleteButton);
         middleLayer.addComponent(buttonLayout);
         middleLayer.setComponentAlignment(buttonLayout, Alignment.BOTTOM_LEFT);
 

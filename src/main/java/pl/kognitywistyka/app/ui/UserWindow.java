@@ -1,8 +1,6 @@
 package pl.kognitywistyka.app.ui;
 
-import com.vaadin.event.dd.acceptcriteria.Not;
 import com.vaadin.icons.VaadinIcons;
-import com.vaadin.server.Page;
 import com.vaadin.ui.*;
 import pl.kognitywistyka.app.security.AuthenticationService;
 import pl.kognitywistyka.app.service.CourseService;
@@ -20,7 +18,7 @@ public class UserWindow extends ItemWindow {
     private CssLayout albumNumberLayout;
     private CssLayout emailLayout;
 
-    private HorizontalLayout buttonLayout;
+    private HorizontalLayout buttonsLayout;
 
     //Labels
     //todo lol, vaadin, seriously, only labels?
@@ -84,16 +82,16 @@ public class UserWindow extends ItemWindow {
 
 
         //Initializing button
-        buttonLayout = new HorizontalLayout();
+        buttonsLayout = new HorizontalLayout();
 
-        previousWindowButton = new Button("Return to course list", VaadinIcons.ANGLE_LEFT);
+        previousWindowButton = new Button("Return", VaadinIcons.ANGLE_LEFT);
         previousWindowButton.addClickListener(event -> {
             getUI().getCurrent().setContent(previousWindow);
         });
 
-        buttonLayout.addComponent(previousWindowButton);
-        middleLayer.addComponent(buttonLayout);
-        middleLayer.setComponentAlignment(buttonLayout, Alignment.BOTTOM_LEFT);
+        buttonsLayout.addComponent(previousWindowButton);
+        middleLayer.addComponent(buttonsLayout);
+        middleLayer.setComponentAlignment(buttonsLayout, Alignment.BOTTOM_LEFT);
 
         deleteButton = new Button("Delete account");
         //it's absolutely not safe todo should add some prompt asking if I'm sure
@@ -107,8 +105,10 @@ public class UserWindow extends ItemWindow {
             }
         });
 
-        if (!AuthenticationService.isAdmin()) {
-            buttonLayout.addComponent(deleteButton);
+        //todo when Authentication will be ready change the if statement to commented (admin cannot delete his account!)
+//        if (!AuthenticationService.isAdmin() && AuthenticationService.getCurrentLoginInfo().equals(user)) {
+        if(true) {
+            buttonsLayout.addComponent(deleteButton);
         }
 
         if (AuthenticationService.isAdmin() && AuthenticationService.getCurrentLoginInfo().equals(user)) {
@@ -124,15 +124,13 @@ public class UserWindow extends ItemWindow {
                 content.setMargin(true);
 
                 //Initializing info button
-                Button infoButton = new Button(VaadinIcons.INFO_CIRCLE_O);
-                infoButton.addClickListener(infoEvent -> {
-                    Notification notification = new Notification("Please, separate each code with a comma.",
-                            "Courses will be downloaded from USOSweb UW and added to the database. \n" +
-                                    "You may browse them in the course grid.", Notification.Type.ASSISTIVE_NOTIFICATION);
-                    notification.show(getUI().getUI().getPage());
-                });
-                content.addComponent(infoButton);
-                content.setComponentAlignment(infoButton, Alignment.TOP_LEFT);
+                VerticalLayout popupContent = new VerticalLayout();
+                popupContent.addComponent(new Label("Please, separate each code with a comma."));
+                popupContent.addComponent(new Label("Courses will be downloaded from USOSweb UW and added to the database."));
+                popupContent.addComponent(new Label("You may browse them in the course grid."));
+                PopupView popup = new PopupView("Info", popupContent);
+                content.addComponent(popup);
+                popup.setHideOnMouseOut(false);
 
                 //Initializing codes field
                 TextField codesField = new TextField("Enter codes: ");
@@ -142,8 +140,8 @@ public class UserWindow extends ItemWindow {
                 Button submitButton = new Button("Submit");
                 submitButton.addClickListener(submitEvent -> {
                     boolean submitted = CourseService.addCourses(codesField.getValue());
-                    showNotification(submitted);
                     window.close();
+                    showNotification(submitted);
                 });
                 content.addComponent(submitButton);
                 content.setComponentAlignment(submitButton, Alignment.BOTTOM_CENTER);
@@ -151,7 +149,47 @@ public class UserWindow extends ItemWindow {
                 getUI().getUI().addWindow(window);
             });
 
-            buttonLayout.addComponent(addCoursesButton);
+            buttonsLayout.addComponent(addCoursesButton);
+        }
+        else if (!AuthenticationService.isAdmin() && AuthenticationService.getCurrentLoginInfo().equals(user)) {
+            addCoursesButton = new Button("Propose courses");
+            addCoursesButton.addClickListener(event -> {
+                //Initializing submit window
+                Window window = new Window("Propose courses");
+                window.setWidth("300px");
+                window.setModal(true);
+
+                //Initializing layout
+                FormLayout content = new FormLayout();
+                content.setMargin(true);
+
+                //Initializing info button
+                VerticalLayout popupContent = new VerticalLayout();
+                popupContent.addComponent(new Label("Please, separate each code with a comma."));
+                popupContent.addComponent(new Label("Courses must be accepted by an admin."));
+                popupContent.addComponent(new Label("Please, check in the course list, you won't be notified."));
+                PopupView popup = new PopupView("Info", popupContent);
+                content.addComponent(popup);
+                popup.setHideOnMouseOut(false);
+
+                //Initializing codes field
+                TextField codesField = new TextField("Enter codes: ");
+                content.addComponent(codesField);
+
+                //Initializing submit button
+                Button submitButton = new Button("Submit");
+                submitButton.addClickListener(submitEvent -> {
+                    boolean submitted = CourseService.proposeCourses(codesField.getValue());
+                    window.close();
+                    showNotification(submitted);
+                });
+                content.addComponent(submitButton);
+                content.setComponentAlignment(submitButton, Alignment.BOTTOM_CENTER);
+                window.setContent(content);
+                getUI().getUI().addWindow(window);
+            });
+
+            buttonsLayout.addComponent(addCoursesButton);
         }
 
 

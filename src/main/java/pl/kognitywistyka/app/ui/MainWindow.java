@@ -31,7 +31,7 @@ public class MainWindow extends GridWindow<Course> {
     private Button clearFilterFieldButton;
 
     //Button
-    private Button registerButton;
+    private Button registerDeleteButton;
     private Button studentsButton;
 
     //variables
@@ -92,13 +92,13 @@ public class MainWindow extends GridWindow<Course> {
 
         grid.setSelectionMode(Grid.SelectionMode.MULTI);
 
-        grid.addColumn(event -> "View course",
+        grid.addColumn(event -> "View",
                 new ButtonRenderer<>(clickEvent ->
                         getUI().getCurrent().setContent(new CourseWindow(clickEvent.getItem(), getUI().getCurrent().getContent()))));
 
         grid.addSelectionListener(event -> {
             selectedCourses = event.getAllSelectedItems();
-            registerButton.setEnabled(selectedCourses.size()>0);
+            registerDeleteButton.setEnabled(selectedCourses.size()>0);
         });
 
         middleLayer.addComponent(grid);
@@ -110,16 +110,25 @@ public class MainWindow extends GridWindow<Course> {
         //Inittializing buttons
         buttonsLayout = new HorizontalLayout();
 
-        registerButton = new Button("Register to Selected Courses");
+        if(!AuthenticationService.isAdmin()) {
+            registerDeleteButton = new Button("Register to Selected Courses");
 
-        registerButton.addClickListener(event -> {
-            boolean registered = courseService.register(selectedCourses);
-            showNotification(registered);
-        });
+            registerDeleteButton.addClickListener(event -> {
+                boolean registered = courseService.register(selectedCourses);
+                showNotification(registered);
+            });
+        } else {
+            registerDeleteButton = new Button("Delete Selected Courses");
 
-        registerButton.setEnabled(false);
+            registerDeleteButton.addClickListener(event -> {
+                boolean deleted = courseService.delete(selectedCourses);
+                showNotification(deleted);
+                updateGrid();
+            });
+        }
 
-        buttonsLayout.addComponent(registerButton);
+        registerDeleteButton.setEnabled(false);
+        buttonsLayout.addComponent(registerDeleteButton);
 
         //todo am I putting stuff into logic that should be handled by db?
         if(AuthenticationService.isAdmin()) {
@@ -153,15 +162,13 @@ public class MainWindow extends GridWindow<Course> {
                 content.setMargin(true);
 
                 //Initializing info button
-                Button infoButton = new Button(VaadinIcons.INFO_CIRCLE_O);
-                infoButton.addClickListener(infoEvent -> {
-                    Notification notification = new Notification("Please, separate each code with a comma.",
-                            "Courses will be downloaded from USOSweb UW and added to the database. \n" +
-                                    "You may browse them in the course grid.", Notification.Type.ASSISTIVE_NOTIFICATION);
-                    notification.show(getUI().getUI().getPage());
-                });
-                content.addComponent(infoButton);
-                content.setComponentAlignment(infoButton, Alignment.TOP_LEFT);
+                VerticalLayout popupContent = new VerticalLayout();
+                popupContent.addComponent(new Label("Please, separate each code with a comma."));
+                popupContent.addComponent(new Label("Courses will be downloaded from USOSweb UW and added to the database."));
+                popupContent.addComponent(new Label("You may browse them in the course grid."));
+                PopupView popup = new PopupView("Info", popupContent);
+                content.addComponent(popup);
+                popup.setHideOnMouseOut(false);
 
                 //Initializing codes field
                 TextField codesField = new TextField("Enter codes: ");
@@ -172,8 +179,8 @@ public class MainWindow extends GridWindow<Course> {
                 submitButton.addClickListener(submitEvent -> {
                     boolean submitted = CourseService.addCourses(codesField.getValue());
                     String object = codesField.getValue();
-                    showNotification(submitted);
                     window.close();
+                    showNotification(submitted);
                     getUI().getCurrent().setContent(new TextWindow(object));
                 });
                 content.addComponent(submitButton);
