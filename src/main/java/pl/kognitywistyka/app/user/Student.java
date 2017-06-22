@@ -96,4 +96,10 @@ public class Student extends User {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public boolean isRegisteredTo(Course course) {
+//        return false;
+        return courses.contains(course);
+//        return true;
+    }
 }

@@ -1,6 +1,7 @@
 package pl.kognitywistyka.app.security;
 
 import pl.kognitywistyka.app.user.Pokropski;
+import pl.kognitywistyka.app.user.Student;
 import pl.kognitywistyka.app.user.User;
 
 /**
@@ -10,9 +11,9 @@ public class AuthenticationService {
 
     private User currentLoginInfo;
 
-    public static Pokropski getCurrentLoginInfo() {
+    public static User getCurrentLoginInfo() {
         //TODO
-        return new Pokropski("0","My","Name", "");
+        return new Student("0","My","Name");
     }
 
     public void setCurrentLoginInfo(User currentLoginInfo) {
@@ -29,7 +30,8 @@ public class AuthenticationService {
     }
 
     public static boolean isAdmin() {
-        return true;
+        if(getCurrentLoginInfo().getClass().equals(Student.class)) return false;
+        else return true;
     }
 
     //TODO

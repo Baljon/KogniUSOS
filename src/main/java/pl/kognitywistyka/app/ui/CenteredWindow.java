@@ -119,8 +119,9 @@ public abstract class CenteredWindow extends VerticalLayout {
         }
     }
 
-    public Window showWarning(Window window, List<Button> buttonList) {
+    public Window showWarning(List<Button> buttonList) {
         //Initializing warning window
+        Window window = new Window();
         window.setCaption("Warning!");
         window.setWidth("300px");
         window.setModal(true);
@@ -141,6 +142,7 @@ public abstract class CenteredWindow extends VerticalLayout {
         content.addComponent(label);
 
         for(Button button : buttonList) {
+            button.addClickListener(event -> window.close());
             buttonsLayout.addComponent(button);
         }
 

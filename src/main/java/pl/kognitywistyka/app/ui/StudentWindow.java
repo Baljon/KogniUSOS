@@ -101,18 +101,12 @@ public class StudentWindow extends ItemWindow {
         deleteButton = new Button("Delete account");
         deleteButton.setStyleName(ValoTheme.BUTTON_DANGER);
         deleteButton.addClickListener(event -> {
-            //Initializing warning window
-            Window window = new Window();
 
             //Initializing buttons
             Button cancelButton = new Button("Cancel");
             cancelButton.setStyleName(ValoTheme.BUTTON_FRIENDLY);
             Button sureButton = new Button("I'm sure");
             sureButton.setStyleName(ValoTheme.BUTTON_DANGER);
-
-            cancelButton.addClickListener(clickEvent -> {
-                window.close();
-            });
 
             sureButton.addClickListener(clickEvent -> {
                 StudentService studentService = StudentService.getInstance();
@@ -128,7 +122,6 @@ public class StudentWindow extends ItemWindow {
                         getUI().getCurrent().setContent(new LoginWindow());
                     }
                 }
-                window.close();
                 showNotification(deleted);
             });
 
@@ -136,7 +129,7 @@ public class StudentWindow extends ItemWindow {
             buttonsList.add(cancelButton);
             buttonsList.add(sureButton);
 
-            getUI().getUI().addWindow(showWarning(window, buttonsList));
+            getUI().getUI().addWindow(showWarning(buttonsList));
         });
 
 
@@ -162,7 +155,8 @@ public class StudentWindow extends ItemWindow {
                 popupContent.addComponent(new Label("Please, separate each code with a comma."));
                 popupContent.addComponent(new Label("Courses will be downloaded from USOSweb UW and added to the database."));
                 popupContent.addComponent(new Label("You may browse them in the course grid."));
-                PopupView popup = new PopupView("Info", popupContent);
+                PopupView popup = new PopupView("Click", popupContent);
+                popup.setIcon(VaadinIcons.INFO_CIRCLE_O);
                 content.addComponent(popup);
                 popup.setHideOnMouseOut(false);
 
@@ -202,7 +196,8 @@ public class StudentWindow extends ItemWindow {
                 popupContent.addComponent(new Label("Please, separate each code with a comma."));
                 popupContent.addComponent(new Label("Courses must be accepted by an admin."));
                 popupContent.addComponent(new Label("Please, check in the course list, you won't be notified."));
-                PopupView popup = new PopupView("Info", popupContent);
+                PopupView popup = new PopupView("Click", popupContent);
+                popup.setIcon(VaadinIcons.INFO_CIRCLE_O);
                 content.addComponent(popup);
                 popup.setHideOnMouseOut(false);
 

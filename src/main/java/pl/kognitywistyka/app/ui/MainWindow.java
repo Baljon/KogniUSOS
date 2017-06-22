@@ -8,6 +8,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import pl.kognitywistyka.app.course.Course;
 import pl.kognitywistyka.app.security.AuthenticationService;
 import pl.kognitywistyka.app.service.CourseService;
+import pl.kognitywistyka.app.service.StudentService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,7 @@ public class MainWindow extends GridWindow<Course> {
     //Layouts
     private VerticalLayout middleLayer;
     private CssLayout filterLayout;
+    private HorizontalLayout superFilterLayout;
     private HorizontalLayout buttonsLayout;
 
     //Grid
@@ -30,19 +32,17 @@ public class MainWindow extends GridWindow<Course> {
     //Filter
     private TextField filterField;
     private Button clearFilterFieldButton;
+    private CheckBox showRegisteredCheckBox;
 
     //Button
     private Button registerDeleteButton;
-    private Button studentsButton;
+    private Button studentsOrMyCoursesButton;
 
     //variables
     //todo should it be here?
     private Set<Course> selectedCourses;
     private CourseService courseService = CourseService.getInstance();
 
-
-
-    //TODO
     public MainWindow() {
         init();
     }
@@ -62,6 +62,8 @@ public class MainWindow extends GridWindow<Course> {
         middleLayer.setHeight("600px");
 
         //Initializing filtering
+        superFilterLayout = new HorizontalLayout();
+
         filterLayout = new CssLayout();
         filterLayout.setSizeFull();
 
@@ -79,9 +81,19 @@ public class MainWindow extends GridWindow<Course> {
         filterLayout.addComponents(filterField, clearFilterFieldButton);
         filterLayout.setStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
 
-        middleLayer.addComponent(filterLayout);
-        middleLayer.setComponentAlignment(filterLayout, Alignment.TOP_LEFT);
-        middleLayer.setExpandRatio(filterLayout, 0.1f);
+        superFilterLayout.addComponent(filterLayout);
+        superFilterLayout.setComponentAlignment(filterLayout, Alignment.TOP_LEFT);
+
+        showRegisteredCheckBox = new CheckBox("Show courses I'm registered to");
+        showRegisteredCheckBox.setValue(true);
+        showRegisteredCheckBox.addValueChangeListener(event -> updateGrid());
+
+        superFilterLayout.addComponent(showRegisteredCheckBox);
+        superFilterLayout.setComponentAlignment(showRegisteredCheckBox, Alignment.MIDDLE_LEFT);
+
+        middleLayer.addComponent(superFilterLayout);
+        middleLayer.setComponentAlignment(superFilterLayout, Alignment.TOP_LEFT);
+        middleLayer.setExpandRatio(superFilterLayout, 0.1f);
 
         //Initializing grid
         grid = new Grid<>(Course.class);
@@ -115,8 +127,6 @@ public class MainWindow extends GridWindow<Course> {
             registerDeleteButton = new Button("Register to Selected Courses");
 
             registerDeleteButton.addClickListener(event -> {
-                //Initializing warning window
-                Window window = new Window();
 
                 //Initializing buttons
                 Button cancelButton = new Button("Cancel");
@@ -124,13 +134,8 @@ public class MainWindow extends GridWindow<Course> {
                 Button sureButton = new Button("I'm sure");
                 sureButton.setStyleName(ValoTheme.BUTTON_FRIENDLY);
 
-                cancelButton.addClickListener(clickEvent -> {
-                    window.close();
-                });
-
                 sureButton.addClickListener(clickEvent -> {
                     boolean registered = courseService.register(selectedCourses);
-                    window.close();
                     showNotification(registered);
                 });
 
@@ -138,15 +143,13 @@ public class MainWindow extends GridWindow<Course> {
                 buttonsList.add(cancelButton);
                 buttonsList.add(sureButton);
 
-                getUI().getUI().addWindow(showWarning(window, buttonsList));
+                getUI().getUI().addWindow(showWarning(buttonsList));
             });
         } else {
             registerDeleteButton = new Button("Delete Selected Courses");
             registerDeleteButton.setStyleName(ValoTheme.BUTTON_DANGER);
 
             registerDeleteButton.addClickListener(event -> {
-                //Initializing warning window
-                Window window = new Window();
 
                 //Initializing buttons
                 Button cancelButton = new Button("Cancel");
@@ -154,13 +157,8 @@ public class MainWindow extends GridWindow<Course> {
                 Button sureButton = new Button("I'm sure");
                 sureButton.setStyleName(ValoTheme.BUTTON_DANGER);
 
-                cancelButton.addClickListener(clickEvent -> {
-                    window.close();
-                });
-
                 sureButton.addClickListener(clickEvent -> {
                     boolean deleted = courseService.delete(selectedCourses);
-                    window.close();
                     updateGrid();
                     showNotification(deleted);
                 });
@@ -169,7 +167,7 @@ public class MainWindow extends GridWindow<Course> {
                 buttonsList.add(cancelButton);
                 buttonsList.add(sureButton);
 
-                getUI().getUI().addWindow(showWarning(window, buttonsList));
+                getUI().getUI().addWindow(showWarning(buttonsList));
             });
         }
 
@@ -178,14 +176,20 @@ public class MainWindow extends GridWindow<Course> {
 
         //todo am I putting stuff into logic that should be handled by db?
         if(AuthenticationService.isAdmin()) {
-            studentsButton = new Button("View students");
+            studentsOrMyCoursesButton = new Button("View students");
 
-            studentsButton.addClickListener(event -> {
+            studentsOrMyCoursesButton.addClickListener(event -> {
                 getUI().getCurrent().setContent(new StudentsWindow());
             });
+        } else {
+            studentsOrMyCoursesButton = new Button("View my courses");
 
-            buttonsLayout.addComponent(studentsButton);
+            studentsOrMyCoursesButton.addClickListener(event -> {
+                getUI().getCurrent().setContent(new StudentsCoursesWindow());
+            });
         }
+
+        buttonsLayout.addComponent(studentsOrMyCoursesButton);
 
         middleLayer.addComponent(buttonsLayout);
         middleLayer.setComponentAlignment(buttonsLayout, Alignment.BOTTOM_LEFT);
@@ -243,7 +247,7 @@ public class MainWindow extends GridWindow<Course> {
     }
 
     public void updateGrid() {
-        List<Course> courses = courseService.findAll(filterField.getValue());
+        List<Course> courses = courseService.findAll(filterField.getValue(), showRegisteredCheckBox.getValue());
         grid.setItems(courses);
     }
 

@@ -6,6 +6,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import pl.kognitywistyka.app.course.Course;
 import pl.kognitywistyka.app.security.AuthenticationService;
 import pl.kognitywistyka.app.service.CourseService;
+import pl.kognitywistyka.app.user.Student;
 import pl.kognitywistyka.app.user.User;
 
 import java.util.ArrayList;
@@ -99,62 +100,72 @@ public class CourseWindow extends ItemWindow {
         middleLayer.addComponent(buttonLayout);
         middleLayer.setComponentAlignment(buttonLayout, Alignment.BOTTOM_LEFT);
 
-        if(!AuthenticationService.isAdmin()) {
-            registerDeleteButton = new Button("Register");
-            registerDeleteButton.setStyleName(ValoTheme.BUTTON_FRIENDLY);
+        if (!AuthenticationService.isAdmin()) {
+            Student student = (Student) AuthenticationService.getCurrentLoginInfo();
+            if (!student.isRegisteredTo(course)) {
+                registerDeleteButton = new Button("Register");
+                registerDeleteButton.setStyleName(ValoTheme.BUTTON_FRIENDLY);
 
-            registerDeleteButton.addClickListener(event -> {
-                //Initializing warning window
-                Window window = new Window();
+                registerDeleteButton.addClickListener(event -> {
+                    //Initializing buttons
+                    Button cancelButton = new Button("Cancel");
+                    cancelButton.setStyleName(ValoTheme.BUTTON_DANGER);
+                    Button sureButton = new Button("I'm sure");
+                    sureButton.setStyleName(ValoTheme.BUTTON_FRIENDLY);
 
-                //Initializing buttons
-                Button cancelButton = new Button("Cancel");
-                cancelButton.setStyleName(ValoTheme.BUTTON_FRIENDLY);
-                Button sureButton = new Button("I'm sure");
-                sureButton.setStyleName(ValoTheme.BUTTON_DANGER);
+                    sureButton.addClickListener(clickEvent -> {
+                        boolean registered = CourseService.register(course);
+                        showNotification(registered);
+                    });
 
-                cancelButton.addClickListener(clickEvent -> {
-                    window.close();
+                    ArrayList<Button> buttonsList = new ArrayList<>();
+                    buttonsList.add(cancelButton);
+                    buttonsList.add(sureButton);
+
+                    getUI().getUI().addWindow(showWarning(buttonsList));
                 });
+            } else {
+                registerDeleteButton = new Button("Unregister");
+                registerDeleteButton.setStyleName(ValoTheme.BUTTON_DANGER);
 
-                sureButton.addClickListener(clickEvent -> {
-                    boolean registered = CourseService.register(course);
-                    window.close();
-                    showNotification(registered);
+                registerDeleteButton.addClickListener(event -> {
+                    //Initializing buttons
+                    Button cancelButton = new Button("Cancel");
+                    cancelButton.setStyleName(ValoTheme.BUTTON_FRIENDLY);
+                    Button sureButton = new Button("I'm sure");
+                    sureButton.setStyleName(ValoTheme.BUTTON_DANGER);
+
+                    sureButton.addClickListener(clickEvent -> {
+                        CourseService courseService = CourseService.getInstance();
+                        boolean registered = courseService.unregister(course);
+                        showNotification(registered);
+                    });
+
+                    ArrayList<Button> buttonsList = new ArrayList<>();
+                    buttonsList.add(cancelButton);
+                    buttonsList.add(sureButton);
+
+                    getUI().getUI().addWindow(showWarning(buttonsList));
                 });
-
-                ArrayList<Button> buttonsList = new ArrayList<>();
-                buttonsList.add(cancelButton);
-                buttonsList.add(sureButton);
-
-                getUI().getUI().addWindow(showWarning(window, buttonsList));
-            });
+            }
         } else {
             registerDeleteButton = new Button("Delete");
             registerDeleteButton.setStyleName(ValoTheme.BUTTON_DANGER);
 
             registerDeleteButton.addClickListener(event -> {
-                //Initializing warning window
-                Window window = new Window();
-
                 //Initializing buttons
                 Button cancelButton = new Button("Cancel");
                 cancelButton.setStyleName(ValoTheme.BUTTON_FRIENDLY);
                 Button sureButton = new Button("I'm sure");
                 sureButton.setStyleName(ValoTheme.BUTTON_DANGER);
 
-                cancelButton.addClickListener(clickEvent -> {
-                    window.close();
-                });
-
                 sureButton.addClickListener(clickEvent -> {
                     CourseService courseService = CourseService.getInstance();
                     boolean deleted = courseService.delete(course);
-                    if(deleted) {
+                    if (deleted) {
                         previousWindow.updateGrid();
                         getUI().getCurrent().setContent(previousWindow);
                     }
-                    window.close();
                     showNotification(deleted);
                 });
 
@@ -162,7 +173,7 @@ public class CourseWindow extends ItemWindow {
                 buttonsList.add(cancelButton);
                 buttonsList.add(sureButton);
 
-                getUI().getUI().addWindow(showWarning(window, buttonsList));
+                getUI().getUI().addWindow(showWarning(buttonsList));
             });
         }
 

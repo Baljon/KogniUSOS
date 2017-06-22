@@ -97,8 +97,6 @@ public class StudentsWindow extends GridWindow<User> {
 
         grid.addColumn(event -> "Delete",
                 new ButtonRenderer<>(clickEvent -> {
-                    //Initializing warning window
-                    Window window = new Window();
 
                     //Initializing buttons
                     Button cancelButton = new Button("Cancel");
@@ -107,23 +105,18 @@ public class StudentsWindow extends GridWindow<User> {
                     sureButton.setStyleName(ValoTheme.BUTTON_DANGER);
                     buttonsLayout.addComponents(cancelButton, sureButton);
 
-                    cancelButton.addClickListener(cancelEvent -> {
-                        window.close();
-                    });
-
                     sureButton.addClickListener(sureEvent -> {
                         StudentService studentService = StudentService.getInstance();
                         boolean deleted = studentService.delete(clickEvent.getItem());
                         showNotification(deleted);
                         updateGrid();
-                        window.close();
                     });
 
                     ArrayList<Button> buttonsList = new ArrayList<>();
                     buttonsList.add(cancelButton);
                     buttonsList.add(sureButton);
 
-                    getUI().getUI().addWindow(showWarning(window, buttonsList));
+                    getUI().getUI().addWindow(showWarning(buttonsList));
                 }));
 
         grid.addSelectionListener(event -> {
@@ -144,7 +137,6 @@ public class StudentsWindow extends GridWindow<User> {
         deleteButton.setStyleName(ValoTheme.BUTTON_DANGER);
 
         deleteButton.addClickListener(event -> {
-            Window window = new Window();
 
             //Initializing buttons
             Button cancelButton = new Button("Cancel");
@@ -153,23 +145,18 @@ public class StudentsWindow extends GridWindow<User> {
             sureButton.setStyleName(ValoTheme.BUTTON_DANGER);
             buttonsLayout.addComponents(cancelButton, sureButton);
 
-            cancelButton.addClickListener(cancelEvent -> {
-                window.close();
-            });
-
             sureButton.addClickListener(sureEvent -> {
                 StudentService studentService = StudentService.getInstance();
                 boolean deleted = studentService.delete(selectedStudents);
                 showNotification(deleted);
                 updateGrid();
-                window.close();
             });
 
             ArrayList<Button> buttonsList = new ArrayList<>();
             buttonsList.add(cancelButton);
             buttonsList.add(sureButton);
 
-            getUI().getUI().addWindow(showWarning(window, buttonsList));
+            getUI().getUI().addWindow(showWarning(buttonsList));
         });
 
         deleteButton.setEnabled(false);
