@@ -1,9 +1,9 @@
 package pl.kognitywistyka.app.ui;
 
+import com.vaadin.event.ShortcutAction;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.*;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.themes.ValoTheme;
 
 /**
  * Created by wikto on 19.06.2017.
@@ -73,6 +73,8 @@ public class LoginWindow extends CenteredWindow {
 
         //Initializing buttons
         loginButton = new Button("Sign in");
+        loginButton.setStyleName(ValoTheme.BUTTON_FRIENDLY);
+        loginButton.setClickShortcut(ShortcutAction.KeyCode.ENTER);
 //        reminderButton = new Button("Retrieve password");
         createAccount = new Button("Sign up");
 

@@ -3,8 +3,12 @@ package pl.kognitywistyka.app.ui;
 import com.vaadin.server.Page;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.*;
+import com.vaadin.ui.themes.ValoTheme;
 import pl.kognitywistyka.app.security.AuthenticationService;
+import pl.kognitywistyka.app.service.StudentService;
 import pl.kognitywistyka.app.user.User;
+
+import java.util.List;
 
 /**
  * Created by wikto on 19.06.2017.
@@ -113,6 +117,37 @@ public abstract class CenteredWindow extends VerticalLayout {
                     "If problem persists, contact administrator.", Notification.Type.ERROR_MESSAGE);
             notification.show(Page.getCurrent());
         }
+    }
+
+    public Window showWarning(Window window, List<Button> buttonList) {
+        //Initializing warning window
+        window.setCaption("Warning!");
+        window.setWidth("300px");
+        window.setModal(true);
+        window.setClosable(false);
+        window.setDraggable(false);
+        window.setResizable(false);
+        window.setStyleName(ValoTheme.NOTIFICATION_WARNING);
+
+        //Initializing layout
+        VerticalLayout content = new VerticalLayout();
+        content.setMargin(true);
+
+        HorizontalLayout buttonsLayout = new HorizontalLayout();
+
+        //Initializing label
+        Label label = new Label("Are you sure? <br> This change cannot be undone!", ContentMode.HTML);
+        label.setStyleName(ValoTheme.LABEL_FAILURE);
+        content.addComponent(label);
+
+        for(Button button : buttonList) {
+            buttonsLayout.addComponent(button);
+        }
+
+        content.addComponent(buttonsLayout);
+        content.setComponentAlignment(buttonsLayout, Alignment.BOTTOM_CENTER);
+        window.setContent(content);
+        return window;
     }
 
     public Component getMiddleLayer() {

@@ -1,7 +1,12 @@
 package pl.kognitywistyka.app.ui;
 
+import com.vaadin.event.ShortcutAction;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.*;
+import com.vaadin.ui.themes.ValoTheme;
+import pl.kognitywistyka.app.service.StudentService;
+import pl.kognitywistyka.app.ui.forms.CreateAccountForm;
+import pl.kognitywistyka.app.user.Student;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
@@ -11,23 +16,20 @@ public class CreateAccountWindow extends CenteredWindow {
 
     //Layouts
     private VerticalLayout middleLayer;
-    private FormLayout inputBoxes;
     private HorizontalLayout buttonsLayout;
 
     private Label welcomeLabel;
 
-    //TextFields
-    private TextField userField;
-    private TextField emailField;
-    private TextField firstNameField;
-    private TextField lastNameField;
-    private PasswordField passwordField;
-    private PasswordField confirmPasswordField;
-    private TextField albumNumberField;
+    //Form
+    private CreateAccountForm createAccountForm;
 
     //Buttons
     private Button backButton;
-    private Button addAccountButton;
+    private Button createAccountButton;
+
+    //Variables
+    private StudentService studentService = StudentService.getInstance();
+
 
     //Constructor
     public CreateAccountWindow() {
@@ -44,59 +46,49 @@ public class CreateAccountWindow extends CenteredWindow {
 
         init(middleLayer);
 
-        inputBoxes = new FormLayout();
-        buttonsLayout = new HorizontalLayout();
-
-//        inputBoxes.addStyleName("form-centered");
+        createAccountForm = new CreateAccountForm(new Student());
+//        createAccountForm.addStyleName("form-centered");
 
         welcomeLabel = new Label("<p align='center'><b>Create an account...</b></p>");
 //        welcomeLabel.addStyleName("caption-label");
         welcomeLabel.setContentMode(ContentMode.HTML);
 
         middleLayer.addComponent(welcomeLabel);
-        middleLayer.addComponent(inputBoxes);
-        middleLayer.addComponent(buttonsLayout);
+        middleLayer.addComponent(createAccountForm);
 
-        middleLayer.setExpandRatio(welcomeLabel, 0.4f);
-        middleLayer.setExpandRatio(buttonsLayout, 0.8f);
+        middleLayer.setExpandRatio(welcomeLabel, 0.1f);
+        middleLayer.setExpandRatio(createAccountForm, 0.8f);
 
-        middleLayer.setComponentAlignment(inputBoxes, Alignment.MIDDLE_CENTER);
-        middleLayer.setComponentAlignment(buttonsLayout, Alignment.TOP_CENTER);
+        middleLayer.setComponentAlignment(createAccountForm, Alignment.TOP_CENTER);
 
         middleLayer.setWidth("450px");
         middleLayer.setHeight("600px");
+        middleLayer.setSpacing(true);
 
-        //Initializing fields
-        userField = new TextField("PESEL: ");
-        albumNumberField = new TextField("Album number: ");
-
-        firstNameField = new TextField("First name: ");
-        lastNameField = new TextField("Last name: ");
-
-        passwordField = new PasswordField("Enter password: ");
-        confirmPasswordField = new PasswordField("Confirm password: ");
-
-        emailField = new TextField("Email: ");
-
-        inputBoxes.addComponent(userField);
-        inputBoxes.addComponent(albumNumberField);
-        inputBoxes.addComponent(firstNameField);
-        inputBoxes.addComponent(lastNameField);
-        inputBoxes.addComponent(passwordField);
-        inputBoxes.addComponent(confirmPasswordField);
-        inputBoxes.addComponent(emailField);
 
         //Initializing buttons
-        addAccountButton = new Button("Create account");
-        backButton = new Button("Return to login screen");
+        buttonsLayout = new HorizontalLayout();
 
-        buttonsLayout.addComponent(addAccountButton);
+        backButton = new Button("Return to login screen");
+        createAccountButton = new Button("Create account");
+
+        createAccountButton.setStyleName(ValoTheme.BUTTON_FRIENDLY);
+        createAccountButton.setClickShortcut(ShortcutAction.KeyCode.ENTER);
+
         buttonsLayout.addComponent(backButton);
+        buttonsLayout.addComponent(createAccountButton);
+
         buttonsLayout.setSpacing(true);
 
-        addAccountButton.addClickListener(event -> {
-            throw new NotImplementedException();
-            //TODO when authentication logic will be ready
+
+        middleLayer.addComponent(buttonsLayout);
+        middleLayer.setComponentAlignment(buttonsLayout, Alignment.BOTTOM_CENTER);
+        middleLayer.setExpandRatio(buttonsLayout, 0.1f);
+
+        createAccountButton.addClickListener(event -> {
+            boolean added = studentService.add(createAccountForm.getStudent());
+            showNotification(added);
+            getUI().getCurrent().setContent(new LoginWindow());
         });
 
         backButton.addClickListener(event -> {

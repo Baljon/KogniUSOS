@@ -12,7 +12,7 @@ import java.util.*;
 public class StudentService {
 
     private static StudentService instance;
-    private HashMap<String, Student> users;
+    private HashMap<String, User> users;
 
     public static StudentService getInstance() {
         if (instance == null){
@@ -23,7 +23,7 @@ public class StudentService {
     }
 
     public void ensureTestData() {
-        users = new HashMap<String, Student>();
+        users = new HashMap<>();
         List<Student> studentsList = Arrays.asList(
                 new Student("1", "Radosław", "Jurczak"),
                 new Student("2", "Jakub", "Milewski"),
@@ -42,9 +42,9 @@ public class StudentService {
         return new ArrayList<>();
     }
 
-    public synchronized ArrayList<Student> findAll(String value) {
-        ArrayList<Student> arrayList = new ArrayList<>();
-        for (Student user : users.values()) {
+    public synchronized ArrayList<User> findAll(String value) {
+        ArrayList<User> arrayList = new ArrayList<>();
+        for (User user : users.values()) {
             boolean passesFilter = (value == null || value.isEmpty())
                     || user.toString().toLowerCase().contains(value.toLowerCase());
             if (passesFilter) {
@@ -59,15 +59,20 @@ public class StudentService {
     public void register(Set<Course> selectedCourses) {
     }
 
-    public boolean delete(Student student) {
+    public boolean delete(User student) {
         users.remove(student.getId());
         return true;
     }
 
-    public boolean delete(Set<Student> selectedStudents) {
-        for(Student user : selectedStudents) {
+    public boolean delete(Set<User> selectedStudents) {
+        for(User user : selectedStudents) {
             users.remove(user.getId());
         }
+        return true;
+    }
+
+    public boolean add(Student student) {
+        users.put(student.getId(), student);
         return true;
     }
 }

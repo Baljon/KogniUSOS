@@ -9,6 +9,7 @@ import pl.kognitywistyka.app.course.Course;
 import pl.kognitywistyka.app.security.AuthenticationService;
 import pl.kognitywistyka.app.service.CourseService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -114,16 +115,61 @@ public class MainWindow extends GridWindow<Course> {
             registerDeleteButton = new Button("Register to Selected Courses");
 
             registerDeleteButton.addClickListener(event -> {
-                boolean registered = courseService.register(selectedCourses);
-                showNotification(registered);
+                //Initializing warning window
+                Window window = new Window();
+
+                //Initializing buttons
+                Button cancelButton = new Button("Cancel");
+                cancelButton.setStyleName(ValoTheme.BUTTON_DANGER);
+                Button sureButton = new Button("I'm sure");
+                sureButton.setStyleName(ValoTheme.BUTTON_FRIENDLY);
+
+                cancelButton.addClickListener(clickEvent -> {
+                    window.close();
+                });
+
+                sureButton.addClickListener(clickEvent -> {
+                    boolean registered = courseService.register(selectedCourses);
+                    window.close();
+                    showNotification(registered);
+                });
+
+                ArrayList<Button> buttonsList = new ArrayList<>();
+                buttonsList.add(cancelButton);
+                buttonsList.add(sureButton);
+
+                getUI().getUI().addWindow(showWarning(window, buttonsList));
             });
         } else {
             registerDeleteButton = new Button("Delete Selected Courses");
+            registerDeleteButton.setStyleName(ValoTheme.BUTTON_DANGER);
 
             registerDeleteButton.addClickListener(event -> {
-                boolean deleted = courseService.delete(selectedCourses);
-                showNotification(deleted);
-                updateGrid();
+                //Initializing warning window
+                Window window = new Window();
+
+                //Initializing buttons
+                Button cancelButton = new Button("Cancel");
+                cancelButton.setStyleName(ValoTheme.BUTTON_FRIENDLY);
+                Button sureButton = new Button("I'm sure");
+                sureButton.setStyleName(ValoTheme.BUTTON_DANGER);
+
+                cancelButton.addClickListener(clickEvent -> {
+                    window.close();
+                });
+
+                sureButton.addClickListener(clickEvent -> {
+                    boolean deleted = courseService.delete(selectedCourses);
+                    window.close();
+                    updateGrid();
+                    showNotification(deleted);
+                });
+
+                ArrayList<Button> buttonsList = new ArrayList<>();
+                buttonsList.add(cancelButton);
+                buttonsList.add(sureButton);
+
+                getUI().getUI().addWindow(showWarning(window, buttonsList));
             });
         }
 

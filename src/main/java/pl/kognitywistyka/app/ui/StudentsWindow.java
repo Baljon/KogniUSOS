@@ -5,10 +5,12 @@ import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.ui.*;
 import com.vaadin.ui.renderers.ButtonRenderer;
 import com.vaadin.ui.themes.ValoTheme;
+import pl.kognitywistyka.app.security.AuthenticationService;
 import pl.kognitywistyka.app.service.StudentService;
 import pl.kognitywistyka.app.user.Student;
 import pl.kognitywistyka.app.user.User;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -23,7 +25,7 @@ public class StudentsWindow extends GridWindow<User> {
     private HorizontalLayout buttonsLayout;
 
     //Grid
-    private Grid<Student> grid;
+    private Grid<User> grid;
 
     //Filter
     private TextField filterField;
@@ -35,7 +37,7 @@ public class StudentsWindow extends GridWindow<User> {
 
     //variables
     //todo should it be here?
-    private Set<Student> selectedStudents;
+    private Set<User> selectedStudents;
 
     public StudentsWindow() {
         init();
@@ -78,12 +80,12 @@ public class StudentsWindow extends GridWindow<User> {
         middleLayer.setExpandRatio(filterLayout, 0.1f);
 
         //Initializing grid
-        grid = new Grid<>(Student.class);
+        grid = new Grid<>(User.class);
         grid.setSizeFull();
 
-        grid.addColumn(Student::getId).setCaption("PESEL");
-        grid.addColumn(Student::getFirstName).setCaption("First Name");
-        grid.addColumn(Student::getLastName).setCaption("Last Name");
+        grid.addColumn(User::getId).setCaption("Album number");
+        grid.addColumn(User::getFirstName).setCaption("First Name");
+        grid.addColumn(User::getLastName).setCaption("Last Name");
         grid.setColumns("id", "firstName", "lastName");
 
         grid.setSelectionMode(Grid.SelectionMode.MULTI);
@@ -95,10 +97,33 @@ public class StudentsWindow extends GridWindow<User> {
 
         grid.addColumn(event -> "Delete",
                 new ButtonRenderer<>(clickEvent -> {
-                    StudentService studentService = StudentService.getInstance();
-                    boolean deleted = studentService.delete(clickEvent.getItem());
-                    showNotification(deleted);
-                    updateGrid();
+                    //Initializing warning window
+                    Window window = new Window();
+
+                    //Initializing buttons
+                    Button cancelButton = new Button("Cancel");
+                    cancelButton.setStyleName(ValoTheme.BUTTON_FRIENDLY);
+                    Button sureButton = new Button("I'm sure");
+                    sureButton.setStyleName(ValoTheme.BUTTON_DANGER);
+                    buttonsLayout.addComponents(cancelButton, sureButton);
+
+                    cancelButton.addClickListener(cancelEvent -> {
+                        window.close();
+                    });
+
+                    sureButton.addClickListener(sureEvent -> {
+                        StudentService studentService = StudentService.getInstance();
+                        boolean deleted = studentService.delete(clickEvent.getItem());
+                        showNotification(deleted);
+                        updateGrid();
+                        window.close();
+                    });
+
+                    ArrayList<Button> buttonsList = new ArrayList<>();
+                    buttonsList.add(cancelButton);
+                    buttonsList.add(sureButton);
+
+                    getUI().getUI().addWindow(showWarning(window, buttonsList));
                 }));
 
         grid.addSelectionListener(event -> {
@@ -116,12 +141,35 @@ public class StudentsWindow extends GridWindow<User> {
         buttonsLayout = new HorizontalLayout();
 
         deleteButton = new Button("Delete selected accounts");
+        deleteButton.setStyleName(ValoTheme.BUTTON_DANGER);
 
         deleteButton.addClickListener(event -> {
-            StudentService studentService = StudentService.getInstance();
-            boolean deleted = studentService.delete(selectedStudents);
-            showNotification(deleted);
-            updateGrid();
+            Window window = new Window();
+
+            //Initializing buttons
+            Button cancelButton = new Button("Cancel");
+            cancelButton.setStyleName(ValoTheme.BUTTON_FRIENDLY);
+            Button sureButton = new Button("I'm sure");
+            sureButton.setStyleName(ValoTheme.BUTTON_DANGER);
+            buttonsLayout.addComponents(cancelButton, sureButton);
+
+            cancelButton.addClickListener(cancelEvent -> {
+                window.close();
+            });
+
+            sureButton.addClickListener(sureEvent -> {
+                StudentService studentService = StudentService.getInstance();
+                boolean deleted = studentService.delete(selectedStudents);
+                showNotification(deleted);
+                updateGrid();
+                window.close();
+            });
+
+            ArrayList<Button> buttonsList = new ArrayList<>();
+            buttonsList.add(cancelButton);
+            buttonsList.add(sureButton);
+
+            getUI().getUI().addWindow(showWarning(window, buttonsList));
         });
 
         deleteButton.setEnabled(false);
@@ -146,7 +194,7 @@ public class StudentsWindow extends GridWindow<User> {
 
     public void updateGrid() {
         StudentService studentService = StudentService.getInstance();
-        List<Student> studentsList= studentService.findAll(filterField.getValue());
+        List<User> studentsList= studentService.findAll(filterField.getValue());
         grid.setItems(studentsList);
     }
 

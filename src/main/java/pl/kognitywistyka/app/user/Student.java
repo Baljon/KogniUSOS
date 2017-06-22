@@ -11,7 +11,7 @@ import java.util.Set;
  * Created by wikto on 19.06.2017.
  */
 @Entity
-//@JoinTable(name = "USERS")
+@DiscriminatorValue("STUDENT")
 public class Student extends User {
     //Students are identified (studentID) by their album number. Fake IDs can be injected by admins if necessary.
 
@@ -25,6 +25,9 @@ public class Student extends User {
 //    @Column(name = "STUDENT_LASTNAME", nullable = false)
 //    private String lastName;
 
+    @Column(name = "EMAIL")
+    private String email;
+
     @ManyToMany(targetEntity = Course.class, cascade = CascadeType.ALL)
     private Set<Course> courses = new HashSet<>();
 
@@ -34,6 +37,10 @@ public class Student extends User {
         setId(albumNo);
         setFirstName(firstName);
         setLastName(lastName);
+    }
+
+    public Student(String albumNo, String firstName, String lastName, String email, String password) {
+        super();
     }
 
 //    public String getStudentID() {

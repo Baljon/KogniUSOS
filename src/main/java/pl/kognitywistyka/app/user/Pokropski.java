@@ -8,7 +8,7 @@ import javax.persistence.*;
  * Created by wikto on 19.06.2017.
  */
 @Entity
-@Table(name = "POKROPSKI")
+@DiscriminatorValue("POKROPSKI")
 public class Pokropski extends User {
     //The only info we need about admins is needed for logging in --> id and password.
     //OK, added the name too, but IMHO we do not need it.
@@ -34,11 +34,11 @@ public class Pokropski extends User {
 
     @Override
     public String toString() {
-        return null;
+        return getId();
     }
 
     public boolean equals(User user) {
-        return true;
+        return getId().equals(user.getId());
     }
 
 //    public String getPokropskiID() {

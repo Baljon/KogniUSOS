@@ -1,12 +1,16 @@
 package pl.kognitywistyka.app.ui;
 
 import com.vaadin.icons.VaadinIcons;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.*;
+import com.vaadin.ui.themes.ValoTheme;
 import pl.kognitywistyka.app.security.AuthenticationService;
 import pl.kognitywistyka.app.service.CourseService;
 import pl.kognitywistyka.app.service.StudentService;
 import pl.kognitywistyka.app.user.Student;
 import pl.kognitywistyka.app.user.User;
+
+import java.util.ArrayList;
 
 /**
  * Created by wikto on 19.06.2017.
@@ -37,7 +41,7 @@ public class StudentWindow extends ItemWindow {
     private GridWindow previousWindow;
 
     public StudentWindow(User user, Component previousWindow) {
-        setUser(this.user);
+        setUser(user);
         setPreviousWindow(previousWindow);
         init();
     }
@@ -95,20 +99,49 @@ public class StudentWindow extends ItemWindow {
         middleLayer.setComponentAlignment(buttonsLayout, Alignment.BOTTOM_LEFT);
 
         deleteButton = new Button("Delete account");
-        //it's absolutely not safe todo should add some prompt asking if I'm sure
+        deleteButton.setStyleName(ValoTheme.BUTTON_DANGER);
         deleteButton.addClickListener(event -> {
-            StudentService studentService = StudentService.getInstance();
-            boolean deleted = studentService.delete((Student) user);
-            showNotification(deleted);
-            if (deleted) {
-                previousWindow.updateGrid();
-                getUI().getCurrent().setContent(previousWindow);
-            }
+            //Initializing warning window
+            Window window = new Window();
+
+            //Initializing buttons
+            Button cancelButton = new Button("Cancel");
+            cancelButton.setStyleName(ValoTheme.BUTTON_FRIENDLY);
+            Button sureButton = new Button("I'm sure");
+            sureButton.setStyleName(ValoTheme.BUTTON_DANGER);
+
+            cancelButton.addClickListener(clickEvent -> {
+                window.close();
+            });
+
+            sureButton.addClickListener(clickEvent -> {
+                StudentService studentService = StudentService.getInstance();
+                boolean deleted = studentService.delete((User) user);
+                if(!AuthenticationService.getCurrentLoginInfo().equals(user)) {
+                    if (deleted) {
+                        previousWindow.updateGrid();
+                        getUI().getCurrent().setContent(previousWindow);
+                    }
+                } else {
+                    if(deleted) {
+                        AuthenticationService.logout();
+                        getUI().getCurrent().setContent(new LoginWindow());
+                    }
+                }
+                window.close();
+                showNotification(deleted);
+            });
+
+            ArrayList<Button> buttonsList = new ArrayList<>();
+            buttonsList.add(cancelButton);
+            buttonsList.add(sureButton);
+
+            getUI().getUI().addWindow(showWarning(window, buttonsList));
         });
 
-        //todo when Authentication will be ready change the if statement to commented (admin cannot delete his account!)
-//        if (!AuthenticationService.isAdmin() && AuthenticationService.getCurrentLoginInfo().equals(user)) {
-        if(true) {
+
+        if (!AuthenticationService.isAdmin() || !AuthenticationService.getCurrentLoginInfo().equals(user)) {
+//        if(true) {
             buttonsLayout.addComponent(deleteButton);
         }
 
