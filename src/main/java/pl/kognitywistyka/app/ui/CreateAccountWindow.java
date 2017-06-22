@@ -1,5 +1,6 @@
 package pl.kognitywistyka.app.ui;
 
+import com.vaadin.data.ValidationException;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.*;
@@ -46,6 +47,7 @@ public class CreateAccountWindow extends CenteredWindow {
 
         init(middleLayer);
 
+        //Initializing form
         createAccountForm = new CreateAccountForm(new Student());
 //        createAccountForm.addStyleName("form-centered");
 
@@ -86,9 +88,16 @@ public class CreateAccountWindow extends CenteredWindow {
         middleLayer.setExpandRatio(buttonsLayout, 0.1f);
 
         createAccountButton.addClickListener(event -> {
-            boolean added = studentService.add(createAccountForm.getStudent());
-            showNotification(added);
-            getUI().getCurrent().setContent(new LoginWindow());
+            try {
+                Student student = new Student();
+                createAccountForm.getStudentBinder().writeBean(student);
+                boolean added = studentService.add(student);
+                showNotification(added);
+                getUI().getCurrent().setContent(new LoginWindow());
+            } catch (ValidationException ve) {
+                createAccountForm.getStudentBinder().validate();
+                Notification.show("You must complete all fields with proper values!", Notification.Type.ERROR_MESSAGE);
+            }
         });
 
         backButton.addClickListener(event -> {

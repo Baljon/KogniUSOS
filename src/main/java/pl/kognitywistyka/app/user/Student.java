@@ -88,4 +88,12 @@ public class Student extends User {
     public boolean equals(Student randomStudent) {
         return this.getId().equals(randomStudent.getId());
     }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }

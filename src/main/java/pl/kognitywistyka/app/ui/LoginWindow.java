@@ -65,7 +65,7 @@ public class LoginWindow extends CenteredWindow {
         middleLayer.setHeight("300px");
 
         //Initializing fields
-        userField = new TextField("PESEL: ");
+        userField = new TextField("Album number: ");
         passwordField = new PasswordField("Password: ");
 
         inputBoxes.addComponent(userField);

@@ -58,7 +58,7 @@ public class StudentWindow extends ItemWindow {
         init(middleLayer);
 
         middleLayer.setWidth("600px");
-        middleLayer.setHeight("600px");
+        middleLayer.setHeight("300px");
 
         //Initializing name
         nameLayout = new CssLayout();

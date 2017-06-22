@@ -49,8 +49,8 @@ public abstract class CenteredWindow extends VerticalLayout {
         addComponent(middleLayer);
         addComponent(bottomSpacer);
 
-        setExpandRatio(topSpacer, 0.05f);
-        setExpandRatio(middleLayer, 0.9f);
+        setExpandRatio(topSpacer, 0.015f);
+        setExpandRatio(middleLayer, 0.94f);
         setExpandRatio(bottomSpacer, 0.05f);
 
         setComponentAlignment(middleLayer, Alignment.MIDDLE_CENTER);
