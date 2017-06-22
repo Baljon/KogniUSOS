@@ -5,9 +5,7 @@ import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.ui.*;
 import com.vaadin.ui.renderers.ButtonRenderer;
 import com.vaadin.ui.themes.ValoTheme;
-import pl.kognitywistyka.app.security.AuthenticationService;
 import pl.kognitywistyka.app.service.StudentService;
-import pl.kognitywistyka.app.user.Student;
 import pl.kognitywistyka.app.user.User;
 
 import java.util.ArrayList;
@@ -181,7 +179,7 @@ public class StudentsWindow extends GridWindow<User> {
 
     public void updateGrid() {
         StudentService studentService = StudentService.getInstance();
-        List<User> studentsList= studentService.findAll(filterField.getValue());
+        List<User> studentsList = studentService.findAll(filterField.getValue());
         grid.setItems(studentsList);
     }
 

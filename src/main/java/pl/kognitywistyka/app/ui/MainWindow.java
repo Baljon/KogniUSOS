@@ -8,7 +8,6 @@ import com.vaadin.ui.themes.ValoTheme;
 import pl.kognitywistyka.app.course.Course;
 import pl.kognitywistyka.app.security.AuthenticationService;
 import pl.kognitywistyka.app.service.CourseService;
-import pl.kognitywistyka.app.service.StudentService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -111,7 +110,7 @@ public class MainWindow extends GridWindow<Course> {
 
         grid.addSelectionListener(event -> {
             selectedCourses = event.getAllSelectedItems();
-            registerDeleteButton.setEnabled(selectedCourses.size()>0);
+            registerDeleteButton.setEnabled(selectedCourses.size() > 0);
         });
 
         middleLayer.addComponent(grid);
@@ -123,7 +122,7 @@ public class MainWindow extends GridWindow<Course> {
         //Inittializing buttons
         buttonsLayout = new HorizontalLayout();
 
-        if(!AuthenticationService.isAdmin()) {
+        if (!AuthenticationService.isAdmin()) {
             registerDeleteButton = new Button("Register to Selected Courses");
 
             registerDeleteButton.addClickListener(event -> {
@@ -175,7 +174,7 @@ public class MainWindow extends GridWindow<Course> {
         buttonsLayout.addComponent(registerDeleteButton);
 
         //todo am I putting stuff into logic that should be handled by db?
-        if(AuthenticationService.isAdmin()) {
+        if (AuthenticationService.isAdmin()) {
             studentsOrMyCoursesButton = new Button("View students");
 
             studentsOrMyCoursesButton.addClickListener(event -> {

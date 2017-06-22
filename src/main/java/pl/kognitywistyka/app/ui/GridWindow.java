@@ -1,7 +1,6 @@
 package pl.kognitywistyka.app.ui;
 
 import com.vaadin.ui.Grid;
-import pl.kognitywistyka.app.course.Course;
 
 /**
  * Created by wikto on 21.06.2017.

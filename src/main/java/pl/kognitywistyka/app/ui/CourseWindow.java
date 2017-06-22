@@ -7,7 +7,6 @@ import pl.kognitywistyka.app.course.Course;
 import pl.kognitywistyka.app.security.AuthenticationService;
 import pl.kognitywistyka.app.service.CourseService;
 import pl.kognitywistyka.app.user.Student;
-import pl.kognitywistyka.app.user.User;
 
 import java.util.ArrayList;
 

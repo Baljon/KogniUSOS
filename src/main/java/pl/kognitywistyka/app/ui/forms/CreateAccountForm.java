@@ -1,21 +1,16 @@
 package pl.kognitywistyka.app.ui.forms;
 
-import com.sun.xml.internal.ws.developer.MemberSubmissionAddressing;
 import com.vaadin.data.Binder;
 import com.vaadin.data.ValidationResult;
 import com.vaadin.data.Validator;
 import com.vaadin.data.ValueContext;
 import com.vaadin.data.validator.EmailValidator;
-import com.vaadin.event.ShortcutAction;
 import com.vaadin.icons.VaadinIcons;
-import com.vaadin.ui.*;
-import com.vaadin.ui.themes.ValoTheme;
-import pl.kognitywistyka.app.KogniUSOSUI;
-import pl.kognitywistyka.app.service.StudentService;
-import pl.kognitywistyka.app.ui.LoginWindow;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.FormLayout;
+import com.vaadin.ui.PasswordField;
+import com.vaadin.ui.TextField;
 import pl.kognitywistyka.app.user.Student;
-
-import java.util.Objects;
 
 /**
  * Created by wikto on 22.06.2017.
@@ -44,7 +39,7 @@ public class CreateAccountForm extends FormLayout {
         Validator<String> valid = new Validator<String>() {
             @Override
             public ValidationResult apply(String s, ValueContext valueContext) {
-                if(s.equals(password.getValue())) return ValidationResult.ok();
+                if (s.equals(password.getValue())) return ValidationResult.ok();
                 else return ValidationResult.error("Incorrect password.");
             }
         };
@@ -71,7 +66,7 @@ public class CreateAccountForm extends FormLayout {
                 .bind(Student::getLastName, Student::setLastName);
         lastName.setRequiredIndicatorVisible(true);
         lastName.setIcon(VaadinIcons.USER_CARD);
-        studentBinder.forField(password).withValidator(pass -> pass.length()> 4,
+        studentBinder.forField(password).withValidator(pass -> pass.length() > 4,
                 "Password should be at least 4 characters long!").bind(Student::getPassword, Student::setPassword);
         password.setRequiredIndicatorVisible(true);
         password.setIcon(VaadinIcons.PASSWORD);

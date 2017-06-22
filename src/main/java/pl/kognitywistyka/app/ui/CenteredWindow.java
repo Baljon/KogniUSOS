@@ -5,7 +5,6 @@ import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import pl.kognitywistyka.app.security.AuthenticationService;
-import pl.kognitywistyka.app.service.StudentService;
 import pl.kognitywistyka.app.user.User;
 
 import java.util.List;
@@ -141,7 +140,7 @@ public abstract class CenteredWindow extends VerticalLayout {
         label.setStyleName(ValoTheme.LABEL_FAILURE);
         content.addComponent(label);
 
-        for(Button button : buttonList) {
+        for (Button button : buttonList) {
             button.addClickListener(event -> window.close());
             buttonsLayout.addComponent(button);
         }

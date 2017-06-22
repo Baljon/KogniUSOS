@@ -1,7 +1,6 @@
 package pl.kognitywistyka.app.user;
 
 import pl.kognitywistyka.app.course.Course;
-import pl.kognitywistyka.app.course.CourseGroup;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -31,9 +30,10 @@ public class Student extends User {
     @ManyToMany(targetEntity = Course.class, cascade = CascadeType.ALL)
     private Set<Course> courses = new HashSet<>();
 
-    public Student() {}
+    public Student() {
+    }
 
-    public Student(String albumNo,String firstName, String lastName) {
+    public Student(String albumNo, String firstName, String lastName) {
         setId(albumNo);
         setFirstName(firstName);
         setLastName(lastName);

@@ -146,13 +146,13 @@ public class StudentsCoursesWindow extends GridWindow<Course> {
         buttonsLayout.addComponent(coursesButton);
 
         middleLayer.addComponent(buttonsLayout);
-        middleLayer.setComponentAlignment(buttonsLayout,Alignment.BOTTOM_LEFT);
-        middleLayer.setExpandRatio(buttonsLayout,0.1f);
+        middleLayer.setComponentAlignment(buttonsLayout, Alignment.BOTTOM_LEFT);
+        middleLayer.setExpandRatio(buttonsLayout, 0.1f);
 
-    //Initializing top menu
-    initTop();
+        //Initializing top menu
+        initTop();
 
-}
+    }
 
 
     @Override

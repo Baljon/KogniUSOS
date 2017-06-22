@@ -15,10 +15,12 @@ public class TextWindow extends ItemWindow {
     private Button returnButton;
 
     private String text;
+
     public TextWindow(String object) {
         setText(object);
         init();
     }
+
     private void init() {
         setSizeFull();
 
