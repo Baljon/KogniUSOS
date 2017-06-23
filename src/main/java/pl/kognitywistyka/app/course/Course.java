@@ -11,14 +11,12 @@ import java.util.Set;
  * Created by wikto on 19.06.2017.
  */
 @Entity
-@Table(name = "COURSES")
+@Table(name = "COURSE")
 public class Course {
 
     @Id
     @Column(name = "ID", nullable = false)
     private String id; //should be course's USOS code
-
-//    private int localId;
 
     @Column(name = "NAME", nullable = false)
     private String courseName;

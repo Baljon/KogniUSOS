@@ -9,12 +9,12 @@ import javax.persistence.*;
 //This class should supposedly be deprecated. We will hopefully never need a common denominator for students and admins.
 @Entity
 @Inheritance
-@DiscriminatorColumn(name = "USER_TYPE")
-@Table(name = "USERS")
+@DiscriminatorColumn(name = "TYPE")
+@Table(name = "USER")
 public abstract class User {
 
     @Id
-    @Column(name = "ID", nullable = false)
+    @Column(name = "USER_ID", nullable = false)
     private String id; //should be PESEL number or album number or USOS id
 
     @Column(name = "FIRST_NAME", nullable = false)

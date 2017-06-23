@@ -10,19 +10,9 @@ import java.util.Set;
  * Created by wikto on 19.06.2017.
  */
 @Entity
-@DiscriminatorValue("STUDENT")
+@DiscriminatorValue("student")
 public class Student extends User {
     //Students are identified (studentID) by their album number. Fake IDs can be injected by admins if necessary.
-
-//    @Id
-//    @Column(name="STUDENT_ID", nullable = false)
-//    private String studentID;
-
-//    @Column(name = "STUDENT_FIRSTNAME", nullable = false)
-//    private String firstName;
-//
-//    @Column(name = "STUDENT_LASTNAME", nullable = false)
-//    private String lastName;
 
     @Column(name = "EMAIL")
     private String email;
