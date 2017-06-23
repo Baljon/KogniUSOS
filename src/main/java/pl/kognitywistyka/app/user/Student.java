@@ -43,14 +43,6 @@ public class Student extends User {
         super();
     }
 
-//    public String getStudentID() {
-//        return studentID;
-//    }
-//
-//    public void setStudentID(String albumNumber) {
-//        this.studentID = albumNumber;
-//    }
-
     public Set<Course> getGroups() {
         return courses;
     }
@@ -59,34 +51,9 @@ public class Student extends User {
         this.courses = courses;
     }
 
-//    public String getFirstName() {
-//        return firstName;
-//    }
-//
-//    public void setFirstName(String firstName) {
-//        this.firstName = firstName;
-//    }
-//
-//    public String getLastName() {
-//        return lastName;
-//    }
-//
-//    public void setLastName(String lastName) {
-//        this.lastName = lastName;
-//    }
-
     @Override
     public String toString() {
         return getId() + "|" + getFirstName() + "|" + getLastName();
-    }
-
-    @Override
-    public boolean equals(User user) {
-        return getId().equals(user.getId());
-    }
-
-    public boolean equals(Student randomStudent) {
-        return this.getId().equals(randomStudent.getId());
     }
 
     public String getEmail() {

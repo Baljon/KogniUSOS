@@ -53,7 +53,9 @@ public abstract class User {
 
     public abstract String toString();
 
-    public abstract boolean equals(User user);
+    public boolean equals(User user) {
+        return getId().equals(user.getId());
+    }
 
     public String getPassword() {
         return password;
