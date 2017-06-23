@@ -64,4 +64,9 @@ public abstract class User {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public boolean confirmPassword(String hashedPassword) {
+        if(password.equals(hashedPassword)) return true;
+        else return false;
+    }
 }
