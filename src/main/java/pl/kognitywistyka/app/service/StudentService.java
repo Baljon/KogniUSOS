@@ -1,10 +1,15 @@
 package pl.kognitywistyka.app.service;
 
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 import pl.kognitywistyka.app.course.Course;
+import pl.kognitywistyka.app.persistence.HibernateUtils;
 import pl.kognitywistyka.app.security.AuthenticationService;
 import pl.kognitywistyka.app.user.Student;
 import pl.kognitywistyka.app.user.User;
 
+import java.sql.Connection;
 import java.util.*;
 
 /**
@@ -16,7 +21,7 @@ public class StudentService {
     private HashMap<String, User> users;
 
     public static StudentService getInstance() {
-        if (instance == null){
+        if (instance == null) {
             instance = new StudentService();
             instance.ensureTestData();
         }
@@ -31,7 +36,7 @@ public class StudentService {
                 new Student("3", "Wiktor", "Rorot")
         );
 //        Integer id = 0;
-        for(Student student : studentsList) {
+        for (Student student : studentsList) {
             String id = student.getId();
             users.put(id, student);
 //            id = id + 1;
@@ -41,6 +46,66 @@ public class StudentService {
     //todo
     public synchronized List<User> findAll() {
         return new ArrayList<>();
+    }
+
+    public synchronized List<Student> findById(String id) {
+        Session session = HibernateUtils.getSessionFactory().openSession();
+        Transaction tx = null;
+        List<Student> resultList = null;
+        try {
+            tx = session.beginTransaction();
+            Query query = session.createQuery("from Student where id =: id").setParameter("id", id);
+            Student student = (Student) query.getSingleResult();
+            resultList.add(student);
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            session.close();
+            e.printStackTrace();
+        } finally {
+            session.flush();
+            session.close();
+        }
+        return resultList;
+    }
+
+    public synchronized List<Student> findByName(String name) {
+        Session session = HibernateUtils.getSessionFactory().openSession();
+        Transaction tx = null;
+        List<Student> resultList = null;
+        try {
+            tx = session.beginTransaction();
+            Query query = session.createQuery(
+                    "from Student where lower(firstName) =: name or lower(lastName) =: name order by id").setParameter(
+                            "name", name.toLowerCase());
+            resultList = (List<Student>) query.getResultList();
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            session.close();
+            e.printStackTrace();
+        } finally {
+            session.flush();
+            session.close();
+        }
+        return resultList;
+    }
+
+    public synchronized List<Student> findAllFinal() {
+        Session session = HibernateUtils.getSessionFactory().openSession();
+        Transaction tx = null;
+        List<Student> resultList = null;
+        try {
+            tx = session.beginTransaction();
+            Query query = session.createQuery("from Student order by lastName, firstName, id");
+            resultList = (List<Student>) query.getResultList();
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            session.close();
+            e.printStackTrace();
+        } finally {
+            session.flush();
+            session.close();
+        }
+        return resultList;
     }
 
     public synchronized ArrayList<User> findAll(String value) {
@@ -66,7 +131,7 @@ public class StudentService {
     }
 
     public boolean delete(Set<User> selectedStudents) {
-        for(User user : selectedStudents) {
+        for (User user : selectedStudents) {
             users.remove(user.getId());
         }
         return true;
@@ -75,7 +140,7 @@ public class StudentService {
     public boolean add(Student student) {
         try {
             student.setPassword(AuthenticationService.sha512(student.getPassword()));
-            if(!users.containsKey(student.getId())) {
+            if (!users.containsKey(student.getId())) {
                 users.put(student.getId(), student);
                 return true;
             } else {
