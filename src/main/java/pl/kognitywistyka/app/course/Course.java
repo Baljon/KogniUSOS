@@ -3,7 +3,6 @@ package pl.kognitywistyka.app.course;
 import pl.kognitywistyka.app.user.Student;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -33,8 +32,8 @@ public class Course {
     @Column(name = "BLACKLISTED")
     private boolean blacklisted;
 
-    @ManyToMany(targetEntity = Student.class, cascade = CascadeType.ALL)
-    private Set<Student> participants = new HashSet<>();
+    @ManyToMany(mappedBy = "courses")
+    private Set<Student> students = new HashSet<>();
 
     public Course() {}
 
@@ -76,12 +75,12 @@ public class Course {
         this.syllabus = syllabus;
     }
 
-    public Set<Student> getParticipants() {
-        return participants;
+    public Set<Student> getStudents() {
+        return students;
     }
 
-    public void setParticipants(Set<Student> participants) {
-        this.participants = participants;
+    public void setStudents(Set<Student> participants) {
+        this.students = participants;
     }
 
     public boolean isAccepted() {
