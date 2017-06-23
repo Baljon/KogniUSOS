@@ -12,10 +12,9 @@ import javax.persistence.EntityManagerFactory;
 public class HibernateUtils {
 
     private static SessionFactory sessionFactory;
-    private EntityManagerFactory entityManagerFactory;
 
     private static void buildSessionFactory() {
-        sessionFactory = new Configuration().configure().buildSessionFactory();
+        sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
     }
 
     public static SessionFactory getSessionFactory() {
@@ -28,10 +27,5 @@ public class HibernateUtils {
             sessionFactory.close();
         }
     }
-
-    public EntityManager createEntityManager() {
-        return entityManagerFactory.createEntityManager();
-    }
-
 
 }
