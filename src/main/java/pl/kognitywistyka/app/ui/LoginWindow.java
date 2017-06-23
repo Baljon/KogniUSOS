@@ -4,6 +4,7 @@ import com.vaadin.event.ShortcutAction;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
+import pl.kognitywistyka.app.security.AuthenticationService;
 
 /**
  * Created by wikto on 19.06.2017.
@@ -89,17 +90,17 @@ public class LoginWindow extends CenteredWindow {
 //        });
 
         loginButton.addClickListener(event -> {
-            getUI().setContent(new MainWindow());
-            //TODO login logic
-//            if (AuthenticationService.validateLogin(userField.getValue(), passwordField.getValue())) {
-//                getUI().setContent(new MainWindow());
-//            } else {
-//                Notification.show("Niepoprawne dane logowania.", Notification.Type.ERROR_MESSAGE);
-//            }
+            if(userField.getValue().isEmpty() || passwordField.getValue().isEmpty()) {
+                Notification.show("Enter login data!", Notification.Type.ERROR_MESSAGE);
+            } else {
+                boolean authenticated = AuthenticationService.getInstance().authenticate(userField.getValue(), passwordField.getValue());
+                if (authenticated) {
+                    getUI().setContent(new MainWindow());
+                } else Notification.show("Incorrect login data!", Notification.Type.ERROR_MESSAGE);
+            }
         });
 
         createAccount.addClickListener(event -> {
-            //throw new NotImplementedException();
             getUI().setContent(new CreateAccountWindow());
         });
     }

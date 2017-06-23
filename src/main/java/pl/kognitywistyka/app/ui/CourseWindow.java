@@ -99,8 +99,8 @@ public class CourseWindow extends ItemWindow {
         middleLayer.addComponent(buttonLayout);
         middleLayer.setComponentAlignment(buttonLayout, Alignment.BOTTOM_LEFT);
 
-        if (!AuthenticationService.isAdmin()) {
-            Student student = (Student) AuthenticationService.getCurrentLoginInfo();
+        if (!AuthenticationService.getInstance().isAdmin()) {
+            Student student = (Student) AuthenticationService.getInstance().getCurrentLoginInfo();
             if (!student.isRegisteredTo(course)) {
                 registerDeleteButton = new Button("Register");
                 registerDeleteButton.setStyleName(ValoTheme.BUTTON_FRIENDLY);

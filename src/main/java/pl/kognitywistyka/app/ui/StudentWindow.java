@@ -38,7 +38,7 @@ public class StudentWindow extends ItemWindow {
 
     //Variables
     private User user;
-    private GridWindow previousWindow;
+    private CenteredWindow previousWindow;
 
     public StudentWindow(User user, Component previousWindow) {
         setUser(user);
@@ -111,14 +111,17 @@ public class StudentWindow extends ItemWindow {
             sureButton.addClickListener(clickEvent -> {
                 StudentService studentService = StudentService.getInstance();
                 boolean deleted = studentService.delete((User) user);
-                if (!AuthenticationService.getCurrentLoginInfo().equals(user)) {
+                if (!AuthenticationService.getInstance().getCurrentLoginInfo().equals(user)) {
                     if (deleted) {
-                        previousWindow.updateGrid();
-                        getUI().getCurrent().setContent(previousWindow);
+                        if(previousWindow.getClass().equals(GridWindow.class)) {
+                            GridWindow window = (GridWindow) previousWindow;
+                            window.updateGrid();
+                            getUI().getCurrent().setContent(window);
+                        } else getUI().getCurrent().setContent(previousWindow);
                     }
                 } else {
                     if (deleted) {
-                        AuthenticationService.logout();
+                        AuthenticationService.getInstance().logout();
                         getUI().getCurrent().setContent(new LoginWindow());
                     }
                 }
@@ -133,12 +136,12 @@ public class StudentWindow extends ItemWindow {
         });
 
 
-        if (!AuthenticationService.isAdmin() || !AuthenticationService.getCurrentLoginInfo().equals(user)) {
+        if (!AuthenticationService.getInstance().isAdmin() || !AuthenticationService.getInstance().getCurrentLoginInfo().equals(user)) {
 //        if(true) {
             buttonsLayout.addComponent(deleteButton);
         }
 
-        if (AuthenticationService.isAdmin() && AuthenticationService.getCurrentLoginInfo().equals(user)) {
+        if (AuthenticationService.getInstance().isAdmin() && AuthenticationService.getInstance().getCurrentLoginInfo().equals(user)) {
             addCoursesButton = new Button("Add courses");
             addCoursesButton.addClickListener(event -> {
                 //Initializing submit window
@@ -178,7 +181,7 @@ public class StudentWindow extends ItemWindow {
             });
 
             buttonsLayout.addComponent(addCoursesButton);
-        } else if (!AuthenticationService.isAdmin() && AuthenticationService.getCurrentLoginInfo().equals(user)) {
+        } else if (!AuthenticationService.getInstance().isAdmin() && AuthenticationService.getInstance().getCurrentLoginInfo().equals(user)) {
             addCoursesButton = new Button("Propose courses");
             addCoursesButton.addClickListener(event -> {
                 //Initializing submit window
@@ -236,6 +239,6 @@ public class StudentWindow extends ItemWindow {
     }
 
     public void setPreviousWindow(Component previousWindow) {
-        this.previousWindow = (GridWindow) previousWindow;
+        this.previousWindow = (CenteredWindow) previousWindow;
     }
 }

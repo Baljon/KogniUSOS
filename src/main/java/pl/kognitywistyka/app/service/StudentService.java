@@ -1,6 +1,7 @@
 package pl.kognitywistyka.app.service;
 
 import pl.kognitywistyka.app.course.Course;
+import pl.kognitywistyka.app.security.AuthenticationService;
 import pl.kognitywistyka.app.user.Student;
 import pl.kognitywistyka.app.user.User;
 
@@ -72,7 +73,16 @@ public class StudentService {
     }
 
     public boolean add(Student student) {
-        users.put(student.getId(), student);
-        return true;
+        try {
+            student.setPassword(AuthenticationService.sha512(student.getPassword()));
+            if(!users.containsKey(student.getId())) {
+                users.put(student.getId(), student);
+                return true;
+            } else {
+                throw new Exception();
+            }
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

@@ -73,7 +73,7 @@ public class CourseService {
      * @return ArrayList<Course>
      */
     public synchronized List<Course> findAll(String value, Boolean value1) {
-        Student student = (Student) AuthenticationService.getCurrentLoginInfo();
+        Student student = (Student) AuthenticationService.getInstance().getCurrentLoginInfo();
         ArrayList<Course> arrayList = new ArrayList<>();
         for (Course course : courses.values()) {
             boolean passesFilter = (value == null || value.isEmpty())
@@ -95,6 +95,7 @@ public class CourseService {
     }
 
     public static boolean addCourses(String value) {
+        //smart - checks if String contains commas
         return false;
     }
 

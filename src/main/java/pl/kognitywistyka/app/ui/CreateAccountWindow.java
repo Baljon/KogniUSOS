@@ -92,7 +92,7 @@ public class CreateAccountWindow extends CenteredWindow {
                 createAccountForm.getStudentBinder().writeBean(student);
                 boolean added = studentService.add(student);
                 showNotification(added);
-                getUI().getCurrent().setContent(new LoginWindow());
+                if(added) getUI().getCurrent().setContent(new LoginWindow());
             } catch (ValidationException ve) {
                 createAccountForm.getStudentBinder().validate();
                 Notification.show("You must complete all fields with proper values!", Notification.Type.ERROR_MESSAGE);

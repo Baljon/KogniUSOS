@@ -109,7 +109,7 @@ public class StudentsCoursesWindow extends GridWindow<Course> {
         //Inittializing buttons
         buttonsLayout = new HorizontalLayout();
 
-        if (!AuthenticationService.isAdmin()) {
+        if (!AuthenticationService.getInstance().isAdmin()) {
             unregisterButton = new Button("Unregister from Selected Courses");
 
             unregisterButton.addClickListener(event -> {
@@ -157,7 +157,7 @@ public class StudentsCoursesWindow extends GridWindow<Course> {
 
     @Override
     public void updateGrid() {
-        Student currentStudent = (Student) AuthenticationService.getCurrentLoginInfo();
+        Student currentStudent = (Student) AuthenticationService.getInstance().getCurrentLoginInfo();
         Set<Course> courses = currentStudent.getGroups();
         grid.setItems(courses);
     }

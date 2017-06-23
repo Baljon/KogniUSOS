@@ -91,7 +91,7 @@ public class MainWindow extends GridWindow<Course> {
         showRegisteredCheckBox.setValue(true);
         showRegisteredCheckBox.addValueChangeListener(event -> updateGrid());
 
-        if(!AuthenticationService.isAdmin()) {
+        if(!AuthenticationService.getInstance().isAdmin()) {
             superFilterLayout.addComponent(showRegisteredCheckBox);
             superFilterLayout.setComponentAlignment(showRegisteredCheckBox, Alignment.MIDDLE_LEFT);
         }
@@ -130,7 +130,7 @@ public class MainWindow extends GridWindow<Course> {
         buttonExportLayout = new HorizontalLayout();
         superButtonLayout = new VerticalLayout();
 
-        if (!AuthenticationService.isAdmin()) {
+        if (!AuthenticationService.getInstance().isAdmin()) {
             registerDeleteButton = new Button("Register to Selected Courses");
             registerDeleteButton.setStyleName(ValoTheme.BUTTON_FRIENDLY);
 
@@ -183,7 +183,7 @@ public class MainWindow extends GridWindow<Course> {
         buttonsLayout.addComponent(registerDeleteButton);
 
         //todo am I putting stuff into logic that should be handled by db?
-        if (AuthenticationService.isAdmin()) {
+        if (AuthenticationService.getInstance().isAdmin()) {
             studentsOrMyCoursesButton = new Button("View students");
 
             studentsOrMyCoursesButton.addClickListener(event -> {
@@ -199,7 +199,7 @@ public class MainWindow extends GridWindow<Course> {
 
         buttonsLayout.addComponent(studentsOrMyCoursesButton);
 
-        if (AuthenticationService.isAdmin()) {
+        if (AuthenticationService.getInstance().isAdmin()) {
             addCoursesButton = new Button("Add courses");
             addCoursesButton.addClickListener(event -> {
                 //Initializing submit window
@@ -271,7 +271,7 @@ public class MainWindow extends GridWindow<Course> {
 
     public void updateGrid() {
         List<Course> courses;
-        if(!AuthenticationService.isAdmin()) {
+        if(!AuthenticationService.getInstance().isAdmin()) {
             courses = courseService.findAll(filterField.getValue(), showRegisteredCheckBox.getValue());
         } else {
             courses = courseService.findAll(filterField.getValue());

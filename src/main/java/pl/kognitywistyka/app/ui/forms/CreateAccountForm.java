@@ -66,7 +66,7 @@ public class CreateAccountForm extends FormLayout {
                 .bind(Student::getLastName, Student::setLastName);
         lastName.setRequiredIndicatorVisible(true);
         lastName.setIcon(VaadinIcons.USER_CARD);
-        studentBinder.forField(password).withValidator(pass -> pass.length() > 4,
+        studentBinder.forField(password).withValidator(pass -> pass.length() >= 4,
                 "Password should be at least 4 characters long!").bind(Student::getPassword, Student::setPassword);
         password.setRequiredIndicatorVisible(true);
         password.setIcon(VaadinIcons.PASSWORD);

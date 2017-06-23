@@ -44,7 +44,7 @@ public class KogniUSOSUI extends UI {
     @Override
     protected void init(VaadinRequest vaadinRequest) {
 
-        if (AuthenticationService.isAuthenticated()) {
+        if (AuthenticationService.getInstance().isAuthenticated()) {
             setContent(new MainWindow());
         } else {
             setContent(new LoginWindow());

@@ -59,7 +59,7 @@ public abstract class CenteredWindow extends VerticalLayout {
 
     protected void initTop() {
         topMenu.removeAllComponents();
-        User loginInfo = AuthenticationService.getCurrentLoginInfo();
+        User loginInfo = AuthenticationService.getInstance().getCurrentLoginInfo();
 
         if (loginInfo != null) {
             String text = "You're logged in as: ";// <b>" + loginInfo.getFirstName() + " " + loginInfo.getLastName() + "</b>";
@@ -82,7 +82,7 @@ public abstract class CenteredWindow extends VerticalLayout {
             Button logoutButton = new Button("Log out");
 
             logoutButton.addClickListener(event -> {
-                boolean signedOut = AuthenticationService.logout();
+                boolean signedOut = AuthenticationService.getInstance().logout();
                 UI.getCurrent().setContent(new LoginWindow());
                 showNotification(signedOut);
             });
