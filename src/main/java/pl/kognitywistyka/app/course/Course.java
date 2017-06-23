@@ -94,6 +94,7 @@ public class Course {
 
     public void rejectCourse() {
         this.accepted = false;
+        this.blacklist();
     }
 
     public boolean isBlacklisted() {
