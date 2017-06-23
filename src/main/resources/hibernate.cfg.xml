@@ -23,6 +23,7 @@
 
         <!-- Class mappings for the ORM -->
         <mapping class="pl.kognitywistyka.app.course.Course"/>
+        <mapping class="pl.kognitywistyka.app.user.User"/>
         <mapping class="pl.kognitywistyka.app.user.Pokropski"/>
         <mapping class="pl.kognitywistyka.app.user.Student"/>
 
