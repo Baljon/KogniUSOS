@@ -1,6 +1,10 @@
 package pl.kognitywistyka.app.service;
 
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 import pl.kognitywistyka.app.course.Course;
+import pl.kognitywistyka.app.persistence.HibernateUtils;
 import pl.kognitywistyka.app.security.AuthenticationService;
 import pl.kognitywistyka.app.user.Student;
 
@@ -34,6 +38,48 @@ public class CourseService {
             courses.put(id, course);
 //            id = id + 1;
         }
+    }
+
+    public synchronized List<Course> findById(String id) {
+        Session session = HibernateUtils.getSessionFactory().openSession();
+        Transaction tx = null;
+        List<Course> resultList = null;
+        try {
+            tx = session.beginTransaction();
+            Query query = session.createQuery("from Course where lower(id) like: id order by id, courseName")
+                    .setParameter("id", id.toLowerCase());
+            Course course = (Course) query.getSingleResult();
+            resultList.add(course);
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            session.close();
+            e.printStackTrace();
+        } finally {
+            session.flush();
+            session.close();
+        }
+        return resultList;
+    }
+
+    public synchronized List<Course> findByName(String name) {
+        Session session = HibernateUtils.getSessionFactory().openSession();
+        Transaction tx = null;
+        List<Course> resultList = null;
+        try {
+            tx = session.beginTransaction();
+            Query query = session.createQuery("from Course where lower(courseName) like: name order by courseName, id")
+                    .setParameter("name", "%" + name.toLowerCase() + "%");
+            Course course = (Course) query.getSingleResult();
+            resultList.add(course);
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            session.close();
+            e.printStackTrace();
+        } finally {
+            session.flush();
+            session.close();
+        }
+        return resultList;
     }
 
     /***
