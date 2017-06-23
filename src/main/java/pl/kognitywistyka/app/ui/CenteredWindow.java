@@ -109,11 +109,13 @@ public abstract class CenteredWindow extends VerticalLayout {
 
     public void showNotification(boolean value) {
         if (value) {
-            Notification notification = new Notification("Ok, it's done!");
+            Notification notification = new Notification("Ok, it's done!", Notification.Type.HUMANIZED_MESSAGE);
+            notification.setStyleName(ValoTheme.NOTIFICATION_SUCCESS);
             notification.show(Page.getCurrent());
         } else {
             Notification notification = new Notification("Something went wrong!",
                     "If problem persists, contact administrator.", Notification.Type.ERROR_MESSAGE);
+//            notification.setStyleName(ValoTheme.NOTIFICATION_FAILURE);
             notification.show(Page.getCurrent());
         }
     }

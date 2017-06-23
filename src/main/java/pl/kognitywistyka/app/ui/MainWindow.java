@@ -23,7 +23,9 @@ public class MainWindow extends GridWindow<Course> {
     private VerticalLayout middleLayer;
     private CssLayout filterLayout;
     private HorizontalLayout superFilterLayout;
+    private VerticalLayout superButtonLayout;
     private HorizontalLayout buttonsLayout;
+    private HorizontalLayout buttonExportLayout;
 
     //Grid
     private Grid<Course> grid;
@@ -36,6 +38,8 @@ public class MainWindow extends GridWindow<Course> {
     //Button
     private Button registerDeleteButton;
     private Button studentsOrMyCoursesButton;
+    private Button exportButton;
+    private Button addCoursesButton;
 
     //variables
     //todo should it be here?
@@ -87,8 +91,10 @@ public class MainWindow extends GridWindow<Course> {
         showRegisteredCheckBox.setValue(true);
         showRegisteredCheckBox.addValueChangeListener(event -> updateGrid());
 
-        superFilterLayout.addComponent(showRegisteredCheckBox);
-        superFilterLayout.setComponentAlignment(showRegisteredCheckBox, Alignment.MIDDLE_LEFT);
+        if(!AuthenticationService.isAdmin()) {
+            superFilterLayout.addComponent(showRegisteredCheckBox);
+            superFilterLayout.setComponentAlignment(showRegisteredCheckBox, Alignment.MIDDLE_LEFT);
+        }
 
         middleLayer.addComponent(superFilterLayout);
         middleLayer.setComponentAlignment(superFilterLayout, Alignment.TOP_LEFT);
@@ -121,9 +127,12 @@ public class MainWindow extends GridWindow<Course> {
 
         //Inittializing buttons
         buttonsLayout = new HorizontalLayout();
+        buttonExportLayout = new HorizontalLayout();
+        superButtonLayout = new VerticalLayout();
 
         if (!AuthenticationService.isAdmin()) {
             registerDeleteButton = new Button("Register to Selected Courses");
+            registerDeleteButton.setStyleName(ValoTheme.BUTTON_FRIENDLY);
 
             registerDeleteButton.addClickListener(event -> {
 
@@ -190,14 +199,6 @@ public class MainWindow extends GridWindow<Course> {
 
         buttonsLayout.addComponent(studentsOrMyCoursesButton);
 
-        middleLayer.addComponent(buttonsLayout);
-        middleLayer.setComponentAlignment(buttonsLayout, Alignment.BOTTOM_LEFT);
-        middleLayer.setExpandRatio(buttonsLayout, 0.1f);
-
-        //todo should I leave it here?
-        Button addCoursesButton;
-
-
         if (AuthenticationService.isAdmin()) {
             addCoursesButton = new Button("Add courses");
             addCoursesButton.addClickListener(event -> {
@@ -239,14 +240,42 @@ public class MainWindow extends GridWindow<Course> {
             });
 
             buttonsLayout.addComponent(addCoursesButton);
+
+            exportButton = new Button("Export lists of students from selected courses");
+            exportButton.setStyleName(ValoTheme.BUTTON_PRIMARY);
+
+            exportButton.addClickListener(event -> {
+                boolean exported = courseService.exportStudents(selectedCourses);
+                showNotification(exported);
+            });
+
+            exportButton.setEnabled(false);
+            buttonExportLayout.addComponent(exportButton);
+            buttonExportLayout.setComponentAlignment(exportButton, Alignment.MIDDLE_LEFT);
         }
+
+        superButtonLayout.addComponent(buttonsLayout);
+        superButtonLayout.setComponentAlignment(buttonsLayout, Alignment.TOP_LEFT);
+
+        superButtonLayout.addComponent(buttonExportLayout);
+        superButtonLayout.setComponentAlignment(buttonExportLayout, Alignment.BOTTOM_LEFT);
+
+        middleLayer.addComponent(superButtonLayout);
+        middleLayer.setComponentAlignment(superButtonLayout, Alignment.BOTTOM_LEFT);
+        middleLayer.setExpandRatio(superButtonLayout, 0.1f);
+
 
         //Initializing top menu
         initTop();
     }
 
     public void updateGrid() {
-        List<Course> courses = courseService.findAll(filterField.getValue(), showRegisteredCheckBox.getValue());
+        List<Course> courses;
+        if(!AuthenticationService.isAdmin()) {
+            courses = courseService.findAll(filterField.getValue(), showRegisteredCheckBox.getValue());
+        } else {
+            courses = courseService.findAll(filterField.getValue());
+        }
         grid.setItems(courses);
     }
 

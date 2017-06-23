@@ -121,4 +121,8 @@ public class CourseService {
     public boolean unregister(Set<Course> selectedCourses) {
         return false;
     }
+
+    public boolean exportStudents(Set<Course> selectedCourses) {
+        return false;
+    }
 }
