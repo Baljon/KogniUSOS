@@ -7,7 +7,7 @@
         <!-- hsqldb database, db name "test"-->
         <property name="connection.url">jdbc:hsqldb://localhost/8080/test</property>
         <property name="connection.driver_class">org.hsqldb.jdbcDriver</property>
-        <!-- Username "admin", empty password-->
+        <!-- Username "admin", no password-->
         <property name="connection.username">admin</property>
         <property name="connection.password"></property>
 
