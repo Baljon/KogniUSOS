@@ -23,6 +23,7 @@ public class AuthenticationService {
 
     public boolean authenticate(String id, String password) {
         StudentService studentService = StudentService.getInstance();
+//        List<User> retrievedUser = studentService.findById(id);
         List<User> retrievedUser = studentService.findAll(id);
         if(!retrievedUser.isEmpty()) {
             String hashedPassword = sha512(password);

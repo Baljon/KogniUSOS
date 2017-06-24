@@ -48,15 +48,16 @@ public class StudentService {
         return new ArrayList<>();
     }
 
-    public synchronized List<Student> findById(String id) {
+    public synchronized List<User> findById(String id) {
         Session session = HibernateUtils.getSessionFactory().openSession();
         Transaction tx = null;
-        List<Student> resultList = null;
+        List<User> resultList = null;
         try {
             tx = session.beginTransaction();
-            Query query = session.createQuery("from Student where id =: id").setParameter("id", id);
-            Student student = (Student) query.getSingleResult();
-            resultList.add(student);
+            Query query = session.createQuery("from User where id =: id").setParameter("id", id);
+            User user = (User) query.getSingleResult();
+            resultList = new ArrayList<>();
+            resultList.add(user);
         } catch (Exception e) {
             if (tx != null) tx.rollback();
             session.close();
@@ -71,13 +72,18 @@ public class StudentService {
     public synchronized List<Student> findByName(String name) {
         Session session = HibernateUtils.getSessionFactory().openSession();
         Transaction tx = null;
-        List<Student> resultList = null;
+        List resultList;
+        List<Student> finalList = new ArrayList<>();
         try {
             tx = session.beginTransaction();
             Query query = session.createQuery(
-                    "from Student where lower(firstName) =: name or lower(lastName) =: name order by id").setParameter(
-                            "name", name.toLowerCase());
-            resultList = (List<Student>) query.getResultList();
+                    "from Student where lower(firstName) like: name or lower(lastName) like: name order by id").setParameter(
+                            "name", "%"+name.toLowerCase()+"%");
+            resultList = query.getResultList();
+            for(Object object : resultList) {
+                Student student = (Student) object;
+                finalList.add(student);
+            }
         } catch (Exception e) {
             if (tx != null) tx.rollback();
             session.close();
@@ -86,17 +92,23 @@ public class StudentService {
             session.flush();
             session.close();
         }
-        return resultList;
+        return finalList;
     }
 
     public synchronized List<Student> findAllFinal() {
         Session session = HibernateUtils.getSessionFactory().openSession();
         Transaction tx = null;
-        List<Student> resultList = null;
+        List resultList;
+        List<Student> finalList = null;
         try {
             tx = session.beginTransaction();
             Query query = session.createQuery("from Student order by lastName, firstName, id");
-            resultList = (List<Student>) query.getResultList();
+            resultList = query.getResultList();
+            finalList = new ArrayList<>();
+            for(Object object : resultList) {
+                Student student = (Student) object;
+                finalList.add(student);
+            }
         } catch (Exception e) {
             if (tx != null) tx.rollback();
             session.close();
@@ -105,7 +117,7 @@ public class StudentService {
             session.flush();
             session.close();
         }
-        return resultList;
+        return finalList;
     }
 
     public synchronized ArrayList<User> findAll(String value) {

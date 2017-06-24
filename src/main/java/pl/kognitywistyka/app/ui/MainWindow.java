@@ -21,7 +21,8 @@ public class MainWindow extends GridWindow<Course> {
 
     //Layouts
     private VerticalLayout middleLayer;
-    private CssLayout filterLayout;
+    private CssLayout filterIdLayout;
+    private CssLayout filterNameLayout;
     private HorizontalLayout superFilterLayout;
     private VerticalLayout superButtonLayout;
     private HorizontalLayout buttonsLayout;
@@ -31,9 +32,12 @@ public class MainWindow extends GridWindow<Course> {
     private Grid<Course> grid;
 
     //Filter
-    private TextField filterField;
-    private Button clearFilterFieldButton;
-    private CheckBox showRegisteredCheckBox;
+    private TextField filterIdField;
+    private Button clearFilterIdFieldButton;
+    private TextField filterNameField;
+    private Button clearFilterNameFieldButton;
+    private CheckBox showRegisteredAcceptedCheckBox;
+    private CheckBox showBlacklistedCheckBox;
 
     //Button
     private Button registerDeleteButton;
@@ -67,33 +71,67 @@ public class MainWindow extends GridWindow<Course> {
         //Initializing filtering
         superFilterLayout = new HorizontalLayout();
 
-        filterLayout = new CssLayout();
-        filterLayout.setSizeFull();
+        filterIdLayout = new CssLayout();
+        filterIdLayout.setSizeFull();
 
-        filterField = new TextField();
+        filterIdField = new TextField();
 
-        filterField.setPlaceholder("filter by name...");
-        filterField.addValueChangeListener(e -> updateGrid());
-        filterField.setValueChangeMode(ValueChangeMode.LAZY);
+        filterIdField.setPlaceholder("filter by id...");
+        filterIdField.addValueChangeListener(e -> updateGridById());
+        filterIdField.addValueChangeListener(e -> filterNameField.clear());
+        filterIdField.setValueChangeMode(ValueChangeMode.LAZY);
+        filterNameField.setPlaceholder("filter by name...");
+        filterNameField.addValueChangeListener(e -> updateGridByName());
+        filterNameField.addValueChangeListener(e-> filterIdField.clear());
+        filterNameField.setValueChangeMode(ValueChangeMode.LAZY);
 
-        clearFilterFieldButton = new Button(VaadinIcons.CLOSE_SMALL);
+        clearFilterIdFieldButton = new Button(VaadinIcons.CLOSE_SMALL);
+        clearFilterNameFieldButton = new Button(VaadinIcons.CLOSE_SMALL);
 
-        clearFilterFieldButton.setDescription("Clear the current filter");
-        clearFilterFieldButton.addClickListener(e -> filterField.clear());
+        clearFilterIdFieldButton.setDescription("Clear the current filter");
+        clearFilterIdFieldButton.addClickListener(e -> filterIdField.clear());
+        clearFilterNameFieldButton.setDescription("Clear the current filter");
+        clearFilterNameFieldButton.addClickListener(e -> filterNameField.clear());
 
-        filterLayout.addComponents(filterField, clearFilterFieldButton);
-        filterLayout.setStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
+        filterIdLayout.addComponents(filterIdField, clearFilterIdFieldButton);
+        filterIdLayout.setStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
+        filterNameLayout.addComponents(filterNameField, clearFilterNameFieldButton);
+        filterNameLayout.setStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
 
-        superFilterLayout.addComponent(filterLayout);
-        superFilterLayout.setComponentAlignment(filterLayout, Alignment.TOP_LEFT);
-
-        showRegisteredCheckBox = new CheckBox("Show courses I'm registered to");
-        showRegisteredCheckBox.setValue(true);
-        showRegisteredCheckBox.addValueChangeListener(event -> updateGrid());
+        superFilterLayout.addComponent(filterIdLayout);
+        superFilterLayout.setComponentAlignment(filterIdLayout, Alignment.TOP_LEFT);
+        superFilterLayout.addComponent(filterNameLayout);
+        superFilterLayout.setComponentAlignment(filterNameLayout, Alignment.TOP_LEFT);
 
         if(!AuthenticationService.getInstance().isAdmin()) {
-            superFilterLayout.addComponent(showRegisteredCheckBox);
-            superFilterLayout.setComponentAlignment(showRegisteredCheckBox, Alignment.MIDDLE_LEFT);
+            showRegisteredAcceptedCheckBox = new CheckBox("Show courses I'm registered to");
+            showRegisteredAcceptedCheckBox.setValue(true);
+            if (filterIdField.getValue().isEmpty() && !filterNameField.getValue().isEmpty()) {
+                showRegisteredAcceptedCheckBox.addValueChangeListener(event -> updateGridByName());
+            } else {
+                showRegisteredAcceptedCheckBox.addValueChangeListener(event -> updateGridById());
+            }
+            superFilterLayout.addComponent(showRegisteredAcceptedCheckBox);
+            superFilterLayout.setComponentAlignment(showRegisteredAcceptedCheckBox, Alignment.MIDDLE_LEFT);
+        } else {
+            showRegisteredAcceptedCheckBox = new CheckBox("Show not accepted courses");
+            showRegisteredAcceptedCheckBox.setValue(true);
+            if (filterIdField.getValue().isEmpty() && !filterNameField.getValue().isEmpty()) {
+                showRegisteredAcceptedCheckBox.addValueChangeListener(event -> updateGridByName());
+            } else {
+                showRegisteredAcceptedCheckBox.addValueChangeListener(event -> updateGridById());
+            }
+            showBlacklistedCheckBox = new CheckBox("Show blacklisted courses");
+            showBlacklistedCheckBox.setValue(true);
+            if (filterIdField.getValue().isEmpty() && !filterNameField.getValue().isEmpty()) {
+                showBlacklistedCheckBox.addValueChangeListener(event -> updateGridByName());
+            } else {
+                showBlacklistedCheckBox.addValueChangeListener(event -> updateGridById());
+            }
+            superFilterLayout.addComponent(showRegisteredAcceptedCheckBox);
+            superFilterLayout.setComponentAlignment(showRegisteredAcceptedCheckBox, Alignment.MIDDLE_LEFT);
+            superFilterLayout.addComponent(showBlacklistedCheckBox);
+            superFilterLayout.setComponentAlignment(showBlacklistedCheckBox, Alignment.MIDDLE_LEFT);
         }
 
         middleLayer.addComponent(superFilterLayout);
@@ -269,12 +307,34 @@ public class MainWindow extends GridWindow<Course> {
         initTop();
     }
 
+    private void updateGridByName() {
+        List<Course> courses;
+        if(!AuthenticationService.getInstance().isAdmin()) {
+            courses = courseService.findByName(filterNameField.getValue(), showRegisteredAcceptedCheckBox.getValue());
+        } else {
+            courses = courseService.findByNameAcceptedBlacklisted(
+                    filterNameField.getValue(), showRegisteredAcceptedCheckBox.getValue(), showBlacklistedCheckBox.getValue());
+        }
+        grid.setItems(courses);
+    }
+
+    private void updateGridById() {
+        List<Course> courses;
+        if(!AuthenticationService.getInstance().isAdmin()) {
+            courses = courseService.findById(filterIdField.getValue(), showRegisteredAcceptedCheckBox.getValue());
+        } else {
+            courses = courseService.findByIdAcceptedBlacklisted(
+                    filterIdField.getValue(), showRegisteredAcceptedCheckBox.getValue(), showBlacklistedCheckBox.getValue());
+        }
+        grid.setItems(courses);
+    }
+
     public void updateGrid() {
         List<Course> courses;
         if(!AuthenticationService.getInstance().isAdmin()) {
-            courses = courseService.findAll(filterField.getValue(), showRegisteredCheckBox.getValue());
+            courses = courseService.findAllAcceptedBlacklisted();
         } else {
-            courses = courseService.findAll(filterField.getValue());
+            courses = courseService.findAllAcceptedBlacklisted();
         }
         grid.setItems(courses);
     }

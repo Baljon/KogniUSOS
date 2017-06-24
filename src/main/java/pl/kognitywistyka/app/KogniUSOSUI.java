@@ -10,6 +10,7 @@ import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.*;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import pl.kognitywistyka.app.persistence.HibernateUtils;
 import pl.kognitywistyka.app.security.AuthenticationService;
 import pl.kognitywistyka.app.ui.LoginWindow;
 import pl.kognitywistyka.app.ui.MainWindow;
@@ -27,19 +28,17 @@ import java.util.List;
 @Theme("kogniusos")
 public class KogniUSOSUI extends UI {
 
-//    private static SessionFactory factory;
+    private static SessionFactory factory;
 
-//    public static void main(String[] args) {
-//        try {
-//            factory = new Configuration().configure().addAnnotatedClass(Student.class).buildSessionFactory();
-//        } catch (Throwable e) {
-//            System.err.println(e);
-//            throw new ExceptionInInitializerError(e);
-//        }
-//        KogniUSOSUI KU = new KogniUSOSUI();
-//
-//
-//    }
+    public static void main(String[] args) {
+        try {
+            factory = HibernateUtils.getSessionFactory();
+        } catch (Throwable e) {
+            System.err.println(e);
+            throw new ExceptionInInitializerError(e);
+        }
+        KogniUSOSUI KU = new KogniUSOSUI();
+    }
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
@@ -49,24 +48,9 @@ public class KogniUSOSUI extends UI {
         } else {
             setContent(new LoginWindow());
         }
-
-//        final VerticalLayout layout = new VerticalLayout();
-//
-//        final TextField name = new TextField();
-//        name.setCaption("Type your id here:");
-//
-//        Button button = new Button("Sign in");
-//        button.addClickListener( e -> {
-//            layout.addComponent(new Label("Thanks " + name.getValue()
-//                    + ", it works!"));
-//        });
-//
-//        layout.addComponents(name, button);
-//
-//        setContent(layout);
     }
 
-    @WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
+    @WebServlet(urlPatterns = "/*", name = "KogniUSOSServlet", asyncSupported = true)
     @VaadinServletConfiguration(ui = KogniUSOSUI.class, productionMode = false)
     public static class KogniUSOSServlet extends VaadinServlet {
     }
