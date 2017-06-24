@@ -67,6 +67,7 @@ public class LoginWindow extends CenteredWindow {
 
         //Initializing fields
         userField = new TextField("Album number: ");
+        userField.selectAll();
         passwordField = new PasswordField("Password: ");
 
         inputBoxes.addComponent(userField);

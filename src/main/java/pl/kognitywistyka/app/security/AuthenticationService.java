@@ -24,8 +24,8 @@ public class AuthenticationService {
     public boolean authenticate(String id, String password) {
         StudentService studentService = StudentService.getInstance();
 //        List<User> retrievedUser = studentService.findById(id);
-        List<User> retrievedUser = studentService.findAll(id);
-        if(!retrievedUser.isEmpty()) {
+        List<User> retrievedUser = studentService.findById(id);
+        if(!retrievedUser.isEmpty() && retrievedUser != null) {
             String hashedPassword = sha512(password);
             if(retrievedUser.get(0).confirmPassword(hashedPassword)) {
                setCurrentLoginInfo(retrievedUser.get(0));

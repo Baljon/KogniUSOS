@@ -56,11 +56,11 @@ public class StudentService {
         List<User> resultList = null;
         try {
             tx = session.beginTransaction();
-            Query query = session.createQuery("from User where id =: id").setParameter("id", id);
+            Query query = session.createQuery("from User where id = :id").setParameter("id", id);
             User user = (User) query.getSingleResult();
             resultList = new ArrayList<>();
             resultList.add(user);
-        } catch (Exception e) {
+        } catch (NoResultException e) {
             if (tx != null) tx.rollback();
             e.printStackTrace();
         } finally {
