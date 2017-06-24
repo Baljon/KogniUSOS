@@ -119,6 +119,21 @@ public class StudentService {
         return finalList;
     }
 
+    //Adds user to db
+    public void addUser(User user) {
+        Session session = HibernateUtils.getSessionFactory().openSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            session.save(user);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            session.close();
+            e.printStackTrace();
+        }
+    }
+
     public synchronized ArrayList<User> findAll(String value) {
         ArrayList<User> arrayList = new ArrayList<>();
         for (User user : users.values()) {
