@@ -7,6 +7,7 @@ import pl.kognitywistyka.app.course.Course;
 import pl.kognitywistyka.app.persistence.HibernateUtils;
 import pl.kognitywistyka.app.security.AuthenticationService;
 import pl.kognitywistyka.app.user.Student;
+import pl.kognitywistyka.app.user.User;
 
 import javax.persistence.NoResultException;
 import java.util.*;
@@ -41,7 +42,7 @@ public class CourseService {
         }
     }
 
-    public synchronized List<Course> findById(String id) throws NoResultException{
+    public synchronized List<Course> findById(String id) throws NoResultException {
         Session session = HibernateUtils.getSessionFactory().openSession();
         Transaction tx = null;
         List<Course> resultList = null;
@@ -254,94 +255,276 @@ public class CourseService {
         return resultList;
     }
 
-    /***
-     * Returns all courses.
-     * @return ArrayList<Course>
-     */
-    public synchronized List<Course> findAll() {
-        ArrayList<Course> arrayList = new ArrayList<>();
-        for (Course course : courses.values()) {
-            arrayList.add(course);
-        }
-        return arrayList;
-    }
-
-    /***
-     * Returns all courses whose String representation contains given String.
-     * @param value filtering value
-     * @return ArrayList<Course>
-     */
-    public synchronized List<Course> findAll(String value) {
-        ArrayList<Course> arrayList = new ArrayList<>();
-        for (Course course : courses.values()) {
-            boolean passesFilter = (value == null || value.isEmpty())
-                    || course.toString().toLowerCase().contains(value.toLowerCase());
-            if (passesFilter) {
-                arrayList.add(course);
+    public boolean register(Set<Course> selectedCourses) {
+        Session session = HibernateUtils.getSessionFactory().openSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            Student user = (Student) AuthenticationService.getInstance().getCurrentLoginInfo();
+            int count = 0;
+            for (Course course : selectedCourses) {
+                course.getStudents().add(user);
+                session.update(course);
+                count++;
+                if (count > 20) {
+                    session.flush();
+                }
             }
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            e.printStackTrace();
+            return false;
+        } finally {
+            session.close();
         }
-//        Collections.sort(arrayList, (o1, o2) -> (int) ( - o1.getLocalId()));
-        return arrayList;
+        return true;
     }
 
-    /***
-     * Returns all courses whose String representation contains given String and that current user is registered to.
-     * @param value String, filtering value
-     * @param value1 boolean, indicates whether the fact that user is registered to should be taken into account
-     * @return ArrayList<Course>
-     */
-    public synchronized List<Course> findAll(String value, Boolean value1) {
-        Student student = (Student) AuthenticationService.getInstance().getCurrentLoginInfo();
-        ArrayList<Course> arrayList = new ArrayList<>();
-        for (Course course : courses.values()) {
-            boolean passesFilter = (value == null || value.isEmpty())
-                    || (course.toString().toLowerCase().contains(value.toLowerCase()) && (value1 || student.isRegisteredTo(course)));
-            if (passesFilter) {
-                arrayList.add(course);
+    public boolean register(Course course) {
+        Session session = HibernateUtils.getSessionFactory().openSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            Student user = (Student) AuthenticationService.getInstance().getCurrentLoginInfo();
+            course.getStudents().add(user);
+            session.update(course);
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            e.printStackTrace();
+            return false;
+        } finally {
+            session.close();
+        }
+        return true;
+    }
+
+    public boolean addCourses(String value) {
+        //todo Currently supports only one course and no REST
+        Session session = HibernateUtils.getSessionFactory().openSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            //todo connecting qith USOS here
+            session.save(new Course(value, value, value, true, false));
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            e.printStackTrace();
+            return false;
+        } finally {
+            session.close();
+        }
+        return true;
+    }
+
+    public boolean proposeCourses(String value) {
+        //todo Currently supports only one course and no REST
+        Session session = HibernateUtils.getSessionFactory().openSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            //todo connecting with USOS here + plus querying db whether exists
+            session.save(new Course(value, value, value, false, false));
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            e.printStackTrace();
+            return false;
+        } finally {
+            session.close();
+        }
+        return true;
+    }
+
+    public boolean acceptCourse(Course course) {
+        return acceptRejectCourse(true, course);
+    }
+
+    public boolean rejectCourse(Course course) {
+        return acceptRejectCourse(false, course);
+    }
+
+    public boolean acceptRejectCourse(boolean accept, Course course) {
+        Session session = HibernateUtils.getSessionFactory().openSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            if(accept) {
+                course.acceptCourse();
+            } else {
+                course.rejectCourse();
             }
+            session.update(course);
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            e.printStackTrace();
+            return false;
+        } finally {
+            session.close();
         }
-//        Collections.sort(arrayList, (o1, o2) -> (int) ( - o1.getLocalId()));
-        return arrayList;
-    }
-
-    public static boolean register(Set<Course> selectedCourses) {
-        return false;
-    }
-
-    public static boolean register(Course course) {
-        return false;
-    }
-
-    public static boolean addCourses(String value) {
-        //smart - checks if String contains commas
-        return false;
-    }
-
-    public static boolean proposeCourses(String value) {
-        return false;
+        return true;
     }
 
     public boolean delete(Course course) {
-        courses.remove(course.getId());
+        Session session = HibernateUtils.getSessionFactory().openSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            session.remove(course);
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            e.printStackTrace();
+            return false;
+        } finally {
+            session.close();
+        }
         return true;
     }
 
     public boolean delete(Set<Course> selectedCourses) {
-        for (Course course : selectedCourses) {
-            courses.remove(course.getId());
+        Session session = HibernateUtils.getSessionFactory().openSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            for (Course course : selectedCourses) {
+                session.remove(course);
+            }
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            e.printStackTrace();
+            return false;
+        } finally {
+            session.close();
         }
         return true;
     }
 
     public boolean unregister(Course course) {
-        return false;
+        Session session = HibernateUtils.getSessionFactory().openSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            Student user = (Student) AuthenticationService.getInstance().getCurrentLoginInfo();
+            course.getStudents().remove(user);
+            session.update(course);
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            e.printStackTrace();
+            return false;
+        } finally {
+            session.close();
+        }
+        return true;
     }
 
     public boolean unregister(Set<Course> selectedCourses) {
-        return false;
+        Session session = HibernateUtils.getSessionFactory().openSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            Student user = (Student) AuthenticationService.getInstance().getCurrentLoginInfo();
+            int count = 0;
+            for (Course course : selectedCourses) {
+                course.getStudents().remove(user);
+                session.update(course);
+                count++;
+                if (count > 20) {
+                    session.flush();
+                }
+            }
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            e.printStackTrace();
+            return false;
+        } finally {
+            session.close();
+        }
+        return true;
     }
 
     public boolean exportStudents(Set<Course> selectedCourses) {
-        return false;
+        Session session = HibernateUtils.getSessionFactory().openSession();
+        Transaction tx = null;
+        HashMap<String, Set<Student>> resultMap = new HashMap<>();
+        int count = 0;
+        try {
+            tx = session.beginTransaction();
+            for (Course course : selectedCourses) {
+                resultMap.put(course.getId(), course.getStudents());
+                course.rejectCourse();
+                session.update(course);
+                count++;
+                if (count > 20) {
+                    session.flush();
+                }
+            }
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            e.printStackTrace();
+            return false;
+        } finally {
+            session.close();
+        }
+        return true;
+        //todo here call to some print to external format method
     }
+
+//
+//    /***
+//     * Returns all courses.
+//     * @return ArrayList<Course>
+//     */
+//    public synchronized List<Course> findAll() {
+//        ArrayList<Course> arrayList = new ArrayList<>();
+//        for (Course course : courses.values()) {
+//            arrayList.add(course);
+//        }
+//        return arrayList;
+//    }
+//
+//    /***
+//     * Returns all courses whose String representation contains given String.
+//     * @param value filtering value
+//     * @return ArrayList<Course>
+//     */
+//    public synchronized List<Course> findAll(String value) {
+//        ArrayList<Course> arrayList = new ArrayList<>();
+//        for (Course course : courses.values()) {
+//            boolean passesFilter = (value == null || value.isEmpty())
+//                    || course.toString().toLowerCase().contains(value.toLowerCase());
+//            if (passesFilter) {
+//                arrayList.add(course);
+//            }
+//        }
+////        Collections.sort(arrayList, (o1, o2) -> (int) ( - o1.getLocalId()));
+//        return arrayList;
+//    }
+//
+//    /***
+//     * Returns all courses whose String representation contains given String and that current user is registered to.
+//     * @param value String, filtering value
+//     * @param value1 boolean, indicates whether the fact that user is registered to should be taken into account
+//     * @return ArrayList<Course>
+//     */
+//    public synchronized List<Course> findAll(String value, Boolean value1) {
+//        Student student = (Student) AuthenticationService.getInstance().getCurrentLoginInfo();
+//        ArrayList<Course> arrayList = new ArrayList<>();
+//        for (Course course : courses.values()) {
+//            boolean passesFilter = (value == null || value.isEmpty())
+//                    || (course.toString().toLowerCase().contains(value.toLowerCase()) && (value1 || student.isRegisteredTo(course)));
+//            if (passesFilter) {
+//                arrayList.add(course);
+//            }
+//        }
+////        Collections.sort(arrayList, (o1, o2) -> (int) ( - o1.getLocalId()));
+//        return arrayList;
+//    }
 }

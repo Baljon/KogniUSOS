@@ -86,7 +86,7 @@ public class MainWindow extends GridWindow<Course> {
         filterIdField.setValueChangeMode(ValueChangeMode.LAZY);
         filterNameField.setPlaceholder("filter by name...");
         filterNameField.addValueChangeListener(e -> updateGridByName());
-        filterNameField.addValueChangeListener(e-> filterIdField.clear());
+        filterNameField.addValueChangeListener(e -> filterIdField.clear());
         filterNameField.setValueChangeMode(ValueChangeMode.LAZY);
 
         clearFilterIdFieldButton = new Button(VaadinIcons.CLOSE_SMALL);
@@ -107,7 +107,7 @@ public class MainWindow extends GridWindow<Course> {
         superFilterLayout.addComponent(filterNameLayout);
         superFilterLayout.setComponentAlignment(filterNameLayout, Alignment.TOP_LEFT);
 
-        if(!AuthenticationService.getInstance().isAdmin()) {
+        if (!AuthenticationService.getInstance().isAdmin()) {
             showRegisteredAcceptedCheckBox = new CheckBox("Show courses I'm registered to");
             showRegisteredAcceptedCheckBox.setValue(true);
             if (filterIdField.getValue().isEmpty() && !filterNameField.getValue().isEmpty()) {
@@ -177,7 +177,6 @@ public class MainWindow extends GridWindow<Course> {
             registerDeleteButton.setStyleName(ValoTheme.BUTTON_FRIENDLY);
 
             registerDeleteButton.addClickListener(event -> {
-
                 //Initializing buttons
                 Button cancelButton = new Button("Cancel");
                 cancelButton.setStyleName(ValoTheme.BUTTON_DANGER);
@@ -269,7 +268,7 @@ public class MainWindow extends GridWindow<Course> {
                 //Initializing submit button
                 Button submitButton = new Button("Submit");
                 submitButton.addClickListener(submitEvent -> {
-                    boolean submitted = CourseService.addCourses(codesField.getValue());
+                    boolean submitted = courseService.addCourses(codesField.getValue());
                     String object = codesField.getValue();
                     window.close();
                     showNotification(submitted);
@@ -323,7 +322,7 @@ public class MainWindow extends GridWindow<Course> {
         } catch (NoResultException e) {
             courses = new ArrayList<>();
         }
-        if(courses == null) courses = new ArrayList<>();
+        if (courses == null) courses = new ArrayList<>();
         grid.setItems(courses);
     }
 
@@ -339,7 +338,7 @@ public class MainWindow extends GridWindow<Course> {
         } catch (NoResultException e) {
             courses = new ArrayList<>();
         }
-        if(courses == null) courses = new ArrayList<>();
+        if (courses == null) courses = new ArrayList<>();
         grid.setItems(courses);
     }
 
@@ -354,7 +353,7 @@ public class MainWindow extends GridWindow<Course> {
         } catch (NoResultException e) {
             courses = new ArrayList<>();
         }
-        if(courses == null) courses = new ArrayList<>();
+        if (courses == null) courses = new ArrayList<>();
         grid.setItems(courses);
     }
 

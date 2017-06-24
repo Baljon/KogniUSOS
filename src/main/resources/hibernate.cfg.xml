@@ -7,7 +7,7 @@
         <!-- hsqldb database, db name "test"-->
 
         <property name="connection.driver_class">org.hsqldb.jdbcDriver</property>
-        <property name="connection.url">jdbc:hsqldb:file:/resources/test</property>
+        <property name="connection.url">jdbc:hsqldb:file:test</property>
         <property name="connection.username">sa</property>
         <property name="connection.password"></property>
 

@@ -43,6 +43,12 @@ public class Course {
         setFaculty(faculty);
     }
 
+    public Course(String id, String courseName, String faculty, boolean accepted, boolean blacklisted) {
+        this(id, courseName, faculty);
+        this.accepted = accepted;
+        this.blacklisted = blacklisted;
+    }
+
     public String getId() {
         return id;
     }
@@ -113,5 +119,9 @@ public class Course {
         //todo properer string, this one only for filtering testdata
         String courseAsString = getId() + "|" + getCourseName() + "|" + getFaculty();
         return courseAsString;
+    }
+
+    public void setAccepted(boolean accepted) {
+        this.accepted = accepted;
     }
 }

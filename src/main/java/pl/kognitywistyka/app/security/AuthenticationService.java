@@ -36,7 +36,6 @@ public class AuthenticationService {
     }
 
     public User getCurrentLoginInfo() {
-        //TODO
         return currentLoginInfo;
     }
 

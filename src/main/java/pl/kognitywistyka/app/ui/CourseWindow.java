@@ -33,11 +33,14 @@ public class CourseWindow extends ItemWindow {
 
     //Buttons
     private Button previousScreenButton;
+    private Button acceptButton;
+    private Button rejectButton;
 
     //Variables
     private Course course;
     private GridWindow previousWindow;
     private Button registerDeleteButton;
+    private CourseService courseService = CourseService.getInstance();
 
     public CourseWindow(Course course, Component previousWindow) {
         setCourse(course);
@@ -113,7 +116,7 @@ public class CourseWindow extends ItemWindow {
                     sureButton.setStyleName(ValoTheme.BUTTON_FRIENDLY);
 
                     sureButton.addClickListener(clickEvent -> {
-                        boolean registered = CourseService.register(course);
+                        boolean registered = courseService.register(course);
                         showNotification(registered);
                     });
 
@@ -174,6 +177,18 @@ public class CourseWindow extends ItemWindow {
 
                 getUI().getUI().addWindow(showWarning(buttonsList));
             });
+            if(!course.isAccepted()){
+                acceptButton = new Button("Accept course");
+                acceptButton.setStyleName(ValoTheme.BUTTON_FRIENDLY);
+
+                acceptButton.addClickListener(clickEvent -> courseService.acceptCourse(course));
+
+                rejectButton = new Button("Reject course");
+
+                rejectButton.addClickListener(clickEvent -> courseService.rejectCourse(course));
+
+                buttonLayout.addComponents(acceptButton, rejectButton);
+            }
         }
 
         buttonLayout.addComponent(registerDeleteButton);

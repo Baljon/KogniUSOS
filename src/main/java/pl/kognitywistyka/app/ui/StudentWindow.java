@@ -39,6 +39,7 @@ public class StudentWindow extends ItemWindow {
     //Variables
     private User user;
     private CenteredWindow previousWindow;
+    private CourseService courseService = CourseService.getInstance();
 
     public StudentWindow(User user, Component previousWindow) {
         setUser(user);
@@ -170,7 +171,7 @@ public class StudentWindow extends ItemWindow {
                 //Initializing submit button
                 Button submitButton = new Button("Submit");
                 submitButton.addClickListener(submitEvent -> {
-                    boolean submitted = CourseService.addCourses(codesField.getValue());
+                    boolean submitted = courseService.addCourses(codesField.getValue());
                     window.close();
                     showNotification(submitted);
                 });
@@ -210,7 +211,7 @@ public class StudentWindow extends ItemWindow {
                 //Initializing submit button
                 Button submitButton = new Button("Submit");
                 submitButton.addClickListener(submitEvent -> {
-                    boolean submitted = CourseService.proposeCourses(codesField.getValue());
+                    boolean submitted = courseService.proposeCourses(codesField.getValue());
                     window.close();
                     showNotification(submitted);
                 });
