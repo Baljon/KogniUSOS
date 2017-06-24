@@ -8,6 +8,7 @@ import pl.kognitywistyka.app.persistence.HibernateUtils;
 import pl.kognitywistyka.app.security.AuthenticationService;
 import pl.kognitywistyka.app.user.Student;
 
+import javax.persistence.NoResultException;
 import java.util.*;
 
 /**
@@ -40,7 +41,7 @@ public class CourseService {
         }
     }
 
-    public synchronized List<Course> findById(String id) {
+    public synchronized List<Course> findById(String id) throws NoResultException{
         Session session = HibernateUtils.getSessionFactory().openSession();
         Transaction tx = null;
         List<Course> resultList = null;
@@ -61,7 +62,7 @@ public class CourseService {
         return resultList;
     }
 
-    public synchronized List<Course> findById(String id, boolean showRegistered) {
+    public synchronized List<Course> findById(String id, boolean showRegistered) throws NoResultException {
         if (!showRegistered) {
             Session session = HibernateUtils.getSessionFactory().openSession();
             Transaction tx = null;
@@ -96,7 +97,7 @@ public class CourseService {
         } else return findById(id);
     }
 
-    public synchronized List<Course> findByName(String name) {
+    public synchronized List<Course> findByName(String name) throws NoResultException {
         Session session = HibernateUtils.getSessionFactory().openSession();
         Transaction tx = null;
         List resultList = null;
@@ -122,7 +123,7 @@ public class CourseService {
         return finalList;
     }
 
-    public List<Course> findByName(String name, boolean showRegistered) {
+    public List<Course> findByName(String name, boolean showRegistered) throws NoResultException {
         if (!showRegistered) {
             Session session = HibernateUtils.getSessionFactory().openSession();
             Transaction tx = null;
@@ -157,7 +158,7 @@ public class CourseService {
         } else return findByName(name);
     }
 
-    public synchronized List<Course> findAllAcceptedBlacklisted(boolean accepted, boolean blacklisted) {
+    public synchronized List<Course> findAllAcceptedBlacklisted(boolean accepted, boolean blacklisted) throws NoResultException {
         Session session = HibernateUtils.getSessionFactory().openSession();
         Transaction tx = null;
         List<Course> resultList = null;
@@ -169,21 +170,19 @@ public class CourseService {
             resultList.add(course);
         } catch (Exception e) {
             if (tx != null) tx.rollback();
-            session.close();
             e.printStackTrace();
         } finally {
-            session.flush();
             session.close();
         }
         return resultList;
     }
 
-    public synchronized List<Course> findAllAcceptedBlacklisted() {
+    public synchronized List<Course> findAllAcceptedBlacklisted() throws NoResultException {
         return findAllAcceptedBlacklisted(true, false);
     }
 
 
-    public List<Course> findByNameAcceptedBlacklisted(String name, boolean accepted, boolean blacklisted) {
+    public List<Course> findByNameAcceptedBlacklisted(String name, boolean accepted, boolean blacklisted) throws NoResultException {
         if (name.isEmpty()) return findAllAcceptedBlacklisted(accepted, blacklisted);
         else {
             Session session = HibernateUtils.getSessionFactory().openSession();
@@ -216,7 +215,7 @@ public class CourseService {
         }
     }
 
-    public List<Course> findByIdAcceptedBlacklisted(String id, boolean accepted, boolean blacklisted) {
+    public List<Course> findByIdAcceptedBlacklisted(String id, boolean accepted, boolean blacklisted) throws NoResultException {
         if (id.isEmpty()) return findAllAcceptedBlacklisted(accepted, blacklisted);
         else {
             Session session = HibernateUtils.getSessionFactory().openSession();
@@ -249,7 +248,7 @@ public class CourseService {
         }
     }
 
-    public synchronized List<Course> findAllfinal() {
+    public synchronized List<Course> findAllFinal() throws NoResultException {
         Session session = HibernateUtils.getSessionFactory().openSession();
         Transaction tx = null;
         List<Course> resultList = null;

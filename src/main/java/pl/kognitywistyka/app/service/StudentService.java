@@ -6,9 +6,11 @@ import org.hibernate.query.Query;
 import pl.kognitywistyka.app.course.Course;
 import pl.kognitywistyka.app.persistence.HibernateUtils;
 import pl.kognitywistyka.app.security.AuthenticationService;
+import pl.kognitywistyka.app.user.Pokropski;
 import pl.kognitywistyka.app.user.Student;
 import pl.kognitywistyka.app.user.User;
 
+import javax.persistence.NoResultException;
 import java.sql.Connection;
 import java.util.*;
 
@@ -30,15 +32,16 @@ public class StudentService {
 
     public void ensureTestData() {
         users = new HashMap<>();
-        List<Student> studentsList = Arrays.asList(
+        List<User> studentsList = Arrays.asList(
                 new Student("1", "Radosław", "Jurczak"),
                 new Student("2", "Jakub", "Milewski"),
-                new Student("3", "Wiktor", "Rorot")
+                new Student("3", "Wiktor", "Rorot"),
+                new Pokropski("admin", "admin", "admin", AuthenticationService.sha512("admin"))
         );
 //        Integer id = 0;
-        for (Student student : studentsList) {
-            String id = student.getId();
-            users.put(id, student);
+        for (User user : studentsList) {
+            String id = user.getId();
+            users.put(id, user);
 //            id = id + 1;
         }
     }
@@ -48,7 +51,7 @@ public class StudentService {
         return new ArrayList<>();
     }
 
-    public synchronized List<User> findById(String id) {
+    public synchronized List<User> findById(String id) throws NoResultException {
         Session session = HibernateUtils.getSessionFactory().openSession();
         Transaction tx = null;
         List<User> resultList = null;
@@ -69,7 +72,7 @@ public class StudentService {
         return resultList;
     }
 
-    public synchronized List<Student> findByName(String name) {
+    public synchronized List<Student> findByName(String name) throws NoResultException {
         Session session = HibernateUtils.getSessionFactory().openSession();
         Transaction tx = null;
         List resultList;
@@ -95,7 +98,7 @@ public class StudentService {
         return finalList;
     }
 
-    public synchronized List<Student> findAllFinal() {
+    public synchronized List<Student> findAllFinal() throws NoResultException {
         Session session = HibernateUtils.getSessionFactory().openSession();
         Transaction tx = null;
         List resultList;

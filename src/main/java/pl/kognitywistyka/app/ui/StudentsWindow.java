@@ -8,6 +8,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import pl.kognitywistyka.app.service.StudentService;
 import pl.kognitywistyka.app.user.User;
 
+import javax.persistence.NoResultException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -177,7 +178,7 @@ public class StudentsWindow extends GridWindow<User> {
         initTop();
     }
 
-    public void updateGrid() {
+    public void updateGrid() throws NoResultException {
         StudentService studentService = StudentService.getInstance();
         List<User> studentsList = studentService.findAll(filterField.getValue());
         grid.setItems(studentsList);

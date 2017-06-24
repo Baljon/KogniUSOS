@@ -9,6 +9,7 @@ import pl.kognitywistyka.app.course.Course;
 import pl.kognitywistyka.app.security.AuthenticationService;
 import pl.kognitywistyka.app.service.CourseService;
 
+import javax.persistence.NoResultException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -73,8 +74,11 @@ public class MainWindow extends GridWindow<Course> {
 
         filterIdLayout = new CssLayout();
         filterIdLayout.setSizeFull();
+        filterNameLayout = new CssLayout();
+        filterNameLayout.setSizeFull();
 
         filterIdField = new TextField();
+        filterNameField = new TextField();
 
         filterIdField.setPlaceholder("filter by id...");
         filterIdField.addValueChangeListener(e -> updateGridById());
@@ -309,33 +313,46 @@ public class MainWindow extends GridWindow<Course> {
 
     private void updateGridByName() {
         List<Course> courses;
-        if(!AuthenticationService.getInstance().isAdmin()) {
-            courses = courseService.findByName(filterNameField.getValue(), showRegisteredAcceptedCheckBox.getValue());
-        } else {
-            courses = courseService.findByNameAcceptedBlacklisted(
-                    filterNameField.getValue(), showRegisteredAcceptedCheckBox.getValue(), showBlacklistedCheckBox.getValue());
+        try {
+            if (!AuthenticationService.getInstance().isAdmin()) {
+                courses = courseService.findByName(filterNameField.getValue(), showRegisteredAcceptedCheckBox.getValue());
+            } else {
+                courses = courseService.findByNameAcceptedBlacklisted(
+                        filterNameField.getValue(), showRegisteredAcceptedCheckBox.getValue(), showBlacklistedCheckBox.getValue());
+            }
+        } catch (NoResultException e) {
+            courses = new ArrayList<>();
         }
         grid.setItems(courses);
     }
 
     private void updateGridById() {
         List<Course> courses;
-        if(!AuthenticationService.getInstance().isAdmin()) {
-            courses = courseService.findById(filterIdField.getValue(), showRegisteredAcceptedCheckBox.getValue());
-        } else {
-            courses = courseService.findByIdAcceptedBlacklisted(
-                    filterIdField.getValue(), showRegisteredAcceptedCheckBox.getValue(), showBlacklistedCheckBox.getValue());
+        try {
+            if (!AuthenticationService.getInstance().isAdmin()) {
+                courses = courseService.findById(filterIdField.getValue(), showRegisteredAcceptedCheckBox.getValue());
+            } else {
+                courses = courseService.findByIdAcceptedBlacklisted(
+                        filterIdField.getValue(), showRegisteredAcceptedCheckBox.getValue(), showBlacklistedCheckBox.getValue());
+            }
+        } catch (NoResultException e) {
+            courses = new ArrayList<>();
         }
         grid.setItems(courses);
     }
 
     public void updateGrid() {
         List<Course> courses;
-        if(!AuthenticationService.getInstance().isAdmin()) {
-            courses = courseService.findAllAcceptedBlacklisted();
-        } else {
-            courses = courseService.findAllAcceptedBlacklisted();
+        try {
+            if (!AuthenticationService.getInstance().isAdmin()) {
+                courses = courseService.findAllAcceptedBlacklisted();
+            } else {
+                courses = courseService.findAllAcceptedBlacklisted(true, true);
+            }
+        } catch (NoResultException e) {
+            courses = new ArrayList<>();
         }
+        if(courses == null) courses = new ArrayList<>();
         grid.setItems(courses);
     }
 

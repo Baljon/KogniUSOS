@@ -70,7 +70,7 @@ public class CreateAccountForm extends FormLayout {
                 "Password should be at least 4 characters long!").bind(Student::getPassword, Student::setPassword);
         password.setRequiredIndicatorVisible(true);
         password.setIcon(VaadinIcons.PASSWORD);
-        studentBinder.forField(confirmPassword).withValidator(valid);
+        studentBinder.forField(confirmPassword).withValidator(valid); //why it doesn't work?
         confirmPassword.setRequiredIndicatorVisible(true);
         confirmPassword.setIcon(VaadinIcons.PASSWORD);
 
