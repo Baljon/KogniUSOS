@@ -11,7 +11,6 @@ import pl.kognitywistyka.app.user.Student;
 import pl.kognitywistyka.app.user.User;
 
 import javax.persistence.NoResultException;
-import java.sql.Connection;
 import java.util.*;
 
 /**
@@ -47,9 +46,9 @@ public class StudentService {
     }
 
     //todo
-    public synchronized List<User> findAll() {
-        return new ArrayList<>();
-    }
+//    public synchronized List<User> findAll() {
+//        return new ArrayList<>();
+//    }
 
     public synchronized List<User> findById(String id) throws NoResultException {
         Session session = HibernateUtils.getSessionFactory().openSession();
@@ -63,46 +62,45 @@ public class StudentService {
             resultList.add(user);
         } catch (Exception e) {
             if (tx != null) tx.rollback();
-            session.close();
             e.printStackTrace();
         } finally {
-            session.flush();
             session.close();
         }
         return resultList;
     }
 
-    public synchronized List<Student> findByName(String name) throws NoResultException {
-        Session session = HibernateUtils.getSessionFactory().openSession();
-        Transaction tx = null;
-        List resultList;
-        List<Student> finalList = new ArrayList<>();
-        try {
-            tx = session.beginTransaction();
-            Query query = session.createQuery(
-                    "from Student where lower(firstName) like: name or lower(lastName) like: name order by id").setParameter(
-                            "name", "%"+name.toLowerCase()+"%");
-            resultList = query.getResultList();
-            for(Object object : resultList) {
-                Student student = (Student) object;
-                finalList.add(student);
+    public synchronized List<User> findByName(String name) throws NoResultException {
+        if(name.isEmpty()) return findAllFinal();
+        else {
+            Session session = HibernateUtils.getSessionFactory().openSession();
+            Transaction tx = null;
+            List resultList;
+            List<User> finalList = new ArrayList<>();
+            try {
+                tx = session.beginTransaction();
+                Query query = session.createQuery(
+                        "from Student where lower(firstName) like: name or lower(lastName) like: name order by id").setParameter(
+                        "name", "%" + name.toLowerCase() + "%");
+                resultList = query.getResultList();
+                for (Object object : resultList) {
+                    Student student = (Student) object;
+                    finalList.add(student);
+                }
+            } catch (Exception e) {
+                if (tx != null) tx.rollback();
+                e.printStackTrace();
+            } finally {
+                session.close();
             }
-        } catch (Exception e) {
-            if (tx != null) tx.rollback();
-            session.close();
-            e.printStackTrace();
-        } finally {
-            session.flush();
-            session.close();
+            return finalList;
         }
-        return finalList;
     }
 
-    public synchronized List<Student> findAllFinal() throws NoResultException {
+    public synchronized List<User> findAllFinal() throws NoResultException {
         Session session = HibernateUtils.getSessionFactory().openSession();
         Transaction tx = null;
         List resultList;
-        List<Student> finalList = null;
+        List<User> finalList = null;
         try {
             tx = session.beginTransaction();
             Query query = session.createQuery("from Student order by lastName, firstName, id");
@@ -114,10 +112,8 @@ public class StudentService {
             }
         } catch (Exception e) {
             if (tx != null) tx.rollback();
-            session.close();
             e.printStackTrace();
         } finally {
-            session.flush();
             session.close();
         }
         return finalList;

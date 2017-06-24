@@ -53,10 +53,8 @@ public class CourseService {
             resultList.add(course);
         } catch (Exception e) {
             if (tx != null) tx.rollback();
-            session.close();
             e.printStackTrace();
         } finally {
-            session.flush();
             session.close();
         }
         return resultList;
@@ -87,10 +85,8 @@ public class CourseService {
                 }
             } catch (Exception e) {
                 if (tx != null) tx.rollback();
-                session.close();
                 e.printStackTrace();
             } finally {
-                session.flush();
                 session.close();
             }
             return finalList;
@@ -114,10 +110,8 @@ public class CourseService {
             }
         } catch (Exception e) {
             if (tx != null) tx.rollback();
-            session.close();
             e.printStackTrace();
         } finally {
-            session.flush();
             session.close();
         }
         return finalList;
@@ -148,10 +142,8 @@ public class CourseService {
                 }
             } catch (Exception e) {
                 if (tx != null) tx.rollback();
-                session.close();
                 e.printStackTrace();
             } finally {
-                session.flush();
                 session.close();
             }
             return finalList;
@@ -205,10 +197,8 @@ public class CourseService {
                 }
             } catch (Exception e) {
                 if (tx != null) tx.rollback();
-                session.close();
                 e.printStackTrace();
             } finally {
-                session.flush();
                 session.close();
             }
             return finalList;
@@ -238,10 +228,8 @@ public class CourseService {
                 }
             } catch (Exception e) {
                 if (tx != null) tx.rollback();
-                session.close();
                 e.printStackTrace();
             } finally {
-                session.flush();
                 session.close();
             }
             return finalList;
@@ -259,10 +247,8 @@ public class CourseService {
             resultList.add(course);
         } catch (Exception e) {
             if (tx != null) tx.rollback();
-            session.close();
             e.printStackTrace();
         } finally {
-            session.flush();
             session.close();
         }
         return resultList;

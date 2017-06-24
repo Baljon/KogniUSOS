@@ -323,6 +323,7 @@ public class MainWindow extends GridWindow<Course> {
         } catch (NoResultException e) {
             courses = new ArrayList<>();
         }
+        if(courses == null) courses = new ArrayList<>();
         grid.setItems(courses);
     }
 
@@ -338,6 +339,7 @@ public class MainWindow extends GridWindow<Course> {
         } catch (NoResultException e) {
             courses = new ArrayList<>();
         }
+        if(courses == null) courses = new ArrayList<>();
         grid.setItems(courses);
     }
 

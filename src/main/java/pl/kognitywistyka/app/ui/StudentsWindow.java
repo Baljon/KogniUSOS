@@ -20,15 +20,19 @@ public class StudentsWindow extends GridWindow<User> {
 
     //Layouts
     private VerticalLayout middleLayer;
-    private CssLayout filterLayout;
+    private CssLayout filterNameLayout;
+    private CssLayout filterIdLayout;
+    private HorizontalLayout superFilterLayout;
     private HorizontalLayout buttonsLayout;
 
     //Grid
     private Grid<User> grid;
 
     //Filter
-    private TextField filterField;
-    private Button clearFilterFieldButton;
+    private TextField filterNameField;
+    private Button clearFilterNameFieldButton;
+    private TextField filterIdField;
+    private Button clearFilterIdFieldButton;
 
     //Button
     private Button deleteButton;
@@ -57,26 +61,43 @@ public class StudentsWindow extends GridWindow<User> {
         middleLayer.setHeight("600px");
 
         //Initializing filtering
-        filterLayout = new CssLayout();
-        filterLayout.setSizeFull();
+        superFilterLayout = new HorizontalLayout();
 
-        filterField = new TextField();
+        filterNameLayout = new CssLayout();
+        filterNameLayout.setSizeFull();
+        filterIdLayout = new CssLayout();
+        filterIdLayout.setSizeFull();
 
-        filterField.setPlaceholder("filter by...");
-        filterField.addValueChangeListener(e -> updateGrid());
-        filterField.setValueChangeMode(ValueChangeMode.LAZY);
+        filterNameField = new TextField();
+        filterIdField = new TextField();
 
-        clearFilterFieldButton = new Button(VaadinIcons.CLOSE_SMALL);
+        filterNameField.setPlaceholder("filter by name...");
+        filterNameField.addValueChangeListener(e -> updateGrid());
+        filterNameField.addValueChangeListener(e -> filterIdField.clear());
+        filterNameField.setValueChangeMode(ValueChangeMode.LAZY);
+        filterIdField.setPlaceholder("filter by id...");
+        filterIdField.addValueChangeListener(e -> updateGridById());
+        filterIdField.addValueChangeListener(e -> filterNameField.clear());
+        filterIdField.setValueChangeMode(ValueChangeMode.LAZY);
 
-        clearFilterFieldButton.setDescription("Clear the current filter");
-        clearFilterFieldButton.addClickListener(e -> filterField.clear());
+        clearFilterNameFieldButton = new Button(VaadinIcons.CLOSE_SMALL);
+        clearFilterIdFieldButton = new Button(VaadinIcons.CLOSE_SMALL);
 
-        filterLayout.addComponents(filterField, clearFilterFieldButton);
-        filterLayout.setStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
+        clearFilterNameFieldButton.setDescription("Clear the current filter");
+        clearFilterNameFieldButton.addClickListener(e -> filterNameField.clear());
+        clearFilterIdFieldButton.setDescription("Clear the current filter");
+        clearFilterIdFieldButton.addClickListener(e -> filterNameField.clear());
 
-        middleLayer.addComponent(filterLayout);
-        middleLayer.setComponentAlignment(filterLayout, Alignment.TOP_LEFT);
-        middleLayer.setExpandRatio(filterLayout, 0.1f);
+        filterNameLayout.addComponents(filterNameField, clearFilterNameFieldButton);
+        filterNameLayout.setStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
+        filterIdLayout.addComponents(filterIdField, clearFilterIdFieldButton);
+        filterIdLayout.setStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
+
+        superFilterLayout.addComponents(filterNameLayout, filterIdLayout);
+
+        middleLayer.addComponent(superFilterLayout);
+        middleLayer.setComponentAlignment(superFilterLayout, Alignment.TOP_LEFT);
+        middleLayer.setExpandRatio(superFilterLayout, 0.1f);
 
         //Initializing grid
         grid = new Grid<>(User.class);
@@ -178,9 +199,17 @@ public class StudentsWindow extends GridWindow<User> {
         initTop();
     }
 
-    public void updateGrid() throws NoResultException {
+    private void updateGridById() {
         StudentService studentService = StudentService.getInstance();
-        List<User> studentsList = studentService.findAll(filterField.getValue());
+        List<User> studentsList = studentService.findById(filterIdField.getValue());
+        if(studentsList == null) studentsList = new ArrayList<>();
+        grid.setItems(studentsList);
+    }
+
+    public void updateGrid() {
+        StudentService studentService = StudentService.getInstance();
+        List<User> studentsList = studentService.findByName(filterNameField.getValue());
+        if(studentsList == null) studentsList = new ArrayList<>();
         grid.setItems(studentsList);
     }
 
