@@ -116,8 +116,7 @@ public class Course {
 
     @Override
     public String toString() {
-        //todo properer string, this one only for filtering testdata
-        String courseAsString = getId() + "|" + getCourseName() + "|" + getFaculty();
+        String courseAsString = getId() + " " + getCourseName();
         return courseAsString;
     }
 

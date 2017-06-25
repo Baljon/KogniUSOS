@@ -46,7 +46,7 @@ public class Student extends User {
 
     @Override
     public String toString() {
-        return getId() + "|" + getFirstName() + "|" + getLastName();
+        return getFirstName() + " " + getLastName() + ", nr albumu " + getId();
     }
 
     public String getEmail() {
