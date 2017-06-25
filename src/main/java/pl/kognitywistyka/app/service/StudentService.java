@@ -48,20 +48,23 @@ public class StudentService {
     public synchronized List<User> findById(String id) throws NoResultException {
         Session session = HibernateUtils.getSessionFactory().openSession();
         Transaction tx = null;
-        List<User> resultList = null;
+        List resultList = null;
+        List<User> finalList = null;
         try {
             tx = session.beginTransaction();
-            Query query = session.createQuery("from User where id = :id").setParameter("id", id);
-            User user = (User) query.getSingleResult();
-            resultList = new ArrayList<>();
-            resultList.add(user);
+            Query query = session.createQuery("from User where id like :id").setParameter("id", id);
+            resultList = query.getResultList();
+            finalList = new ArrayList<>();
+            for(Object object : resultList) {
+                finalList.add((User) object);
+            }
         } catch (NoResultException e) {
             if (tx != null) tx.rollback();
             e.printStackTrace();
         } finally {
             session.close();
         }
-        return resultList;
+        return finalList;
     }
 
     public synchronized List<User> findByName(String name) throws NoResultException {
@@ -177,7 +180,6 @@ public class StudentService {
 //            boolean passesFilter = (value == null || value.isEmpty())
 //                    || user.toString().toLowerCase().contains(value.toLowerCase());
 //            if (passesFilter) {
-//                //todo we should implement ordering here
 //                arrayList.add(user);
 //            }
 //        }

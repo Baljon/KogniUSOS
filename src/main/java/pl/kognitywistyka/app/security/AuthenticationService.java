@@ -25,7 +25,7 @@ public class AuthenticationService {
         StudentService studentService = StudentService.getInstance();
 //        List<User> retrievedUser = studentService.findById(id);
         List<User> retrievedUser = studentService.findById(id);
-        if(!retrievedUser.isEmpty() && retrievedUser != null) {
+        if(retrievedUser != null && !retrievedUser.isEmpty()) {
             String hashedPassword = sha512(password);
             if(retrievedUser.get(0).confirmPassword(hashedPassword)) {
                setCurrentLoginInfo(retrievedUser.get(0));

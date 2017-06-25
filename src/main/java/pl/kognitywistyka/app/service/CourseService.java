@@ -18,47 +18,55 @@ import java.util.*;
 public class CourseService {
 
     private static CourseService instance;
-    private HashMap<String, Course> courses;
+//    private HashMap<String, Course> courses;
 
     public static CourseService getInstance() {
         if (instance == null) {
             instance = new CourseService();
-            instance.ensureTestData();
+//            instance.ensureTestData();
         }
         return instance;
     }
 
-    public void ensureTestData() {
-        courses = new HashMap<>();
-        List<Course> coursesList = Arrays.asList(
-                new Course("1", "kurs1", "Filozofia"),
-                new Course("2", "kurs2", "Matematyka")
-        );
-//        Integer id = 0;
-        for (Course course : coursesList) {
-            String id = course.getId();
-            courses.put(id, course);
-//            id = id + 1;
-        }
-    }
+//    public void ensureTestData() {
+//        courses = new HashMap<>();
+//        List<Course> coursesList = Arrays.asList(
+//                new Course("1", "kurs1", "Filozofia"),
+//                new Course("2", "kurs2", "Matematyka")
+//        );
+////        Integer id = 0;
+//        for (Course course : coursesList) {
+//            String id = course.getId();
+//            courses.put(id, course);
+////            id = id + 1;
+//        }
+//    }
 
     public synchronized List<Course> findById(String id) throws NoResultException {
         Session session = HibernateUtils.getSessionFactory().openSession();
         Transaction tx = null;
-        List<Course> resultList = null;
+        List resultList = null;
+        List<Course> finalList = null;
         try {
             tx = session.beginTransaction();
-            Query query = session.createQuery("from Course where lower(id) like :id order by id, courseName")
+            Query query = session
+                    .createQuery("from Course where lower(id) " +
+                            "like :id and accepted = :true " +
+                            "order by id, courseName")
                     .setParameter("id", id.toLowerCase());
-            Course course = (Course) query.getSingleResult();
-            resultList.add(course);
+            resultList = query.getResultList();
+            finalList = new ArrayList<>();
+            for (Object object : resultList) {
+                Course course = (Course) object;
+                finalList.add(course);
+            }
         } catch (Exception e) {
             if (tx != null) tx.rollback();
             e.printStackTrace();
         } finally {
             session.close();
         }
-        return resultList;
+        return finalList;
     }
 
     public synchronized List<Course> findById(String id, boolean showRegistered) throws NoResultException {
@@ -76,7 +84,8 @@ public class CourseService {
                                 "join course.students as students " +
                                 "where lower(course.id) like :id " +
                                 "and :student not in " +
-                                "elements(students.id)")
+                                "elements(students.id) " +
+                                "and course.accepted =: true")
                         .setParameter("id", "%" + id.toLowerCase() + "%").setParameter("student", student.getId());
                 resultList = query.getResultList();
                 finalList = new ArrayList<>();
@@ -101,7 +110,11 @@ public class CourseService {
         List<Course> finalList = null;
         try {
             tx = session.beginTransaction();
-            Query query = session.createQuery("from Course where lower(courseName) like :name order by courseName, id")
+            Query query = session
+                    .createQuery("from Course " +
+                            "where lower(courseName) like :name " +
+                            "and accepted =: true " +
+                            "order by courseName, id")
                     .setParameter("name", "%" + name.toLowerCase() + "%");
             resultList = query.getResultList();
             finalList = new ArrayList<>();
@@ -133,7 +146,8 @@ public class CourseService {
                                 "join course.students as students " +
                                 "where lower(course.courseName) like :name " +
                                 "and :student not in " +
-                                "elements(students.id)")
+                                "elements(students.id) " +
+                                "and course.accepted =: true")
                         .setParameter("name", "%" + name.toLowerCase() + "%").setParameter("student", student.getId());
                 resultList = query.getResultList();
                 finalList = new ArrayList<>();
@@ -154,20 +168,28 @@ public class CourseService {
     public synchronized List<Course> findAllAcceptedBlacklisted(boolean accepted, boolean blacklisted) throws NoResultException {
         Session session = HibernateUtils.getSessionFactory().openSession();
         Transaction tx = null;
-        List<Course> resultList = null;
+        List resultList = null;
+        List<Course> finalList = null;
         try {
             tx = session.beginTransaction();
-            Query query = session.createQuery("from Course where accepted = :accepted and blacklisted = :blacklisted order by courseName, id")
+            Query query = session
+                    .createQuery("from Course " +
+                            "where accepted = :accepted " +
+                            "or blacklisted = :blacklisted " +
+                            "order by courseName, id")
                     .setParameter("accepted", accepted).setParameter("blacklisted", blacklisted);
-            Course course = (Course) query.getSingleResult();
-            resultList.add(course);
+            resultList = query.getResultList();
+            finalList = new ArrayList<>();
+            for (Object object : resultList) {
+                finalList.add((Course) object);
+            }
         } catch (Exception e) {
             if (tx != null) tx.rollback();
             e.printStackTrace();
         } finally {
             session.close();
         }
-        return resultList;
+        return finalList;
     }
 
     public synchronized List<Course> findAllAcceptedBlacklisted() throws NoResultException {
@@ -187,7 +209,8 @@ public class CourseService {
                 Query query = session.createQuery(
                         "from Course as course " +
                                 "where lower(course.courseName) like :name " +
-                                "and accepted = :accepted and blacklisted = :blacklisted")
+                                "and accepted = :accepted " +
+                                "and blacklisted = :blacklisted")
                         .setParameter("name", "%" + name.toLowerCase() + "%").setParameter("accepted", accepted)
                         .setParameter("blacklisted", blacklisted);
                 resultList = query.getResultList();
@@ -207,7 +230,7 @@ public class CourseService {
     }
 
     public List<Course> findByIdAcceptedBlacklisted(String id, boolean accepted, boolean blacklisted) throws NoResultException {
-        if (id.isEmpty()) return findAllAcceptedBlacklisted(accepted, blacklisted);
+        if (id == null || id.isEmpty()) return findAllAcceptedBlacklisted(accepted, blacklisted);
         else {
             Session session = HibernateUtils.getSessionFactory().openSession();
             Transaction tx = null;
@@ -218,7 +241,8 @@ public class CourseService {
                 Query query = session.createQuery(
                         "from Course as course " +
                                 "where lower(course.id) like :id " +
-                                "and accepted = :accepted and blacklisted = :blacklisted")
+                                "and accepted = :accepted " +
+                                "and blacklisted = :blacklisted")
                         .setParameter("id", "%" + id.toLowerCase() + "%").setParameter("accepted", accepted)
                         .setParameter("blacklisted", blacklisted);
                 resultList = query.getResultList();
@@ -351,7 +375,7 @@ public class CourseService {
         Transaction tx = null;
         try {
             tx = session.beginTransaction();
-            if(accept) {
+            if (accept) {
                 course.acceptCourse();
             } else {
                 course.rejectCourse();
