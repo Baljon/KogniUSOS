@@ -32,7 +32,7 @@ public class Course {
     @Column(name = "BLACKLISTED")
     private boolean blacklisted;
 
-    @ManyToMany(mappedBy = "courses")
+    @ManyToMany(mappedBy = "courses", fetch = FetchType.EAGER)
     private Set<Student> students = new HashSet<>();
 
     public Course() {}
