@@ -129,7 +129,7 @@ public class StudentService {
             tx = session.beginTransaction();
             //todo querying if exists?
             session.save(user);
-            session.getTransaction().commit();
+            tx.commit();
         } catch (Exception e) {
             if (tx != null) tx.rollback();
             e.printStackTrace();

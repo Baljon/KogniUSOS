@@ -124,4 +124,8 @@ public class Course {
     public void setAccepted(boolean accepted) {
         this.accepted = accepted;
     }
+
+    public void addStudent(Student user) {
+        this.students.add(user);
+    }
 }

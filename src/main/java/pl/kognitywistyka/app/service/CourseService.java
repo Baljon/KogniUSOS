@@ -292,13 +292,15 @@ public class CourseService {
             int count = 0;
             for (Course course : selectedCourses) {
                 course.getStudents().add(user);
-                session.update(course);
+                user.getGroups().add(course);
+                session.save(course);
+                session.save(user);
                 count++;
                 if (count > 20) {
                     session.flush();
                 }
             }
-            session.getTransaction().commit();
+            tx.commit();
         } catch (Exception e) {
             if (tx != null) tx.rollback();
             e.printStackTrace();
@@ -315,9 +317,12 @@ public class CourseService {
         try {
             tx = session.beginTransaction();
             Student user = (Student) AuthenticationService.getInstance().getCurrentLoginInfo();
-            course.getStudents().add(user);
-            session.update(course);
-            session.getTransaction().commit();
+            user.addCourse(course);
+            course.addStudent(user);
+//            session.save(user);
+            session.save(course);
+//                    .update(course);
+            tx.commit();
         } catch (Exception e) {
             if (tx != null) tx.rollback();
             e.printStackTrace();

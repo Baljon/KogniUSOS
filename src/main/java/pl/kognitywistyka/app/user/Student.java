@@ -62,4 +62,8 @@ public class Student extends User {
         return courses.contains(course);
 //        return true;
     }
+
+    public void addCourse(Course course) {
+        this.courses.add(course);
+    }
 }
