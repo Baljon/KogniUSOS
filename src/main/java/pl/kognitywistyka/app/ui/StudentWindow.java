@@ -10,6 +10,7 @@ import pl.kognitywistyka.app.service.StudentService;
 import pl.kognitywistyka.app.user.Student;
 import pl.kognitywistyka.app.user.User;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -181,7 +182,12 @@ public class StudentWindow extends ItemWindow {
                 //Initializing submit button
                 Button submitButton = new Button("Submit");
                 submitButton.addClickListener(submitEvent -> {
-                    boolean submitted = courseService.addCourses(codesField.getValue());
+                    boolean submitted = false;
+                    try {
+                        submitted = courseService.addCourses(codesField.getValue());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     window.close();
                     showNotification(submitted);
                 });
@@ -221,7 +227,12 @@ public class StudentWindow extends ItemWindow {
                 //Initializing submit button
                 Button submitButton = new Button("Submit");
                 submitButton.addClickListener(submitEvent -> {
-                    boolean submitted = courseService.proposeCourses(codesField.getValue());
+                    boolean submitted = false;
+                    try {
+                        submitted = courseService.proposeCourses(codesField.getValue());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     window.close();
                     showNotification(submitted);
                 });

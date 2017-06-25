@@ -1,19 +1,23 @@
 package pl.kognitywistyka.app.service;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import pl.kognitywistyka.app.course.Course;
 import pl.kognitywistyka.app.persistence.HibernateUtils;
-import pl.kognitywistyka.app.reporting.FACULTY_CONST;
 import pl.kognitywistyka.app.reporting.ReportingUtils;
 import pl.kognitywistyka.app.security.AuthenticationService;
 import pl.kognitywistyka.app.user.Student;
-
 import javax.persistence.NoResultException;
-import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -21,6 +25,7 @@ import java.util.Set;
  * Created by wikto on 20.06.2017.
  */
 public class CourseService {
+
 
     private static CourseService instance;
 //    private HashMap<String, Course> courses;
@@ -336,14 +341,55 @@ public class CourseService {
         return true;
     }
 
-    public boolean addCourses(String value) {
-        //todo Currently supports only one course and no REST
+    public Course courseFromJSON(String courseID, boolean acceptFlag) throws IOException {
+
+        String id;
+        String plName;
+        String plDescription;
+        String facultyName;
+        String facultyID;
+        String aURL = "https://usosapps.uw.edu.pl/services/courses/course?course_id=" + courseID + "&format=json&fields=name|id|fac_id|description";
+
+        URL aaa = new URL(aURL);
+
+        HttpURLConnection request = (HttpURLConnection) aaa.openConnection();
+        request.connect();
+        JsonParser jp = new JsonParser(); //from gson
+        JsonElement root = jp.parse(new InputStreamReader((InputStream) request.getContent())); //Convert the input stream to a json element
+        JsonObject rootobj = root.getAsJsonObject(); //May be an array, may be an object.
+        id = rootobj.get("id").getAsString();
+        JsonElement name = rootobj.get("name");
+        JsonObject nameObject = name.getAsJsonObject();
+        plName = nameObject.get("pl").getAsString();
+        facultyID =rootobj.get("fac_id").getAsString();
+        JsonElement description = rootobj.get("description");
+        JsonObject descriptionObject = description.getAsJsonObject();
+        plDescription = descriptionObject.get("pl").getAsString();
+
+
+
+        String bURL = "https://usosapps.uw.edu.pl/services/fac/faculty?fac_id=" + facultyID + "&fields=name&format=json";
+        URL bbb = new URL(bURL);
+
+        HttpURLConnection request3 = (HttpURLConnection) bbb.openConnection();
+        request.connect();
+        JsonParser jp3 = new JsonParser(); //from gson
+        JsonElement root3 = jp3.parse(new InputStreamReader((InputStream) request3.getContent())); //Convert the input stream to a json element
+        JsonObject rootobj3 = root3.getAsJsonObject(); //May be an array, may be an object.
+        JsonElement nameF = rootobj3.get("name");
+        JsonObject nameFac = nameF.getAsJsonObject();
+        facultyName = nameFac.get("pl").getAsString();
+
+        Course addedCourse = new Course(id, plName, facultyName, plDescription, acceptFlag, false);
+        return addedCourse;
+    };
+
+    public boolean coolTransaction(Course addedCourse){
         Session session = HibernateUtils.getSessionFactory().openSession();
         Transaction tx = null;
         try {
             tx = session.beginTransaction();
-            //todo connecting qith USOS here
-            session.save(new Course(value, value, value, true, false));
+            session.save(addedCourse);
             session.getTransaction().commit();
         } catch (Exception e) {
             if (tx != null) tx.rollback();
@@ -353,25 +399,20 @@ public class CourseService {
             session.close();
         }
         return true;
+    };
+
+    public boolean addCourses(String value) throws IOException {
+
+        Course addedCourse = courseFromJSON(value, true);
+        return coolTransaction(addedCourse);
+
     }
 
-    public boolean proposeCourses(String value) {
-        //todo Currently supports only one course and no REST
-        Session session = HibernateUtils.getSessionFactory().openSession();
-        Transaction tx = null;
-        try {
-            tx = session.beginTransaction();
-            //todo connecting with USOS here + plus querying db whether exists
-            session.save(new Course(value, value, value, false, false));
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            if (tx != null) tx.rollback();
-            e.printStackTrace();
-            return false;
-        } finally {
-            session.close();
-        }
-        return true;
+    public boolean proposeCourses(String value) throws IOException {
+
+        Course addedCourse = courseFromJSON(value, false);
+        return coolTransaction(addedCourse);
+
     }
 
     public boolean acceptCourse(Course course) {

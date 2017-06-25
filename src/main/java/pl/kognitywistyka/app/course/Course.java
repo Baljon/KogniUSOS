@@ -37,14 +37,15 @@ public class Course {
 
     public Course() {}
 
-    public Course(String id, String courseName, String faculty) {
+    public Course(String id, String courseName, String faculty, String syllabus) {
         setId(id);
         setCourseName(courseName);
         setFaculty(faculty);
+        setSyllabus(syllabus);
     }
 
-    public Course(String id, String courseName, String faculty, boolean accepted, boolean blacklisted) {
-        this(id, courseName, faculty);
+    public Course(String id, String courseName, String faculty, String syllabus, boolean accepted, boolean blacklisted) {
+        this(id, courseName, faculty, syllabus);
         this.accepted = accepted;
         this.blacklisted = blacklisted;
     }

@@ -13,6 +13,7 @@ import pl.kognitywistyka.app.security.AuthenticationService;
 import pl.kognitywistyka.app.service.CourseService;
 
 import javax.persistence.NoResultException;
+import java.io.IOException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -284,7 +285,12 @@ public class MainWindow extends GridWindow<Course> {
                 //Initializing submit button
                 Button submitButton = new Button("Submit");
                 submitButton.addClickListener(submitEvent -> {
-                    boolean submitted = courseService.addCourses(codesField.getValue());
+                    boolean submitted = false;
+                    try {
+                        submitted = courseService.addCourses(codesField.getValue());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     String object = codesField.getValue();
                     window.close();
                     showNotification(submitted);
