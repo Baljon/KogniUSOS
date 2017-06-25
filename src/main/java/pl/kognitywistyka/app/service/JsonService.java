@@ -1,4 +1,4 @@
-package pl.kognitywistyka.app;
+package pl.kognitywistyka.app.service;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
