@@ -1,6 +1,7 @@
 package pl.kognitywistyka.app.ui;
 
 import com.vaadin.icons.VaadinIcons;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import pl.kognitywistyka.app.course.Course;
@@ -19,7 +20,6 @@ public class CourseWindow extends ItemWindow {
     private VerticalLayout middleLayer;
     private CssLayout courseNameLayout;
     private CssLayout facultyLayout;
-    private CssLayout lecturerLayout;
     private CssLayout syllabusLayout;
 
     private HorizontalLayout buttonLayout;
@@ -28,7 +28,6 @@ public class CourseWindow extends ItemWindow {
     //todo lol, vaadin, seriously, only labels?
     private Label courseNameLabel;
     private Label facultyLabel;
-    private Label lecturerLabel;
     private Label syllabusLabel;
 
     //Buttons
@@ -84,11 +83,16 @@ public class CourseWindow extends ItemWindow {
         middleLayer.setComponentAlignment(facultyLayout, Alignment.TOP_LEFT);
         middleLayer.setExpandRatio(facultyLayout, 0.1f);
 
-        //Initializing lecturer
-        //todo
-
         //Initializing syllabus
-        //todo
+        syllabusLayout = new CssLayout();
+        syllabusLayout.setSizeFull();
+
+        syllabusLabel = new Label("Syllabus: " + course.getSyllabus(), ContentMode.HTML);
+
+        syllabusLayout.addComponents(syllabusLabel);
+        middleLayer.addComponent(syllabusLayout);
+        middleLayer.setComponentAlignment(syllabusLayout, Alignment.TOP_LEFT);
+        middleLayer.setExpandRatio(syllabusLayout, 0.8f);
 
         //Initializing buttons
         buttonLayout = new HorizontalLayout();

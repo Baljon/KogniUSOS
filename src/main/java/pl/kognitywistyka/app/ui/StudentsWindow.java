@@ -57,7 +57,7 @@ public class StudentsWindow extends GridWindow<User> {
 
         init(middleLayer);
 
-        middleLayer.setWidth("600px");
+        middleLayer.setWidth("750px");
         middleLayer.setHeight("600px");
 
         //Initializing filtering
@@ -96,7 +96,7 @@ public class StudentsWindow extends GridWindow<User> {
         superFilterLayout.addComponents(filterNameLayout, filterIdLayout);
 
         middleLayer.addComponent(superFilterLayout);
-        middleLayer.setComponentAlignment(superFilterLayout, Alignment.TOP_LEFT);
+        middleLayer.setComponentAlignment(superFilterLayout, Alignment.TOP_CENTER);
         middleLayer.setExpandRatio(superFilterLayout, 0.1f);
 
         //Initializing grid
@@ -145,7 +145,7 @@ public class StudentsWindow extends GridWindow<User> {
         });
 
         middleLayer.addComponent(grid);
-        middleLayer.setComponentAlignment(grid, Alignment.MIDDLE_LEFT);
+        middleLayer.setComponentAlignment(grid, Alignment.MIDDLE_CENTER);
         middleLayer.setExpandRatio(grid, 0.8f);
 
         updateGrid();
@@ -184,7 +184,7 @@ public class StudentsWindow extends GridWindow<User> {
         buttonsLayout.addComponent(deleteButton);
 
         middleLayer.addComponent(buttonsLayout);
-        middleLayer.setComponentAlignment(buttonsLayout, Alignment.BOTTOM_LEFT);
+        middleLayer.setComponentAlignment(buttonsLayout, Alignment.BOTTOM_CENTER);
         middleLayer.setExpandRatio(buttonsLayout, 0.1f);
 
         coursesButton = new Button("View courses");

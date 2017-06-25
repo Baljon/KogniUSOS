@@ -74,7 +74,7 @@ public class MainWindow extends GridWindow<Course> {
 
         init(middleLayer);
 
-        middleLayer.setWidth("600px");
+        middleLayer.setWidth("750px");
         middleLayer.setHeight("600px");
 
         //Initializing filtering
@@ -150,7 +150,7 @@ public class MainWindow extends GridWindow<Course> {
         }
 
         middleLayer.addComponent(superFilterLayout);
-        middleLayer.setComponentAlignment(superFilterLayout, Alignment.TOP_LEFT);
+        middleLayer.setComponentAlignment(superFilterLayout, Alignment.TOP_CENTER);
         middleLayer.setExpandRatio(superFilterLayout, 0.1f);
 
         //Initializing grid
@@ -173,7 +173,7 @@ public class MainWindow extends GridWindow<Course> {
         });
 
         middleLayer.addComponent(grid);
-        middleLayer.setComponentAlignment(grid, Alignment.MIDDLE_LEFT);
+        middleLayer.setComponentAlignment(grid, Alignment.MIDDLE_CENTER);
         middleLayer.setExpandRatio(grid, 0.8f);
 
         updateGrid();
@@ -313,13 +313,13 @@ public class MainWindow extends GridWindow<Course> {
         }
 
         superButtonLayout.addComponent(buttonsLayout);
-        superButtonLayout.setComponentAlignment(buttonsLayout, Alignment.TOP_LEFT);
+        superButtonLayout.setComponentAlignment(buttonsLayout, Alignment.TOP_CENTER);
 
         superButtonLayout.addComponent(buttonExportLayout);
-        superButtonLayout.setComponentAlignment(buttonExportLayout, Alignment.BOTTOM_LEFT);
+        superButtonLayout.setComponentAlignment(buttonExportLayout, Alignment.BOTTOM_CENTER);
 
         middleLayer.addComponent(superButtonLayout);
-        middleLayer.setComponentAlignment(superButtonLayout, Alignment.BOTTOM_LEFT);
+        middleLayer.setComponentAlignment(superButtonLayout, Alignment.BOTTOM_CENTER);
         middleLayer.setExpandRatio(superButtonLayout, 0.1f);
 
 
