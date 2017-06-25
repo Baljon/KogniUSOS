@@ -84,8 +84,18 @@ public class StudentWindow extends ItemWindow {
         middleLayer.setExpandRatio(albumNumberLayout, 0.1f);
 
         //Initializing email
-        //todo
+        if(user.getClass().equals(Student.class)) {
+            Student student = (Student) user;
+            emailLayout = new CssLayout();
+            emailLayout.setSizeFull();
 
+            emailLabel = new Label("e-mail: " + student.getEmail());
+
+            emailLayout.addComponent(emailLabel);
+            middleLayer.addComponent(emailLayout);
+            middleLayer.setComponentAlignment(emailLayout, Alignment.TOP_LEFT);
+            middleLayer.setExpandRatio(emailLayout, 0.1f);
+        }
 
         //Initializing button
         buttonsLayout = new HorizontalLayout();

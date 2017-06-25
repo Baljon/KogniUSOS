@@ -170,6 +170,7 @@ public class MainWindow extends GridWindow<Course> {
         grid.addSelectionListener(event -> {
             selectedCourses = event.getAllSelectedItems();
             registerDeleteButton.setEnabled(selectedCourses.size() > 0);
+            exportButton.setEnabled(selectedCourses.size() > 0);
         });
 
         middleLayer.addComponent(grid);
