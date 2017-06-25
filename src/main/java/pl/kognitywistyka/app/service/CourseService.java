@@ -293,8 +293,8 @@ public class CourseService {
             for (Course course : selectedCourses) {
                 course.getStudents().add(user);
                 user.getGroups().add(course);
-                session.save(course);
-                session.save(user);
+                session.update(course);
+                session.update(user);
                 count++;
                 if (count > 20) {
                     session.flush();
@@ -318,9 +318,9 @@ public class CourseService {
             tx = session.beginTransaction();
             Student user = (Student) AuthenticationService.getInstance().getCurrentLoginInfo();
             user.addCourse(course);
-            course.addStudent(user);
-//            session.save(user);
-            session.save(course);
+//            course.addStudent(user);
+            session.update(user);
+//            session.update(course);
 //                    .update(course);
             tx.commit();
         } catch (Exception e) {
