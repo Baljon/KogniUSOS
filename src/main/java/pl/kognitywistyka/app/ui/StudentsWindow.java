@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import static com.vaadin.server.Responsive.makeResponsive;
+
 /**
  * Created by wikto on 21.06.2017.
  */
@@ -58,7 +60,9 @@ public class StudentsWindow extends GridWindow<User> {
         init(middleLayer);
 
         middleLayer.setWidth("750px");
-        middleLayer.setHeight("600px");
+//        middleLayer.setHeight("600px");
+//        middleLayer.setSizeFull();
+//        makeResponsive(middleLayer);
 
         //Initializing filtering
         superFilterLayout = new HorizontalLayout();
