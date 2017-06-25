@@ -3,6 +3,7 @@ package pl.kognitywistyka.app.service;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.apache.deltaspike.core.api.config.ConfigProperty;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -11,6 +12,8 @@ import pl.kognitywistyka.app.persistence.HibernateUtils;
 import pl.kognitywistyka.app.reporting.ReportingUtils;
 import pl.kognitywistyka.app.security.AuthenticationService;
 import pl.kognitywistyka.app.user.Student;
+
+import javax.inject.Inject;
 import javax.persistence.NoResultException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -341,6 +344,24 @@ public class CourseService {
         return true;
     }
 
+    @Inject
+    @ConfigProperty(name = "usosuw.service.course")
+    private String serviceCourse;
+
+    @Inject
+    @ConfigProperty(name = "usosuw.service.fac")
+    private String serviceFaculty;
+
+    @Inject
+    @ConfigProperty(name = "usosuw.service.course.fields")
+    private String serviceCourseFields;
+
+    @Inject
+    @ConfigProperty(name = "usosuw.service.fac.fields")
+    private String serviceFacultyFields;
+
+
+
     public Course courseFromJSON(String courseID, boolean acceptFlag) throws IOException {
 
         String id;
@@ -348,15 +369,13 @@ public class CourseService {
         String plDescription;
         String facultyName;
         String facultyID;
-        String aURL = "https://usosapps.uw.edu.pl/services/courses/course?course_id=" + courseID + "&format=json&fields=name|id|fac_id|description";
-
-        URL aaa = new URL(aURL);
+        URL aaa = new URL(serviceCourse + courseID + serviceCourseFields);
 
         HttpURLConnection request = (HttpURLConnection) aaa.openConnection();
         request.connect();
         JsonParser jp = new JsonParser(); //from gson
-        JsonElement root = jp.parse(new InputStreamReader((InputStream) request.getContent())); //Convert the input stream to a json element
-        JsonObject rootobj = root.getAsJsonObject(); //May be an array, may be an object.
+        JsonElement root = jp.parse(new InputStreamReader((InputStream) request.getContent()));
+        JsonObject rootobj = root.getAsJsonObject();
         id = rootobj.get("id").getAsString();
         JsonElement name = rootobj.get("name");
         JsonObject nameObject = name.getAsJsonObject();
@@ -366,16 +385,13 @@ public class CourseService {
         JsonObject descriptionObject = description.getAsJsonObject();
         plDescription = descriptionObject.get("pl").getAsString();
 
-
-
-        String bURL = "https://usosapps.uw.edu.pl/services/fac/faculty?fac_id=" + facultyID + "&fields=name&format=json";
-        URL bbb = new URL(bURL);
+        URL bbb = new URL(serviceFaculty + facultyID + serviceFacultyFields);
 
         HttpURLConnection request3 = (HttpURLConnection) bbb.openConnection();
         request.connect();
-        JsonParser jp3 = new JsonParser(); //from gson
-        JsonElement root3 = jp3.parse(new InputStreamReader((InputStream) request3.getContent())); //Convert the input stream to a json element
-        JsonObject rootobj3 = root3.getAsJsonObject(); //May be an array, may be an object.
+        JsonParser jp3 = new JsonParser();
+        JsonElement root3 = jp3.parse(new InputStreamReader((InputStream) request3.getContent()));
+        JsonObject rootobj3 = root3.getAsJsonObject();
         JsonElement nameF = rootobj3.get("name");
         JsonObject nameFac = nameF.getAsJsonObject();
         facultyName = nameFac.get("pl").getAsString();
