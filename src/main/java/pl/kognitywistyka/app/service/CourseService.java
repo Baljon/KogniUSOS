@@ -9,11 +9,13 @@ import pl.kognitywistyka.app.reporting.FACULTY_CONST;
 import pl.kognitywistyka.app.reporting.ReportingUtils;
 import pl.kognitywistyka.app.security.AuthenticationService;
 import pl.kognitywistyka.app.user.Student;
-import pl.kognitywistyka.app.user.User;
 
 import javax.persistence.NoResultException;
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by wikto on 20.06.2017.
@@ -80,24 +82,22 @@ public class CourseService {
         if (!showRegistered) {
             Session session = HibernateUtils.getSessionFactory().openSession();
             Transaction tx = null;
-            List resultList = null;
+            List<Object[]> resultList = null;
             List<Course> finalList = null;
             try {
                 tx = session.beginTransaction();
                 Student student = (Student) AuthenticationService.getInstance().getCurrentLoginInfo();
-                //todo
                 Query query = session.createQuery(
-                        "from Course as course " +
-                                "join course.students as students " +
-                                "where lower(course.id) like :id " +
-                                "and :student not in " +
-                                "elements(students.id) " +
-                                "and course.accepted = true")
-                        .setParameter("id", "%" + id.toLowerCase() + "%").setParameter("student", student.getId());
+                        "from Course course " +
+                                "join course.students students " +
+                                "where :student not in students " +
+                                "and course.id like :id")
+                        .setParameter("id", "%" + id.toLowerCase() + "%")
+                        .setParameter("student", student);
                 resultList = query.getResultList();
                 finalList = new ArrayList<>();
-                for (Object object : resultList) {
-                    Course course = (Course) object;
+                for (Object[] object : resultList) {
+                    Course course = (Course) object[0];
                     finalList.add(course);
                 }
             } catch (Exception e) {
@@ -527,7 +527,7 @@ public class CourseService {
             session.close();
         }
         return true; */
-        //todo here call to some print to external format method
+//todo here call to some print to external format method
 
 //
 //    /***

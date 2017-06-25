@@ -116,7 +116,7 @@ public class MainWindow extends GridWindow<Course> {
         superFilterLayout.setComponentAlignment(filterNameLayout, Alignment.TOP_LEFT);
 
         if (!AuthenticationService.getInstance().isAdmin()) {
-            showRegisteredCheckBox = new CheckBox("Show courses I'm registered to");
+            showRegisteredCheckBox = new CheckBox("Show also courses I'm registered to");
             showRegisteredCheckBox.setValue(true);
 //            showRegisteredCheckBox.addValueChangeListener(event -> updateGridByName());
             showRegisteredCheckBox.addValueChangeListener(event -> {
