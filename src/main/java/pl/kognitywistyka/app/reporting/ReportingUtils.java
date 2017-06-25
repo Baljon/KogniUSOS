@@ -17,13 +17,13 @@ import java.util.List;
  * Created by RJ on 2017-06-25.
  */
 
-/* Internal report creation utilities, basically for use only by ReportingService.
- * iText tool is used for pdf creation.
+/** Report generating facility.
+ * There is just one public method generateReport; all other methods are intended for in-class use only.
  */
 public class ReportingUtils {
 
     /** Method creating a .pdf report listing of students to be enrolled to courses, then saves it.
-     * Input: List<Course> courses, the method assumes that all the courses are offered by a single faculty.
+     * @param courses List<Course>; the method assumes that all the courses are offered by a single faculty.
      * Generates: .pdf file named "[facultyNameHere]EnrollmentList.pdf".
      */
     public void generateReport(List<Course> courses) {
