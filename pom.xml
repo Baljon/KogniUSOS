@@ -45,44 +45,47 @@
 	</dependencyManagement>
 
 	<dependencies>
+
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 			<version>3.0.1</version>
 			<scope>provided</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin-server</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin-push</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin-client-compiled</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin-themes</artifactId>
 		</dependency>
+
         <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>5.2.10.Final</version>
         </dependency>
-        <dependency>
-            <groupId>org.hsqldb</groupId>
-            <artifactId>hsqldb</artifactId>
-            <version>2.3.4</version>
-        </dependency>
+
         <dependency>
             <groupId>javax.enterprise</groupId>
             <artifactId>cdi-api</artifactId>
             <version>1.0</version>
         </dependency>
+
         <dependency>
             <groupId>org.sonatype.plexus</groupId>
             <artifactId>plexus-sec-dispatcher</artifactId>
@@ -103,7 +106,22 @@
 			<version>2.1-m09</version>
 		</dependency>
 
-	</dependencies>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.6</version>
+		</dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.itextpdf/itextpdf -->
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>itextpdf</artifactId>
+            <version>5.5.11</version>
+        </dependency>
+
+
+
+    </dependencies>
 
 	<build>
 		<plugins>
