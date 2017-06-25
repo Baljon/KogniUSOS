@@ -10,7 +10,7 @@ import java.util.Set;
  * Created by wikto on 19.06.2017.
  */
 @Entity
-@Table(name = "COURSE")
+@Table(name = "course")
 public class Course {
 
     @Id

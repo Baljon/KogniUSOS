@@ -18,7 +18,7 @@ public class Student extends User {
     private String email;
 
     @ManyToMany(targetEntity = Course.class, cascade = CascadeType.ALL)
-    @JoinTable(name = "STUDENT_COURSE",
+    @JoinTable(name = "student_course",
     joinColumns = {@JoinColumn(name = "STUDENT_ID")},
     inverseJoinColumns = {@JoinColumn(name = "COURSE_ID")})
     private Set<Course> courses = new HashSet<>();

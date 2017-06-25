@@ -6,8 +6,8 @@
     <session-factory>
         <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
         <property name="hibernate.connection.url">jdbc:mysql://usoskogni.cf8msacdo7y1.us-east-2.rds.amazonaws.com:3306/test</property>
-        <property name="hibernate.connection.username">work2</property>
-        <property name="hibernate.connection.password">!QAZ2wsx</property>
+        <property name="hibernate.connection.username"></property>
+        <property name="hibernate.connection.password"></property>
 
         <!-- JDBC connection pool (use the built-in) -->
         <property name="connection.pool_size">5</property>
@@ -20,8 +20,8 @@
         <property name="format_sql">true</property>
 
         <!-- THIS IS NOT FOR PRODUCTION (xD)
-       <property name="hbm2ddl.auto">update</property>
-       -->
+        <property name="hbm2ddl.auto">update</property>
+        -->
 
         <!-- Class mappings for the ORM -->
         <mapping class="pl.kognitywistyka.app.course.Course"/>

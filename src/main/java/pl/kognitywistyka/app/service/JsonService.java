@@ -42,8 +42,44 @@ public class JsonService {
     private Client client;
     private WebTarget target;
 
+    private String id;
+    private String name;
+    private String faculty;
+    private String syllabus;
 
-    public String CourseRESTtoBASE(String courseID) {
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getFaculty() {
+        return faculty;
+    }
+
+    public void setFaculty(String faculty) {
+        this.faculty = faculty;
+    }
+
+    public String getSyllabus() {
+        return syllabus;
+    }
+
+    public void setSyllabus(String syllabus) {
+        this.syllabus = syllabus;
+    }
+
+    public void getREST(String courseID) {
         client = ClientBuilder.newClient();
 
         target = client.target(
@@ -51,9 +87,10 @@ public class JsonService {
                 .queryParam("id", courseID)
                 .queryParam("format", "json")
                 .queryParam("fields", courseFields)
+                //.request(MediaType)
+                //.get(this)
         ;
-        String TestOutput = "TEST";
-        return TestOutput;
+
     }
 }
 
