@@ -38,20 +38,6 @@ public class CourseService {
         return instance;
     }
 
-//    public void ensureTestData() {
-//        courses = new HashMap<>();
-//        List<Course> coursesList = Arrays.asList(
-//                new Course("1", "kurs1", "Filozofia"),
-//                new Course("2", "kurs2", "Matematyka")
-//        );
-////        Integer id = 0;
-//        for (Course course : coursesList) {
-//            String id = course.getId();
-//            courses.put(id, course);
-////            id = id + 1;
-//        }
-//    }
-
     public synchronized List<Course> findById(String id) throws NoResultException {
         if (id.isEmpty()) return findAllAcceptedBlacklisted();
         else {
@@ -537,83 +523,4 @@ public class CourseService {
         return true;
     }
 }
-
-        /*
-        try {
-            Session session = HibernateUtils.getSessionFactory().openSession();
-            Transaction tx = null;
-            int count = 0;
-            tx = session.beginTransaction();
-            for (Course course : selectedCourses) {
-                result.add(course.getId(), course.getStudents());
-                course.rejectCourse();
-                session.update(course);
-                count++;
-                if (count > 20) {
-                    session.flush();
-                }
-            }
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            if (tx != null) tx.rollback();
-            e.printStackTrace();
-            return false;
-        } finally {
-            session.close();
-        }
-        return true; */
-//todo here call to some print to external format method
-
-//
-//    /***
-//     * Returns all courses.
-//     * @return ArrayList<Course>
-//     */
-//    public synchronized List<Course> findAll() {
-//        ArrayList<Course> arrayList = new ArrayList<>();
-//        for (Course course : courses.values()) {
-//            arrayList.add(course);
-//        }
-//        return arrayList;
-//    }
-//
-//    /***
-//     * Returns all courses whose String representation contains given String.
-//     * @param value filtering value
-//     * @return ArrayList<Course>
-//     */
-//    public synchronized List<Course> findAll(String value) {
-//        ArrayList<Course> arrayList = new ArrayList<>();
-//        for (Course course : courses.values()) {
-//            boolean passesFilter = (value == null || value.isEmpty())
-//                    || course.toString().toLowerCase().contains(value.toLowerCase());
-//            if (passesFilter) {
-//                arrayList.add(course);
-//            }
-//        }
-////        Collections.sort(arrayList, (o1, o2) -> (int) ( - o1.getLocalId()));
-//        return arrayList;
-//    }
-//
-//    /***
-//     * Returns all courses whose String representation contains given String and that current user is registered to.
-//     * @param value String, filtering value
-//     * @param value1 boolean, indicates whether the fact that user is registered to should be taken into account
-//     * @return ArrayList<Course>
-//     */
-//    public synchronized List<Course> findAll(String value, Boolean value1) {
-//        Student student = (Student) AuthenticationService.getInstance().getCurrentLoginInfo();
-//        ArrayList<Course> arrayList = new ArrayList<>();
-//        for (Course course : courses.values()) {
-//            boolean passesFilter = (value == null || value.isEmpty())
-//                    || (course.toString().toLowerCase().contains(value.toLowerCase()) && (value1 || student.isRegisteredTo(course)));
-//            if (passesFilter) {
-//                arrayList.add(course);
-//            }
-//        }
-////        Collections.sort(arrayList, (o1, o2) -> (int) ( - o1.getLocalId()));
-//        return arrayList;
-//    }
-//}
-
 
