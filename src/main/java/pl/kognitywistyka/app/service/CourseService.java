@@ -54,9 +54,9 @@ public class CourseService {
                 Query query = session
                         .createQuery("from Course " +
                                 "where lower(id) like :id " +
-                                "and accepted = :true " +
+                                "and accepted = true " +
                                 "order by id, courseName")
-                        .setParameter("id", id.toLowerCase());
+                        .setParameter("id", "%"+id.toLowerCase()+"%");
                 resultList = query.getResultList();
                 finalList = new ArrayList<>();
                 for (Object object : resultList) {
@@ -89,7 +89,7 @@ public class CourseService {
                                 "where lower(course.id) like :id " +
                                 "and :student not in " +
                                 "elements(students.id) " +
-                                "and course.accepted =: true")
+                                "and course.accepted = true")
                         .setParameter("id", "%" + id.toLowerCase() + "%").setParameter("student", student.getId());
                 resultList = query.getResultList();
                 finalList = new ArrayList<>();
@@ -117,7 +117,7 @@ public class CourseService {
             Query query = session
                     .createQuery("from Course " +
                             "where lower(courseName) like :name " +
-                            "and accepted = :true " +
+                            "and accepted = true " +
                             "order by courseName, id")
                     .setParameter("name", "%" + name.toLowerCase() + "%");
             resultList = query.getResultList();
@@ -151,7 +151,7 @@ public class CourseService {
                                 "where lower(course.courseName) like :name " +
                                 "and :student not in " +
                                 "elements(students.id) " +
-                                "and course.accepted = :true")
+                                "and course.accepted = true")
                         .setParameter("name", "%" + name.toLowerCase() + "%").setParameter("student", student.getId());
                 resultList = query.getResultList();
                 finalList = new ArrayList<>();

@@ -37,7 +37,8 @@ public class MainWindow extends GridWindow<Course> {
     private Button clearFilterIdFieldButton;
     private TextField filterNameField;
     private Button clearFilterNameFieldButton;
-    private CheckBox showRegisteredAcceptedCheckBox;
+    private CheckBox showRegisteredCheckBox;
+    private CheckBox showAcceptedCheckBox;
     private CheckBox showBlacklistedCheckBox;
 
     //Button
@@ -82,11 +83,11 @@ public class MainWindow extends GridWindow<Course> {
 
         filterIdField.setPlaceholder("filter by id...");
         filterIdField.addValueChangeListener(e -> updateGridById());
-        filterIdField.addValueChangeListener(e -> filterNameField.clear());
+//        filterIdField.addValueChangeListener(e -> filterNameField.clear());
         filterIdField.setValueChangeMode(ValueChangeMode.LAZY);
         filterNameField.setPlaceholder("filter by name...");
         filterNameField.addValueChangeListener(e -> updateGridByName());
-        filterNameField.addValueChangeListener(e -> filterIdField.clear());
+//        filterNameField.addValueChangeListener(e -> filterIdField.clear());
         filterNameField.setValueChangeMode(ValueChangeMode.LAZY);
 
         clearFilterIdFieldButton = new Button(VaadinIcons.CLOSE_SMALL);
@@ -108,32 +109,35 @@ public class MainWindow extends GridWindow<Course> {
         superFilterLayout.setComponentAlignment(filterNameLayout, Alignment.TOP_LEFT);
 
         if (!AuthenticationService.getInstance().isAdmin()) {
-            showRegisteredAcceptedCheckBox = new CheckBox("Show courses I'm registered to");
-            showRegisteredAcceptedCheckBox.setValue(true);
-            if (filterIdField.getValue().isEmpty() && !filterNameField.getValue().isEmpty()) {
-                showRegisteredAcceptedCheckBox.addValueChangeListener(event -> updateGridByName());
-            } else {
-                showRegisteredAcceptedCheckBox.addValueChangeListener(event -> updateGridById());
-            }
-            superFilterLayout.addComponent(showRegisteredAcceptedCheckBox);
-            superFilterLayout.setComponentAlignment(showRegisteredAcceptedCheckBox, Alignment.MIDDLE_LEFT);
+            showRegisteredCheckBox = new CheckBox("Show courses I'm registered to");
+            showRegisteredCheckBox.setValue(true);
+//            showRegisteredCheckBox.addValueChangeListener(event -> updateGridByName());
+            showRegisteredCheckBox.addValueChangeListener(event -> {
+                if (filterIdField.getValue().isEmpty() && !filterNameField.getValue().isEmpty()) updateGridByName();
+                else updateGridById();
+            });
+            superFilterLayout.addComponent(showRegisteredCheckBox);
+            superFilterLayout.setComponentAlignment(showRegisteredCheckBox, Alignment.MIDDLE_LEFT);
         } else {
-            showRegisteredAcceptedCheckBox = new CheckBox("Show not accepted courses");
-            showRegisteredAcceptedCheckBox.setValue(true);
-            if (filterIdField.getValue().isEmpty() && !filterNameField.getValue().isEmpty()) {
-                showRegisteredAcceptedCheckBox.addValueChangeListener(event -> updateGridByName());
-            } else {
-                showRegisteredAcceptedCheckBox.addValueChangeListener(event -> updateGridById());
-            }
-            showBlacklistedCheckBox = new CheckBox("Show blacklisted courses");
-            showBlacklistedCheckBox.setValue(true);
-            if (filterIdField.getValue().isEmpty() && !filterNameField.getValue().isEmpty()) {
-                showBlacklistedCheckBox.addValueChangeListener(event -> updateGridByName());
-            } else {
-                showBlacklistedCheckBox.addValueChangeListener(event -> updateGridById());
-            }
-            superFilterLayout.addComponent(showRegisteredAcceptedCheckBox);
-            superFilterLayout.setComponentAlignment(showRegisteredAcceptedCheckBox, Alignment.MIDDLE_LEFT);
+            showBlacklistedCheckBox = new CheckBox("Show only blacklisted courses");
+            showBlacklistedCheckBox.setValue(false);
+            showBlacklistedCheckBox.addValueChangeListener(event -> {
+                if (filterIdField.getValue().isEmpty() && !filterNameField.getValue().isEmpty()) updateGridByName();
+                else updateGridById();
+                if(showBlacklistedCheckBox.getValue()) showAcceptedCheckBox.setEnabled(false);
+                else showAcceptedCheckBox.setEnabled(true);
+            });
+            showBlacklistedCheckBox.setEnabled(false);
+            showAcceptedCheckBox = new CheckBox("Show only accepted courses");
+            showAcceptedCheckBox.setValue(true);
+            showAcceptedCheckBox.addValueChangeListener(event -> {
+                if (filterIdField.getValue().isEmpty() && !filterNameField.getValue().isEmpty()) updateGridByName();
+                else updateGridById();
+                if (showAcceptedCheckBox.getValue()) showBlacklistedCheckBox.setEnabled(false);
+                else showBlacklistedCheckBox.setEnabled(true);
+            });
+            superFilterLayout.addComponent(showAcceptedCheckBox);
+            superFilterLayout.setComponentAlignment(showAcceptedCheckBox, Alignment.MIDDLE_LEFT);
             superFilterLayout.addComponent(showBlacklistedCheckBox);
             superFilterLayout.setComponentAlignment(showBlacklistedCheckBox, Alignment.MIDDLE_LEFT);
         }
@@ -314,10 +318,13 @@ public class MainWindow extends GridWindow<Course> {
         List<Course> courses;
         try {
             if (!AuthenticationService.getInstance().isAdmin()) {
-                courses = courseService.findByName(filterNameField.getValue(), showRegisteredAcceptedCheckBox.getValue());
+                courses = courseService.findByName(filterNameField.getValue(), showRegisteredCheckBox.getValue());
             } else {
-                courses = courseService.findByNameAcceptedBlacklisted(
-                        filterNameField.getValue(), showRegisteredAcceptedCheckBox.getValue(), showBlacklistedCheckBox.getValue());
+                if(showAcceptedCheckBox.getValue())
+                    courses = courseService.findByNameAcceptedBlacklisted(filterNameField.getValue(), true, false);
+                else if (!showAcceptedCheckBox.getValue() && !showBlacklistedCheckBox.getValue())
+                    courses = courseService.findByNameAcceptedBlacklisted(filterNameField.getValue(), false, false);
+                else courses = courseService.findByNameAcceptedBlacklisted(filterNameField.getValue(), false, true);
             }
         } catch (NoResultException e) {
             courses = new ArrayList<>();
@@ -330,10 +337,13 @@ public class MainWindow extends GridWindow<Course> {
         List<Course> courses;
         try {
             if (!AuthenticationService.getInstance().isAdmin()) {
-                courses = courseService.findById(filterIdField.getValue(), showRegisteredAcceptedCheckBox.getValue());
+                courses = courseService.findById(filterIdField.getValue(), showRegisteredCheckBox.getValue());
             } else {
-                courses = courseService.findByIdAcceptedBlacklisted(
-                        filterIdField.getValue(), showRegisteredAcceptedCheckBox.getValue(), showBlacklistedCheckBox.getValue());
+                if(showAcceptedCheckBox.getValue())
+                    courses = courseService.findByIdAcceptedBlacklisted(filterIdField.getValue(), true, false);
+                else if (!showAcceptedCheckBox.getValue() && !showBlacklistedCheckBox.getValue())
+                    courses = courseService.findByIdAcceptedBlacklisted(filterIdField.getValue(), false, false);
+                else courses = courseService.findByIdAcceptedBlacklisted(filterIdField.getValue(), false, true);
             }
         } catch (NoResultException e) {
             courses = new ArrayList<>();
@@ -345,11 +355,7 @@ public class MainWindow extends GridWindow<Course> {
     public void updateGrid() {
         List<Course> courses;
         try {
-            if (!AuthenticationService.getInstance().isAdmin()) {
-                courses = courseService.findAllAcceptedBlacklisted();
-            } else {
-                courses = courseService.findAllAcceptedBlacklisted(true, true);
-            }
+            courses = courseService.findAllAcceptedBlacklisted();
         } catch (NoResultException e) {
             courses = new ArrayList<>();
         }

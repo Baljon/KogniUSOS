@@ -52,7 +52,7 @@ public class StudentService {
         List<User> finalList = null;
         try {
             tx = session.beginTransaction();
-            Query query = session.createQuery("from User where id like :id").setParameter("id", id);
+            Query query = session.createQuery("from User where id like :id").setParameter("id", "%"+id+"%");
             resultList = query.getResultList();
             finalList = new ArrayList<>();
             for(Object object : resultList) {

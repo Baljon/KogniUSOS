@@ -182,10 +182,12 @@ public class CourseWindow extends ItemWindow {
                 acceptButton.setStyleName(ValoTheme.BUTTON_FRIENDLY);
 
                 acceptButton.addClickListener(clickEvent -> courseService.acceptCourse(course));
+                acceptButton.addClickListener(clickEvent -> getUI().getCurrent().setContent(previousWindow));
 
                 rejectButton = new Button("Reject course");
 
                 rejectButton.addClickListener(clickEvent -> courseService.rejectCourse(course));
+                acceptButton.addClickListener(clickEvent -> getUI().getCurrent().setContent(previousWindow));
 
                 buttonLayout.addComponents(acceptButton, rejectButton);
             }
