@@ -77,7 +77,10 @@ public class StudentService {
             try {
                 tx = session.beginTransaction();
                 Query query = session.createQuery(
-                        "from Student where lower(firstName) like: name or lower(lastName) like: name order by id").setParameter(
+                        "from Student " +
+                                "where lower(firstName) like :name " +
+                                "or lower(lastName) like :name " +
+                                "order by id").setParameter(
                         "name", "%" + name.toLowerCase() + "%");
                 resultList = query.getResultList();
                 for (Object object : resultList) {
