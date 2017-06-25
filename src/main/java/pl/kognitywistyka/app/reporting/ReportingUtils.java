@@ -29,14 +29,13 @@ public class ReportingUtils {
      * @param courses List<Course>; the method assumes that all the courses are offered by a single faculty.
      * @return: File .pdf doc named "[facultyNameHere]EnrollmentList.pdf".
      */
-    public static File generateReport(List<Course> courses) {
+    public static void generateReport(List<Course> courses) {
 
         String facultyName = courses.get(0).getFaculty();
-        File reportFile = new File(facultyName + "EnrollmentList.pdf");
 
         try {
             Document report = new Document();
-            PdfWriter writer = PdfWriter.getInstance(report, new FileOutputStream(reportFile));
+            PdfWriter writer = PdfWriter.getInstance(report, new FileOutputStream(facultyName + "EnrollmentList.pdf"));
             report.open();
             addCogSciMetadata(report, facultyName);
             addDateLine(report);
@@ -55,8 +54,6 @@ public class ReportingUtils {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            return reportFile;
         }
     }
 

@@ -298,13 +298,7 @@ public class MainWindow extends GridWindow<Course> {
             exportButton.setStyleName(ValoTheme.BUTTON_PRIMARY);
 
             exportButton.addClickListener(event -> {
-                List<File> returned = courseService.exportStudents(selectedCourses);
-                boolean exported = !returned.isEmpty();
-                for (File file : returned) {
-                    FileDownloader dwnl = new FileDownloader(new FileResource(file));
-                    dwnl.extend(exportButton);
-                }
-
+                boolean exported = courseService.exportStudents(selectedCourses);
                 showNotification(exported);
             });
 

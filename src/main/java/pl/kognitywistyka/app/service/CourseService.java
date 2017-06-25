@@ -485,21 +485,11 @@ public class CourseService {
         return true;
     }
 
-    public List<File> exportStudents(Set<Course> selectedCourses) {
-        List<String> facultyNameList = FACULTY_CONST.getFacultyNames();
-        List<File> output = new ArrayList<>();
-        for (String name : facultyNameList) {
-            Iterator itr = selectedCourses.iterator();
-            List<Course> filteredCourses = new ArrayList<>();
-            Course currentCourse = null;
-            while (itr.hasNext()) {
-                currentCourse = (Course) itr.next();
-                if (currentCourse.getFaculty().equalsIgnoreCase(name)) filteredCourses.add(currentCourse);
-            }
-            File report = ReportingUtils.generateReport(filteredCourses);
-            output.add(report);
-        }
-        return output;
+    public boolean exportStudents(Set<Course> selectedCourses) {
+        List<Course> courses = new ArrayList<>();
+        courses.addAll(selectedCourses);
+        ReportingUtils.generateReport(courses);
+        return true;
     }
 }
 
