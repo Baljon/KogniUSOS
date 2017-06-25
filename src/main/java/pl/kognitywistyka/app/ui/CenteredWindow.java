@@ -1,6 +1,7 @@
 package pl.kognitywistyka.app.ui;
 
 import com.vaadin.server.Page;
+import com.vaadin.server.Responsive;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
@@ -29,6 +30,7 @@ public abstract class CenteredWindow extends VerticalLayout {
         //Initializing layouts
         this.setMiddleLayer(middleLayer);
         middleLayer.setSizeFull();
+        Responsive.makeResponsive(middleLayer);
 //        middleLayer.addStyleName("login-panel");
 
         topMenu = new HorizontalLayout();
