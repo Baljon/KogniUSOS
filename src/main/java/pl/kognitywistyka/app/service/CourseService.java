@@ -5,11 +5,14 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import pl.kognitywistyka.app.course.Course;
 import pl.kognitywistyka.app.persistence.HibernateUtils;
+import pl.kognitywistyka.app.reporting.FACULTY_CONST;
+import pl.kognitywistyka.app.reporting.ReportingUtils;
 import pl.kognitywistyka.app.security.AuthenticationService;
 import pl.kognitywistyka.app.user.Student;
 import pl.kognitywistyka.app.user.User;
 
 import javax.persistence.NoResultException;
+import java.io.File;
 import java.util.*;
 
 /**
@@ -56,7 +59,7 @@ public class CourseService {
                                 "where lower(id) like :id " +
                                 "and accepted = true " +
                                 "order by id, courseName")
-                        .setParameter("id", "%"+id.toLowerCase()+"%");
+                        .setParameter("id", "%" + id.toLowerCase() + "%");
                 resultList = query.getResultList();
                 finalList = new ArrayList<>();
                 for (Object object : resultList) {
@@ -482,15 +485,32 @@ public class CourseService {
         return true;
     }
 
-    public boolean exportStudents(Set<Course> selectedCourses) {
-        Session session = HibernateUtils.getSessionFactory().openSession();
-        Transaction tx = null;
-        HashMap<String, Set<Student>> resultMap = new HashMap<>();
-        int count = 0;
+    public List<File> exportStudents(Set<Course> selectedCourses) {
+        List<String> facultyNameList = FACULTY_CONST.getFacultyNames();
+        List<File> output = new ArrayList<>();
+        for (String name : facultyNameList) {
+            Iterator itr = selectedCourses.iterator();
+            List<Course> filteredCourses = new ArrayList<>();
+            Course currentCourse = null;
+            while (itr.hasNext()) {
+                currentCourse = (Course) itr.next();
+                if (currentCourse.getFaculty().equalsIgnoreCase(name)) filteredCourses.add(currentCourse);
+            }
+            File report = ReportingUtils.generateReport(filteredCourses);
+            output.add(report);
+        }
+        return output;
+    }
+}
+
+        /*
         try {
+            Session session = HibernateUtils.getSessionFactory().openSession();
+            Transaction tx = null;
+            int count = 0;
             tx = session.beginTransaction();
             for (Course course : selectedCourses) {
-                resultMap.put(course.getId(), course.getStudents());
+                result.add(course.getId(), course.getStudents());
                 course.rejectCourse();
                 session.update(course);
                 count++;
@@ -506,9 +526,8 @@ public class CourseService {
         } finally {
             session.close();
         }
-        return true;
+        return true; */
         //todo here call to some print to external format method
-    }
 
 //
 //    /***
@@ -560,4 +579,6 @@ public class CourseService {
 ////        Collections.sort(arrayList, (o1, o2) -> (int) ( - o1.getLocalId()));
 //        return arrayList;
 //    }
-}
+//}
+
+

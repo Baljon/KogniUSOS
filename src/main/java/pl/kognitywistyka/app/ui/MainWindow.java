@@ -1,6 +1,9 @@
 package pl.kognitywistyka.app.ui;
 
 import com.vaadin.icons.VaadinIcons;
+import com.vaadin.server.FileDownloader;
+import com.vaadin.server.FileResource;
+import com.vaadin.server.StreamResource;
 import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.ui.*;
 import com.vaadin.ui.renderers.ButtonRenderer;
@@ -10,6 +13,10 @@ import pl.kognitywistyka.app.security.AuthenticationService;
 import pl.kognitywistyka.app.service.CourseService;
 
 import javax.persistence.NoResultException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -290,7 +297,13 @@ public class MainWindow extends GridWindow<Course> {
             exportButton.setStyleName(ValoTheme.BUTTON_PRIMARY);
 
             exportButton.addClickListener(event -> {
-                boolean exported = courseService.exportStudents(selectedCourses);
+                List<File> returned = courseService.exportStudents(selectedCourses);
+                boolean exported = !returned.isEmpty();
+                for (File file : returned) {
+                    FileDownloader dwnl = new FileDownloader(new FileResource(file));
+                    dwnl.extend(exportButton);
+                }
+
                 showNotification(exported);
             });
 

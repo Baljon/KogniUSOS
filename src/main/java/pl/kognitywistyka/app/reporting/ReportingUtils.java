@@ -6,12 +6,14 @@ import com.itextpdf.text.pdf.PdfWriter;
 import pl.kognitywistyka.app.course.Course;
 import pl.kognitywistyka.app.user.Student;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by RJ on 2017-06-25.
@@ -19,21 +21,22 @@ import java.util.List;
 
 /** Report generating facility.
  * There is just one public method generateReport; all other methods are intended for in-class use only.
+ * The tool used is iTextPDF.
  */
 public class ReportingUtils {
 
     /** Method creating a .pdf report listing of students to be enrolled to courses, then saves it.
      * @param courses List<Course>; the method assumes that all the courses are offered by a single faculty.
-     * Generates: .pdf file named "[facultyNameHere]EnrollmentList.pdf".
+     * @return: File .pdf doc named "[facultyNameHere]EnrollmentList.pdf".
      */
-    public void generateReport(List<Course> courses) {
+    public static File generateReport(List<Course> courses) {
 
         String facultyName = courses.get(0).getFaculty();
+        File reportFile = new File(facultyName + "EnrollmentList.pdf");
 
         try {
             Document report = new Document();
-            PdfWriter writer = PdfWriter.getInstance(report, new FileOutputStream(
-                    facultyName + "EnrollmentList.pdf"));
+            PdfWriter writer = PdfWriter.getInstance(report, new FileOutputStream(reportFile));
             report.open();
             addCogSciMetadata(report, facultyName);
             addDateLine(report);
@@ -52,6 +55,8 @@ public class ReportingUtils {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            return reportFile;
         }
     }
 
