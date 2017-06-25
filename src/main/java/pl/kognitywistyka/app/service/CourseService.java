@@ -409,7 +409,9 @@ public class CourseService {
         Transaction tx = null;
         try {
             tx = session.beginTransaction();
-            session.remove(course);
+            String cID = course.getId();
+            session.load(Course.class, cID);
+            session.delete(course);
             session.getTransaction().commit();
         } catch (Exception e) {
             if (tx != null) tx.rollback();
@@ -427,7 +429,9 @@ public class CourseService {
         try {
             tx = session.beginTransaction();
             for (Course course : selectedCourses) {
-                session.remove(course);
+                String cID = course.getId();
+                Course persistentInstance = session.load(Course.class, cID);
+                session.delete(persistentInstance);
             }
             session.getTransaction().commit();
         } catch (Exception e) {
