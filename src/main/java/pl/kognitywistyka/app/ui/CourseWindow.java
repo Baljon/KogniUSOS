@@ -91,6 +91,7 @@ public class CourseWindow extends ItemWindow {
         syllabusLabel.setReadOnly(true);
         syllabusLabel.setWidth("600px");
         syllabusLabel.setHeight("300px");
+        syllabusLabel.setStyleName(ValoTheme.TEXTAREA_BORDERLESS);
 
         syllabusLayout.addComponents(syllabusLabel);
         middleLayer.addComponent(syllabusLayout);
