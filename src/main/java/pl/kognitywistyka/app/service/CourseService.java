@@ -24,19 +24,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Created by wikto on 20.06.2017.
+/** The service provides data access operations involving courses.
+ * It forms a layer between the view components and the entities & db.
  */
 public class CourseService {
 
 
     private static CourseService instance;
-//    private HashMap<String, Course> courses;
 
     public static CourseService getInstance() {
         if (instance == null) {
             instance = new CourseService();
-//            instance.ensureTestData();
         }
         return instance;
     }

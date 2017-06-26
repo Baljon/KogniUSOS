@@ -3,10 +3,10 @@ package pl.kognitywistyka.app.user;
 import javax.persistence.*;
 
 /**
- * Created by wikto on 19.06.2017.
+ * Basic entity class representing users. Extended by Student and Pokropski.
+ * DB table user (single-table inheritance, discriminator column TYPE, values {student, pokropski}).
  */
 
-//This class should supposedly be deprecated. We will hopefully never need a common denominator for students and admins.
 @Entity
 @Inheritance
 @DiscriminatorColumn(name = "TYPE")

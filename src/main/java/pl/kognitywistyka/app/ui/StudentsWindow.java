@@ -206,14 +206,14 @@ public class StudentsWindow extends GridWindow<User> {
     private void updateGridById() {
         StudentService studentService = StudentService.getInstance();
         List<User> studentsList = studentService.findById(filterIdField.getValue());
-        if(studentsList == null) studentsList = new ArrayList<>();
+        if (studentsList == null) studentsList = new ArrayList<>();
         grid.setItems(studentsList);
     }
 
     public void updateGrid() {
         StudentService studentService = StudentService.getInstance();
         List<User> studentsList = studentService.findByName(filterNameField.getValue());
-        if(studentsList == null) studentsList = new ArrayList<>();
+        if (studentsList == null) studentsList = new ArrayList<>();
         grid.setItems(studentsList);
     }
 

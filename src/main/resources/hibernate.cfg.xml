@@ -19,10 +19,6 @@
         <property name="show_sql">true</property>
         <property name="format_sql">true</property>
 
-        <!-- THIS IS NOT FOR PRODUCTION (xD)
-        <property name="hbm2ddl.auto">update</property>
-        -->
-
         <!-- Class mappings for the ORM -->
         <mapping class="pl.kognitywistyka.app.course.Course"/>
         <mapping class="pl.kognitywistyka.app.user.User"/>

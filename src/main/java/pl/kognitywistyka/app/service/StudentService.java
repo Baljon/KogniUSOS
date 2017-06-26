@@ -14,7 +14,8 @@ import javax.persistence.NoResultException;
 import java.util.*;
 
 /**
- * Created by wikto on 21.06.2017.
+ * The service provides data access operations involving students.
+ * It forms a layer between the view components and the entities & db.
  */
 public class StudentService {
 

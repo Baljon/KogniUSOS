@@ -15,13 +15,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Created by RJ on 2017-06-25.
- */
-
-/** Report generating facility.
+/** Report generating facility for admins. Generates .pdf reports for the faculties, listing cog-sci students to be registered.
+ * AFAIK the utility does work standalone, but is not yet integrated with CourseService. To be improved.
  * There is just one public method generateReport; all other methods are intended for in-class use only.
- * The tool used is iTextPDF.
+ * Third-party pdf manipulation library iTextPDF is used.
  */
 public class ReportingUtils {
 

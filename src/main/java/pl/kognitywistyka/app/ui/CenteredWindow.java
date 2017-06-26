@@ -15,8 +15,6 @@ import java.util.List;
  */
 public abstract class CenteredWindow extends VerticalLayout {
 
-    //private static final long serialVersionUID = 1L;
-
     //Layouts
     private VerticalLayout topSpacer;
     private VerticalLayout bottomSpacer;
@@ -31,10 +29,8 @@ public abstract class CenteredWindow extends VerticalLayout {
         this.setMiddleLayer(middleLayer);
         middleLayer.setSizeFull();
         Responsive.makeResponsive(middleLayer);
-//        middleLayer.addStyleName("login-panel");
 
         topMenu = new HorizontalLayout();
-//        topMenu.addStyleName("kogniusos-top");
         topMenu.setHeight("15px");
         topMenu.setWidth("60%");
 

@@ -1,7 +1,6 @@
 package pl.kognitywistyka.app.ui;
 
 import com.vaadin.icons.VaadinIcons;
-import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import pl.kognitywistyka.app.course.Course;
@@ -28,7 +27,7 @@ public class CourseWindow extends ItemWindow {
     //todo lol, vaadin, seriously, only labels?
     private Label courseNameLabel;
     private Label facultyLabel;
-    private Label syllabusLabel;
+    private TextArea syllabusLabel;
 
     //Buttons
     private Button previousScreenButton;
@@ -87,7 +86,12 @@ public class CourseWindow extends ItemWindow {
         syllabusLayout = new CssLayout();
         syllabusLayout.setSizeFull();
 
-        syllabusLabel = new Label("Syllabus: " + course.getSyllabus(), ContentMode.HTML);
+        syllabusLabel = new TextArea("Syllabus: ");
+        syllabusLabel.setValue(course.getSyllabus());
+        syllabusLabel.setReadOnly(true);
+        syllabusLabel.setWidth("600px");
+        syllabusLabel.setHeight("300px");
+        syllabusLabel.setStyleName(ValoTheme.TEXTAREA_BORDERLESS);
 
         syllabusLayout.addComponents(syllabusLabel);
         middleLayer.addComponent(syllabusLayout);
@@ -181,7 +185,7 @@ public class CourseWindow extends ItemWindow {
 
                 getUI().getUI().addWindow(showWarning(buttonsList));
             });
-            if(!course.isAccepted()){
+            if (!course.isAccepted()) {
                 acceptButton = new Button("Accept course");
                 acceptButton.setStyleName(ValoTheme.BUTTON_FRIENDLY);
 

@@ -9,6 +9,10 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
+/** A basic authentication facility used for signing up and registration.
+ * One third-party method is used, i.e. the sha15() method by P. Wilkin.
+ */
+
 /**
  * Created by wikto on 19.06.2017.
  */

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by RJ on 2017-06-25.
+ * Please do not pay much attention to this class. It was created for testing purposes mostly and will be deprecated.
  */
 public class FACULTY_CONST {
 
