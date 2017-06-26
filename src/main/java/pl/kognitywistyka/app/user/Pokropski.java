@@ -5,7 +5,9 @@ import pl.kognitywistyka.app.user.User;
 import javax.persistence.*;
 
 /**
- * Created by wikto on 19.06.2017.
+ * Entity class representing admins.
+ * Extends User. DB table user, single-table inheritance discriminator value "pokropski".
+ * No additional attributes.
  */
 @Entity
 @DiscriminatorValue("pokropski")

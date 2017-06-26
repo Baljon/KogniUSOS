@@ -7,7 +7,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 /**
- * Created by RJ on 2017-06-21.
+ * Utility class for Hibernate initialization and SessionFactory creation.
+ * It provides SessionFactory for transactions in the service classes.
  */
 public class HibernateUtils {
 

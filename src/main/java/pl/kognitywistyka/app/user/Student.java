@@ -7,7 +7,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Created by wikto on 19.06.2017.
+ * Entity class representing students.
+ * Extends User. DB table user, single-table inheritance discriminator value "student".
+ * Mapped ManyToMany to Course, join table student_course. Join columns are IDs.
  */
 @Entity
 @DiscriminatorValue("student")

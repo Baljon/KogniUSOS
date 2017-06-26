@@ -7,7 +7,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Created by wikto on 19.06.2017.
+ * Entity class representing course.
+ * DB table course. Mapped ManyToMany to Student, join table student_course. Join columns are IDs.
+ * May be proposed (by students), accepted (by admin), blacklisted (by admin; co that nobody can register anymore).
+ * Course objects are basically imported from USOS (identified by their USOS id) by methods from CourseService.
+ * The attributes are filled in basing on USOS info.
  */
 @Entity
 @Table(name = "course")

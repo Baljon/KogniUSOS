@@ -19,6 +19,8 @@ import pl.kognitywistyka.app.user.Student;
 import java.util.List;
 
 /**
+ * Built upon an auto-generated template.
+ *
  * This UI is the application entry point. A UI may either represent a browser window
  * (or tab) or some part of a html page where a Vaadin application is embedded.
  * <p>
