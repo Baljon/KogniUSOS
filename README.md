@@ -33,7 +33,7 @@ This is a Java web application using:
   
   Other possibilities can be freely explored, though definitely not every feature is fully functional at the moment.
   
- ###Perspectives
+ ### Perspectives
  The app is aimed at becoming a real-life module facilitating the MS2 registration process.
  Major fixes are possibly required, though at the present stage basic procedures are by and large functional.
  
