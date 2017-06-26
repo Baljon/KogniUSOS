@@ -27,10 +27,6 @@ import java.util.Set;
 /** The service provides data access operations involving courses.
  * It forms a layer between the view components and the entities & db.
  */
-
- /**
- * Created by wikto on 20.06.2017.
- */
 public class CourseService {
 
 
