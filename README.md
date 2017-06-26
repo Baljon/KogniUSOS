@@ -29,8 +29,8 @@ This is a Java web application using:
   From an admin's perspective, the core functionality now includes:
    * logging, courses and students preview;
    * removing courses and students;
-   * accepting/rejecting proposed courses;
-   * to be added soon: generating CogSci student lists for associated faculties for registration purposes.
+   * button to be added soon: accepting/rejecting proposed courses;
+   * function to be added soon: generating CogSci student lists for associated faculties for registration purposes.
   
   Other possibilities can be freely explored, though definitely not every feature is fully functional at the moment.
   
