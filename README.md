@@ -23,7 +23,7 @@ This is a Java web application using:
  From a student's perspective, the core functionality now includes:
   * signing up (University of Warsaw student ID qnd e-mail address required);
   * logging and courses preview;
-  * proposing courses for MS2 (course ID from USOS required);
+  * proposing courses for MS2 (unique course code from USOS required);
   * course registration (for CogSci internal purposes only, not USOS-integrated).
   
   From an admin's perspective, the core functionality now includes:
