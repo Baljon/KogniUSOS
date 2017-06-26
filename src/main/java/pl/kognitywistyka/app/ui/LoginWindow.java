@@ -39,14 +39,11 @@ public class LoginWindow extends CenteredWindow {
         //Initializing layout
         middleLayer = new VerticalLayout();
         middleLayer.setSizeFull();
-//        middleLayer.addStyleName("login-panel");
 
         init(middleLayer);
 
         inputBoxes = new FormLayout();
         buttonsLayout = new HorizontalLayout();
-
-//        inputBoxes.addStyleName("form-centered");
 
         welcomeLabel = new Label("<p align='center'><b>WELCOME TO KogniUSOS!</b></p>");
 //        welcomeLabel.addStyleName("caption-label");
@@ -77,18 +74,11 @@ public class LoginWindow extends CenteredWindow {
         loginButton = new Button("Sign in");
         loginButton.setStyleName(ValoTheme.BUTTON_FRIENDLY);
         loginButton.setClickShortcut(ShortcutAction.KeyCode.ENTER);
-//        reminderButton = new Button("Retrieve password");
         createAccount = new Button("Sign up");
 
         buttonsLayout.addComponent(loginButton);
-//        buttonsLayout.addComponent(reminderButton);
         buttonsLayout.addComponent(createAccount);
         buttonsLayout.setSpacing(true);
-
-//        reminderButton.addClickListener(event -> {
-//           throw new NotImplementedException();
-////            getUI().setContent(new SendReminderWindow());
-//        });
 
         loginButton.addClickListener(event -> {
             if(userField.getValue().isEmpty() || passwordField.getValue().isEmpty()) {
