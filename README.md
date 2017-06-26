@@ -14,7 +14,7 @@ This is a Java web application using:
  * Maven management;
  * Google gson, Apache deltaspike, iTextPDF, ...
  
- ###Functionality
+ ### Functionality
  As for now, the application provides basic functionality for course proposing and registration.
  
  The application communicates with the USOS API to get course information.
