@@ -1,7 +1,7 @@
 KogniUSOS
 ==============
 
-An application designed to simplify the process of signing up to the Specialization Module 2 (Moduł Specjalizacyjny 2)
+A web application designed to simplify the process of signing up to the Specialization Module 2 (Moduł Specjalizacyjny 2)
 for Cognitive Science students at University of Warsaw (Institute of Philosophy).
 
 Developed as a course project for the Basics of Application Programming course by @pwilkin.
