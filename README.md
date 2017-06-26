@@ -5,6 +5,7 @@ An application designed to simplify the process of signing up to the Specializat
 for Cognitive Science students at University of Warsaw (Institute of Philosophy).
 
 Developed as a course project for the Basics of Application Programming course by @pwilkin.
+Project developers (in alphabetical order): Radosław Jurczak, Jakub Milewski, Wiktor Rorot.
 
 ### Stack
 This is a Java web application using:
